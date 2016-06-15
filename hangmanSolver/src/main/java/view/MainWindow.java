@@ -1,6 +1,8 @@
 package view;
 
-import java.io.IOException;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 
 /**
  * Sample Skeleton for "MainWindow.fxml" Controller Class
@@ -12,7 +14,6 @@ import java.util.ResourceBundle;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -25,16 +26,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class MainWindow extends Application implements Initializable {
-	
+
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 	private ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
 
 	@FXML // ResourceBundle that was given to the FXMLLoader
@@ -72,29 +75,38 @@ public class MainWindow extends Application implements Initializable {
 
 	@FXML
 	private AnchorPane invalidCharactersMessage;
-	
+
 	@FXML
 	private Button invalidCharactersMessageCloseButton;
-	
-	private final ChangeListener<String> currentSequenceOnChangeListener = new ChangeListener<String>(){
+
+	private final ChangeListener<String> currentSequenceOnChangeListener = new ChangeListener<String>() {
 		@Override
-		public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
+		public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 			currentSequenceKeyReleased();
 		}
 	};
-	
-	// Handler for Button[fx:id="copyButton"] onAction
+
+	/**
+	 * Handler for Button[fx:id="copyButton"] onAction<br>
+	 * <br>
+	 * Copies the result of the algorithm to the system clipboard
+	 * 
+	 * @param event
+	 *            The event object (automatically injected)
+	 */
 	@FXML
 	void copyResultToClipboard(ActionEvent event) {
-		// handle the event here
+		StringSelection selection = new StringSelection(result.getText());
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboard.setContents(selection, selection);
 	}
 
 	@FXML
-	void invalidCharactersMessageCloseButtonOnAction(ActionEvent event){
+	void invalidCharactersMessageCloseButtonOnAction(ActionEvent event) {
 		hideinvalidCharactersMessage();
 	}
-	
-    void currentSequenceKeyReleased() {
+
+	void currentSequenceKeyReleased() {
 		String curValue = currentSequence.getText();
 		boolean showMessage = false;
 		String newValue = "";
@@ -116,14 +128,14 @@ public class MainWindow extends Application implements Initializable {
 		} else {
 			hideinvalidCharactersMessage();
 		}
-    }
+	}
 
 	private void showinvalidCharactersMessage() {
 		showinvalidCharactersMessage(false);
 	}
 
 	private void showinvalidCharactersMessage(boolean noAnimation) {
-		
+
 		invalidCharactersMessageLabel.setMouseTransparent(false);
 		invalidCharactersMessageRectangle.setMouseTransparent(false);
 		invalidCharactersMessageTriangle.setMouseTransparent(false);
@@ -157,14 +169,17 @@ public class MainWindow extends Application implements Initializable {
 		}
 	}
 
-	// Handler for Button[fx:id="getNextLetter"] onAction
+	/**
+	 * Handler for Button[fx:id="getNextLetter"] onAction<br>
+	 * Fires when the user is in the text field and hits the enter key or clicks
+	 * the 'get result button'
+	 * 
+	 * @param event
+	 *            The event object (automatically injected)
+	 */
 	@FXML
 	void getNextLetterAction(ActionEvent event) {
-		// handle the event here
-	}
-
-	public static void main(String[] args) {
-		launch(args);
+		launchAlgorithm();
 	}
 
 	@Override
@@ -173,8 +188,12 @@ public class MainWindow extends Application implements Initializable {
 			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"), bundle);
 			Scene scene = new Scene(root);
 			// scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setMinWidth(scene.getRoot().minWidth(0)+70);
-			primaryStage.setMinHeight(scene.getRoot().minHeight(0)+70);
+
+			primaryStage.setTitle(bundle.getString("windowTitle"));
+
+			primaryStage.setMinWidth(scene.getRoot().minWidth(0) + 70);
+			primaryStage.setMinHeight(scene.getRoot().minHeight(0) + 70);
+
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (Exception e) {
@@ -194,7 +213,13 @@ public class MainWindow extends Application implements Initializable {
 		// injected
 		currentSequence.textProperty().addListener(currentSequenceOnChangeListener);
 
-		//hideinvalidCharactersMessage(true);
+		// hideinvalidCharactersMessage(true);
+	}
+
+	void launchAlgorithm() {
+		String res = "bla";
+
+		result.setText(res);
 	}
 
 }
