@@ -51,6 +51,9 @@ public class MainWindow extends Application implements Initializable {
 
 	@FXML // fx:id="copyButton"
 	private Button copyButton; // Value injected by FXMLLoader
+	
+	@FXML
+    private Button creditsButton;
 
 	@FXML // fx:id="currentSequence"
 	private TextField currentSequence; // Value injected by FXMLLoader
@@ -181,6 +184,12 @@ public class MainWindow extends Application implements Initializable {
 	void getNextLetterAction(ActionEvent event) {
 		launchAlgorithm();
 	}
+
+    @FXML
+    void creditsButtonOnAction(ActionEvent event) {
+    	System.out.println("Hey");
+    	LicenseWindow.show(bundle.getString("licenseWindowTitle"));
+    }
 
 	@Override
 	public void start(Stage primaryStage) {
