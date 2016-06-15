@@ -187,7 +187,6 @@ public class MainWindow extends Application implements Initializable {
 
     @FXML
     void creditsButtonOnAction(ActionEvent event) {
-    	System.out.println("Hey");
     	LicenseWindow.show(bundle.getString("licenseWindowTitle"));
     }
 

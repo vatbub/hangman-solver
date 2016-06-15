@@ -22,7 +22,6 @@ public class LicenseWindow {
 
     @FXML
     void initialize() {
-    	System.out.println("LicenseWindow initialized");
     }
     
     public static void show(String windowTitle){
