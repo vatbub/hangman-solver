@@ -12,18 +12,18 @@
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="306.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.MainWindow">
   <children>
-    <Label fx:id="actionLabel" maxWidth="1.7976931348623157E308" prefWidth="572.0" text="%enterInitialSequence" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="74.0" />
-    <TextField fx:id="currentSequence" maxWidth="1.7976931348623157E308" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="106.0" />
-    <Button fx:id="getNextLetter" defaultButton="true" mnemonicParsing="false" onAction="#getNextLetterAction" prefWidth="572.0" text="%computeNextLetterButtonLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="145.0" />
-    <TextField fx:id="result" disable="false" editable="false" prefHeight="26.0" prefWidth="572.0" promptText="%clickGenerateButtonText" text="" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="219.0" />
-    <Label prefWidth="572.0" text="%nextTurnLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="188.0" />
-    <Button fx:id="copyButton" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#copyResultToClipboard" prefHeight="-1.0" text="%copyButtontext" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="220.0">
+    <Label fx:id="actionLabel" maxWidth="1.7976931348623157E308" prefWidth="572.0" text="%enterInitialSequence" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="84.0" />
+    <TextField fx:id="currentSequence" maxWidth="1.7976931348623157E308" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="120.0" />
+    <Button fx:id="getNextLetter" defaultButton="true" mnemonicParsing="false" onAction="#getNextLetterAction" prefWidth="572.0" text="%computeNextLetterButtonLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="160.0" />
+    <TextField fx:id="result" disable="false" editable="false" prefHeight="26.0" prefWidth="572.0" promptText="%clickGenerateButtonText" text="" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="228.0" />
+    <Label prefWidth="572.0" text="%nextTurnLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="196.0" />
+    <Button fx:id="copyButton" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#copyResultToClipboard" prefHeight="-1.0" text="%copyButtontext" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="229.0">
       <font>
         <Font size="13.0" />
       </font>
     </Button>
     <Label layoutX="14.0" layoutY="14.0" text="%languageLabel" />
-    <AnchorPane id="AnchorPane" fx:id="invalidCharactersMessage" layoutX="164.0" layoutY="146.0" opacity="0.0" prefWidth="384.0">
+    <AnchorPane id="AnchorPane" fx:id="invalidCharactersMessage" layoutX="152.0" layoutY="155.0" opacity="0.0" prefWidth="384.0">
       <children>
         <Polygon fx:id="invalidCharactersMessageTriangle" fill="DODGERBLUE" layoutX="130.0" layoutY="0.0" scaleX="1.0" scaleY="0.3296499913215637" stroke="DODGERBLUE" strokeType="INSIDE">
           <points>
@@ -45,6 +45,6 @@
         <FXCollections fx:factory="observableArrayList" />
       </items>
     </ComboBox>
-    <Button fx:id="creditsButton" mnemonicParsing="false" onAction="#creditsButtonOnAction" prefWidth="572.0" text="%licenseButton" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="265.0" />
+    <Button fx:id="creditsButton" mnemonicParsing="false" onAction="#creditsButtonOnAction" prefWidth="572.0" text="%licenseButton" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="265.0" />
   </children>
 </AnchorPane>
