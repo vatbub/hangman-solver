@@ -11,11 +11,20 @@ import java.awt.datatransfer.StringSelection;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ModifiableObservableListBase;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +40,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import languages.Language;
 
 public class MainWindow extends Application implements Initializable {
 
@@ -51,9 +61,9 @@ public class MainWindow extends Application implements Initializable {
 
 	@FXML // fx:id="copyButton"
 	private Button copyButton; // Value injected by FXMLLoader
-	
+
 	@FXML
-    private Button creditsButton;
+	private Button creditsButton;
 
 	@FXML // fx:id="currentSequence"
 	private TextField currentSequence; // Value injected by FXMLLoader
@@ -62,7 +72,7 @@ public class MainWindow extends Application implements Initializable {
 	private Button getNextLetter; // Value injected by FXMLLoader
 
 	@FXML // fx:id="languageSelector"
-	private ComboBox<?> languageSelector; // Value injected by FXMLLoader
+	private ComboBox<String> languageSelector; // Value injected by FXMLLoader
 
 	@FXML // fx:id="result"
 	private TextField result; // Value injected by FXMLLoader
@@ -185,10 +195,10 @@ public class MainWindow extends Application implements Initializable {
 		launchAlgorithm();
 	}
 
-    @FXML
-    void creditsButtonOnAction(ActionEvent event) {
-    	LicenseWindow.show(bundle.getString("licenseWindowTitle"));
-    }
+	@FXML
+	void creditsButtonOnAction(ActionEvent event) {
+		LicenseWindow.show(bundle.getString("licenseWindowTitle"));
+	}
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -220,14 +230,29 @@ public class MainWindow extends Application implements Initializable {
 		// Initialize your logic here: all @FXML variables will have been
 		// injected
 		currentSequence.textProperty().addListener(currentSequenceOnChangeListener);
-
-		// hideinvalidCharactersMessage(true);
+		loadLanguageList();
 	}
 
 	void launchAlgorithm() {
 		String res = "bla";
 
 		result.setText(res);
+	}
+
+	private void loadLanguageList() {
+		System.out.println("Loading language list...");
+		
+		ObservableList<String> items = FXCollections.observableArrayList();
+
+		// Load the languages
+		for (Language lang : Language.getSupportedLanguages()) {
+			items.add(lang.getHumanReadableName());
+		}
+
+		languageSelector.setItems(items);
+
+		System.out.println("Languages loaded");
+
 	}
 
 }
