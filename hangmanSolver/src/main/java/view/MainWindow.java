@@ -2,6 +2,8 @@ package view;
 
 
 
+import java.io.IOException;
+
 /**
  * Sample Skeleton for "MainWindow.fxml" Controller Class
  * You can copy and paste this code into your favorite IDE
@@ -11,11 +13,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 
 public class MainWindow {
@@ -51,10 +57,13 @@ public class MainWindow {
         // handle the event here
     }
 
-    // Handler for TextField[fx:id="currentSequence"] onKeyTyped
+    /**
+     *  Handler for TextField[fx:id="currentSequence"] onKeyTyped
+     * @param event The 
+     */
     @FXML
     void currentSequenceKeyTyped(KeyEvent event) {
-        // handle the event here
+    	
     }
 
     // Handler for Button[fx:id="getNextLetter"] onAction
@@ -77,8 +86,27 @@ public class MainWindow {
     }
     
     public static void main(String[] args){
-    	MainWindow window = new MainWindow();
-    	window.initialize();
+    	try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainWindow.class.getResource("/view/MainWindow.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            // Create the dialog Stage.
+            Stage primaryStage = new Stage();
+            primaryStage.setTitle("Edit Person");
+            Scene scene = new Scene(page);
+            primaryStage.setScene(scene);
+
+            // Set the person into the controller.
+            MainWindow controller = loader.getController();
+
+            // Show the dialog and wait until the user closes it
+            primaryStage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
