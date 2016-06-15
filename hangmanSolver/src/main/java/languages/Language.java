@@ -6,13 +6,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-public class Language {
+import common.Config;
 
-	// Config
-	// {langCode} will be replaced by the language code
-	private static String cldrNamePattern = "/languages/cldr/wn-cldr-{langCode}.tab";
-	private static String wiktNamePattern = "/languages/wikt/wn-wikt-{langCode}.tab";
-	private static URL languageCodes = Language.class.getResource("/languages/LanguageCodes.tab");
+public class Language {
 
 	/**
 	 * Cached list of supported languages
@@ -61,7 +57,7 @@ public class Language {
 
 		// Try to get the resource file, if it fails, the language is not
 		// supported
-		return Language.class.getResource(cldrNamePattern.replace("{langCode}", languageCode));
+		return Language.class.getResource(Config.cldrNamePattern.replace("{langCode}", languageCode));
 	}
 
 	/**
@@ -78,7 +74,7 @@ public class Language {
 
 		// Try to get the resource file, if it fails, the language is not
 		// supported
-		return Language.class.getResource(wiktNamePattern.replace("{langCode}", languageCode));
+		return Language.class.getResource(Config.wiktNamePattern.replace("{langCode}", languageCode));
 	}
 
 	/**
@@ -99,7 +95,7 @@ public class Language {
 			// Open the LanguageCodes.tab-file
 			TabFile languageCodesFile;
 			try {
-				languageCodesFile = new TabFile(languageCodes);
+				languageCodesFile = new TabFile(Config.languageCodes);
 				// Go through all records and check if the word databases to all
 				// files
 				// can be found for each language
@@ -135,7 +131,7 @@ public class Language {
 	private String getHumanReadableName(String languageCode) {
 		try {
 			// Open the LanguageCodes.tab-file
-			TabFile languageCodesFile = new TabFile(languageCodes);
+			TabFile languageCodesFile = new TabFile(Config.languageCodes);
 
 			// Go through all records to find the language
 			for (int i = 0; i < languageCodesFile.getRowCount(); i++) {
@@ -150,6 +146,21 @@ public class Language {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+	@Override
+	public boolean equals(Object anObject) {
+		if (anObject instanceof Language) {
+			if (this.getCldrName().equals(((Language) anObject).getCldrName())
+					&& this.getWiktName().equals(((Language) anObject).getWiktName())
+					&& this.getLanguageCode().equals(((Language) anObject).getLanguageCode())) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
 		}
 	}
 

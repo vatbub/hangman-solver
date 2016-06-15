@@ -14,7 +14,7 @@
   <children>
     <Label fx:id="actionLabel" maxWidth="1.7976931348623157E308" prefWidth="572.0" text="%enterInitialSequence" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="84.0" />
     <TextField fx:id="currentSequence" maxWidth="1.7976931348623157E308" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="120.0" />
-    <Button fx:id="getNextLetter" defaultButton="true" mnemonicParsing="false" onAction="#getNextLetterAction" prefWidth="572.0" text="%computeNextLetterButtonLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="160.0" />
+    <Button fx:id="getNextLetter" defaultButton="true" layoutX="14.0" layoutY="162.0" mnemonicParsing="false" onAction="#getNextLetterAction" prefWidth="571.9998779296875" text="%computeNextLetterButtonLabel" />
     <TextField fx:id="result" disable="false" editable="false" prefHeight="26.0" prefWidth="572.0" promptText="%clickGenerateButtonText" text="" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="228.0" />
     <Label prefWidth="572.0" text="%nextTurnLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="196.0" />
     <Button fx:id="copyButton" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#copyResultToClipboard" prefHeight="-1.0" text="%copyButtontext" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="229.0">
@@ -23,23 +23,6 @@
       </font>
     </Button>
     <Label layoutX="14.0" layoutY="14.0" text="%languageLabel" />
-    <AnchorPane id="AnchorPane" fx:id="invalidCharactersMessage" layoutX="152.0" layoutY="155.0" opacity="0.0" prefWidth="384.0">
-      <children>
-        <Polygon fx:id="invalidCharactersMessageTriangle" fill="DODGERBLUE" layoutX="130.0" layoutY="0.0" scaleX="1.0" scaleY="0.3296499913215637" stroke="DODGERBLUE" strokeType="INSIDE">
-          <points>
-            <Double fx:value="-50.0" />
-            <Double fx:value="40.0" />
-            <Double fx:value="50.0" />
-            <Double fx:value="40.0" />
-            <Double fx:value="0.0" />
-            <Double fx:value="-60.0" />
-          </points>
-        </Polygon>
-        <Rectangle fx:id="invalidCharactersMessageRectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="99.0" layoutX="0.0" layoutY="0.0" stroke="DODGERBLUE" strokeType="INSIDE" width="384.0" />
-        <Label fx:id="invalidCharactersMessageLabel" layoutX="14.0" layoutY="12.0" prefHeight="75.0" prefWidth="356.0" text="%invalidCharactersMessage" wrapText="true" />
-        <Button fx:id="invalidCharactersMessageCloseButton" cancelButton="false" defaultButton="false" minWidth="26.0" mnemonicParsing="false" onAction="#invalidCharactersMessageCloseButtonOnAction" prefWidth="33.0" style="-fx-background-color: #1875cf;" text="x" textOverrun="ELLIPSIS" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      </children>
-    </AnchorPane>
     <ComboBox fx:id="languageSelector" editable="false" prefWidth="572.0" promptText="%languageSelector.PromptText" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="43.0">
       <items>
         <FXCollections fx:factory="observableArrayList" />

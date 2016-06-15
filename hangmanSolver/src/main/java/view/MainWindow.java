@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import algorithm.HangmanSolver;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.beans.property.SimpleListProperty;
@@ -49,6 +50,7 @@ public class MainWindow extends Application implements Initializable {
 	}
 
 	private ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
+	private String currentSolution;
 
 	@FXML // ResourceBundle that was given to the FXMLLoader
 	private ResourceBundle resources;
@@ -77,28 +79,6 @@ public class MainWindow extends Application implements Initializable {
 	@FXML // fx:id="result"
 	private TextField result; // Value injected by FXMLLoader
 
-	@FXML
-	private Label invalidCharactersMessageLabel;
-
-	@FXML
-	private Rectangle invalidCharactersMessageRectangle;
-
-	@FXML
-	private Polygon invalidCharactersMessageTriangle;
-
-	@FXML
-	private AnchorPane invalidCharactersMessage;
-
-	@FXML
-	private Button invalidCharactersMessageCloseButton;
-
-	private final ChangeListener<String> currentSequenceOnChangeListener = new ChangeListener<String>() {
-		@Override
-		public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-			currentSequenceKeyReleased();
-		}
-	};
-
 	/**
 	 * Handler for Button[fx:id="copyButton"] onAction<br>
 	 * <br>
@@ -112,74 +92,6 @@ public class MainWindow extends Application implements Initializable {
 		StringSelection selection = new StringSelection(result.getText());
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 		clipboard.setContents(selection, selection);
-	}
-
-	@FXML
-	void invalidCharactersMessageCloseButtonOnAction(ActionEvent event) {
-		hideinvalidCharactersMessage();
-	}
-
-	void currentSequenceKeyReleased() {
-		String curValue = currentSequence.getText();
-		boolean showMessage = false;
-		String newValue = "";
-
-		for (int i = 0; i < curValue.length(); i++) {
-			if (curValue.substring(i, i + 1).equals(" ") || curValue.substring(i, i + 1).equals("_")) {
-				System.out.println(newValue);
-				newValue = newValue + curValue.substring(i, i + 1);
-			} else {
-				showMessage = true;
-			}
-		}
-
-		if (showMessage) {
-			showinvalidCharactersMessage();
-			currentSequence.textProperty().removeListener(currentSequenceOnChangeListener);
-			currentSequence.setText(newValue);
-			currentSequence.textProperty().addListener(currentSequenceOnChangeListener);
-		} else {
-			hideinvalidCharactersMessage();
-		}
-	}
-
-	private void showinvalidCharactersMessage() {
-		showinvalidCharactersMessage(false);
-	}
-
-	private void showinvalidCharactersMessage(boolean noAnimation) {
-
-		invalidCharactersMessageLabel.setMouseTransparent(false);
-		invalidCharactersMessageRectangle.setMouseTransparent(false);
-		invalidCharactersMessageTriangle.setMouseTransparent(false);
-
-		if (!noAnimation) {
-			FadeTransition ft = new FadeTransition(Duration.millis(300), invalidCharactersMessage);
-			ft.setFromValue(invalidCharactersMessage.getOpacity());
-			ft.setToValue(1.0);
-			ft.play();
-		} else {
-			invalidCharactersMessage.setOpacity(1);
-		}
-	}
-
-	private void hideinvalidCharactersMessage() {
-		hideinvalidCharactersMessage(false);
-	}
-
-	private void hideinvalidCharactersMessage(boolean noAnimation) {
-		invalidCharactersMessageLabel.setMouseTransparent(true);
-		invalidCharactersMessageRectangle.setMouseTransparent(true);
-		invalidCharactersMessageTriangle.setMouseTransparent(true);
-
-		if (!noAnimation) {
-			FadeTransition ft = new FadeTransition(Duration.millis(300), invalidCharactersMessage);
-			ft.setFromValue(invalidCharactersMessage.getOpacity());
-			ft.setToValue(0.0);
-			ft.play();
-		} else {
-			invalidCharactersMessage.setOpacity(0);
-		}
 	}
 
 	/**
@@ -229,14 +141,12 @@ public class MainWindow extends Application implements Initializable {
 
 		// Initialize your logic here: all @FXML variables will have been
 		// injected
-		currentSequence.textProperty().addListener(currentSequenceOnChangeListener);
 		loadLanguageList();
 	}
 
 	void launchAlgorithm() {
-		String res = "bla";
-
-		result.setText(res);
+		currentSolution = algorithm.HangmanSolver.solve(currentSequence.getText(), Language.getSupportedLanguages().get(languageSelector.getSelectionModel().getSelectedIndex()));
+		result.setText(currentSolution);
 	}
 
 	private void loadLanguageList() {
