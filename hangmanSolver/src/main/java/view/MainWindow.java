@@ -12,6 +12,9 @@ import java.util.ResourceBundle;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,12 +27,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class MainWindow extends Application implements Initializable {
+	
+	private ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
 
 	@FXML // ResourceBundle that was given to the FXMLLoader
 	private ResourceBundle resources;
@@ -67,28 +73,33 @@ public class MainWindow extends Application implements Initializable {
 	@FXML
 	private AnchorPane invalidCharactersMessage;
 	
+	@FXML
+	private Button invalidCharactersMessageCloseButton;
+	
+	private final ChangeListener<String> currentSequenceOnChangeListener = new ChangeListener<String>(){
+		@Override
+		public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
+			currentSequenceKeyReleased();
+		}
+	};
+	
 	// Handler for Button[fx:id="copyButton"] onAction
 	@FXML
 	void copyResultToClipboard(ActionEvent event) {
 		// handle the event here
 	}
 
-	/**
-	 * Handler for TextField[fx:id="currentSequence"] onKeyTyped<br>
-	 * Removes any letters from the text field that are not underscores or
-	 * spaces and displays a message to the user, if he has entered an invalid
-	 * letter.
-	 * 
-	 * @param event
-	 *            The event object (injected automatically)
-	 */
 	@FXML
-	void currentSequenceKeyTyped(KeyEvent event) {
+	void invalidCharactersMessageCloseButtonOnAction(ActionEvent event){
+		hideinvalidCharactersMessage();
+	}
+	
+    void currentSequenceKeyReleased() {
 		String curValue = currentSequence.getText();
 		boolean showMessage = false;
 		String newValue = "";
 
-		for (int i = 0; i < curValue.length() - 1; i++) {
+		for (int i = 0; i < curValue.length(); i++) {
 			if (curValue.substring(i, i + 1).equals(" ") || curValue.substring(i, i + 1).equals("_")) {
 				System.out.println(newValue);
 				newValue = newValue + curValue.substring(i, i + 1);
@@ -99,30 +110,31 @@ public class MainWindow extends Application implements Initializable {
 
 		if (showMessage) {
 			showinvalidCharactersMessage();
+			currentSequence.textProperty().removeListener(currentSequenceOnChangeListener);
+			currentSequence.setText(newValue);
+			currentSequence.textProperty().addListener(currentSequenceOnChangeListener);
 		} else {
 			hideinvalidCharactersMessage();
 		}
-	}
+    }
 
 	private void showinvalidCharactersMessage() {
 		showinvalidCharactersMessage(false);
 	}
 
 	private void showinvalidCharactersMessage(boolean noAnimation) {
+		
 		invalidCharactersMessageLabel.setMouseTransparent(false);
 		invalidCharactersMessageRectangle.setMouseTransparent(false);
 		invalidCharactersMessageTriangle.setMouseTransparent(false);
 
 		if (!noAnimation) {
 			FadeTransition ft = new FadeTransition(Duration.millis(300), invalidCharactersMessage);
-			ft.setFromValue(0.0);
+			ft.setFromValue(invalidCharactersMessage.getOpacity());
 			ft.setToValue(1.0);
 			ft.play();
-
 		} else {
-			invalidCharactersMessageLabel.setOpacity(1);
-			invalidCharactersMessageRectangle.setOpacity(1);
-			invalidCharactersMessageTriangle.setOpacity(1);
+			invalidCharactersMessage.setOpacity(1);
 		}
 	}
 
@@ -136,15 +148,12 @@ public class MainWindow extends Application implements Initializable {
 		invalidCharactersMessageTriangle.setMouseTransparent(true);
 
 		if (!noAnimation) {
-			for (double i = 1; i >= 0; i = i - 0.01) {
-				invalidCharactersMessageLabel.setOpacity(i);
-				invalidCharactersMessageRectangle.setOpacity(i);
-				invalidCharactersMessageTriangle.setOpacity(i);
-			}
+			FadeTransition ft = new FadeTransition(Duration.millis(300), invalidCharactersMessage);
+			ft.setFromValue(invalidCharactersMessage.getOpacity());
+			ft.setToValue(0.0);
+			ft.play();
 		} else {
-			invalidCharactersMessageLabel.setOpacity(0);
-			invalidCharactersMessageRectangle.setOpacity(0);
-			invalidCharactersMessageTriangle.setOpacity(0);
+			invalidCharactersMessage.setOpacity(0);
 		}
 	}
 
@@ -161,11 +170,11 @@ public class MainWindow extends Application implements Initializable {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
-			System.out.println(bundle.getString("languageLabel"));
 			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"), bundle);
 			Scene scene = new Scene(root);
 			// scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			primaryStage.setMinWidth(scene.getRoot().minWidth(0)+70);
+			primaryStage.setMinHeight(scene.getRoot().minHeight(0)+70);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (Exception e) {
@@ -183,8 +192,9 @@ public class MainWindow extends Application implements Initializable {
 
 		// Initialize your logic here: all @FXML variables will have been
 		// injected
+		currentSequence.textProperty().addListener(currentSequenceOnChangeListener);
 
-		hideinvalidCharactersMessage(true);
+		//hideinvalidCharactersMessage(true);
 	}
 
 }
