@@ -13,7 +13,7 @@ public class HangmanSolver {
 	private static Language langOld;
 	private static TabFile wiktDatabase;
 	private static TabFile cldrDatabase;
-	
+
 	public static List<String> proposedSolutions = new ArrayList<String>();
 
 	public static String solve(String currentSequence, Language lang) {
@@ -47,10 +47,10 @@ public class HangmanSolver {
 
 			System.out.println(bestWordWikt);
 			System.out.println(bestWordCldr);
-			System.out.println(TabFile.stringCorrelation(word, bestWordWikt)); //__l__h_n
-			
-			if (TabFile.stringCorrelation(word, bestWordWikt)>=TabFile.stringCorrelation(word, bestWordCldr)){
-				bestWord=bestWordWikt;
+			System.out.println(TabFile.stringCorrelation(word, bestWordWikt)); // __l__h_n
+
+			if (TabFile.stringCorrelation(word, bestWordWikt) >= TabFile.stringCorrelation(word, bestWordCldr)) {
+				bestWord = bestWordWikt;
 			} else {
 				bestWord = bestWordCldr;
 			}
@@ -62,10 +62,11 @@ public class HangmanSolver {
 
 			// apparently no direct match, get the most used letter from the
 			// results
-			
-			// Get all chars from the bestWord and filter those out which were already proposed
-			
-			String res = Character.toString(getMostFrequentChar(wordsWithEqualLength)); 
+
+			// Get all chars from the bestWord
+			char[] priorityChars = bestWord.toCharArray();
+
+			String res = Character.toString(getMostFrequentChar(wordsWithEqualLength, priorityChars));
 			proposedSolutions.add(res);
 			return res;
 
@@ -85,16 +86,16 @@ public class HangmanSolver {
 		}
 	}
 
-	private static char getMostFrequentChar(List<String> words) {
+	private static char getMostFrequentChar(List<String> words, char[] priorityChars) {
 		ArrayList<Thread> threads = new ArrayList<Thread>();
 		AtomicInteger currentIndex = new AtomicInteger(0);
 		List<AtomicInteger> charCounts = new ArrayList<AtomicInteger>();
-		
-		for (int i=0; i<26; i++){
+
+		for (int i = 0; i < 26; i++) {
 			AtomicInteger temp = new AtomicInteger(0);
 			charCounts.add(temp);
 		}
-		
+
 		System.out.println("Size: " + words.size());
 
 		for (int i = 0; i < Config.parallelThreadCount; i++) {
@@ -131,14 +132,48 @@ public class HangmanSolver {
 		int maxCount = -1;
 		int maxIndex = 0;
 
-		for (int i = 0; i < 26; i++) {
-			if (charCounts.get(i).get() > maxCount && !proposedSolutions.contains(Character.toString((char)('A'+i)))) {
-				maxIndex = i;
-				maxCount = charCounts.get(i).get();
+		if (priorityChars.length != 0) {
+			// priority chars specified
+
+			// convert priorityChars to lower case
+			for (int j=0; j<priorityChars.length; j++) {
+					// convert to lower case
+					priorityChars[j] = Character.toLowerCase(priorityChars[j]);
+			}
+
+			for (int i = 0; i < 26; i++) {
+				if (charCounts.get(i).get() > maxCount
+						&& (!proposedSolutions.contains(Character.toString((char) ('A' + i))))
+						&& charArrayContais(priorityChars, (char) ('a' + i))) {
+					maxIndex = i;
+					maxCount = charCounts.get(i).get();
+				}
+			}
+		} 
+		
+		if (priorityChars.length == 0 || maxCount==-1){
+			// No priorityChars specified or all priority chars already proposed
+			
+			for (int i = 0; i < 26; i++) {
+				if (charCounts.get(i).get() > maxCount
+						&& !proposedSolutions.contains(Character.toString((char) ('A' + i)))) {
+					maxIndex = i;
+					maxCount = charCounts.get(i).get();
+				}
 			}
 		}
 
 		return (char) ('A' + maxIndex);
+	}
+	
+	private static boolean charArrayContais(char[] array, char value){
+		for (char c:array){
+			if (c==value){
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	private static int[] countAllCharsInString(String str) {
