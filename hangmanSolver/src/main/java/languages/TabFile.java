@@ -69,10 +69,15 @@ public class TabFile {
 	 *            The row index of the desired value
 	 * @param column
 	 *            The column index of the desired value
-	 * @return The value at the specified position
+	 * @return The value at the specified position and {@code ""} if the
+	 *         requested address is outside the bounds (no exception thrown)
 	 */
 	public String getValueAt(int row, int column) {
-		return values.get(row)[column];
+		try {
+			return values.get(row)[column];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return "";
+		}
 	}
 
 	public List<String> getValuesWithLength(int column, int length) {
@@ -93,13 +98,14 @@ public class TabFile {
 		AtomicInteger maxIndex = new AtomicInteger(-1);
 		AtomicDouble maxCorr = new AtomicDouble(-1);
 
-		for (int i=0; i<Config.parallelThreadCount;i++) {
+		for (int i = 0; i < Config.parallelThreadCount; i++) {
 			threads.add(new Thread() {
 				@Override
 				public void run() {
 					int index = currentIndex.getAndIncrement();
 					while (index < getRowCount()) {
-						if (value.length() == getValueAt(index, column).length() && !ignoredWords.contains(getValueAt(index, column))) {
+						if (value.length() == getValueAt(index, column).length()
+								&& !ignoredWords.contains(getValueAt(index, column))) {
 							double corr = stringCorrelation(value, getValueAt(index, column));
 
 							if (corr > maxCorr.get()) {
@@ -107,7 +113,7 @@ public class TabFile {
 								maxIndex.set(index);
 							}
 						}
-						
+
 						// Grab the next index
 						index = currentIndex.getAndIncrement();
 					}
@@ -115,9 +121,9 @@ public class TabFile {
 			});
 			threads.get(i).start();
 		}
-		
+
 		// Wait for threads
-		for (int i=0; i<Config.parallelThreadCount;i++){
+		for (int i = 0; i < Config.parallelThreadCount; i++) {
 			try {
 				threads.get(i).join();
 			} catch (InterruptedException e) {
