@@ -101,7 +101,7 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>controller.Controller</mainClass>
+									<mainClass>view.MainWindow</mainClass>
 									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 									<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 								</manifest>
