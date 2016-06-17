@@ -197,4 +197,18 @@ public class HangmanSolver {
 
 		return res;
 	}
+	
+	public static boolean wordContainsProposedChar(String word){
+		
+		char[] chars = word.toCharArray();
+		
+		for (char chr:chars){
+			// if (proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))){
+			if (proposedSolutions.contains(Character.toString((chr)))){
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
