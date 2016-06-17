@@ -78,6 +78,15 @@ public class MainWindow extends Application implements Initializable {
 
 	@FXML // fx:id="result"
 	private TextField result; // Value injected by FXMLLoader
+	
+	@FXML
+	private Button newGameButton;
+	
+	@FXML
+	void newGameButtonOnAction(ActionEvent event){
+		algorithm.HangmanSolver.proposedSolutions.clear();
+		currentSequence.setText("");
+	}
 
 	/**
 	 * Handler for Button[fx:id="copyButton"] onAction<br>
