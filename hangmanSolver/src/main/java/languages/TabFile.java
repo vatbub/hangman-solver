@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import algorithm.HangmanSolver;
 import common.*;
 
 public class TabFile {
@@ -104,8 +105,13 @@ public class TabFile {
 				public void run() {
 					int index = currentIndex.getAndIncrement();
 					while (index < getRowCount()) {
+						if (value.equals("_a_n___") && getValueAt(index, column).equals("zahnlos")){
+							System.out.println("stopping...");
+						}
+						
 						if (value.length() == getValueAt(index, column).length()
-								&& !ignoredWords.contains(getValueAt(index, column))) {
+								&& !ignoredWords.contains(getValueAt(index, column))
+								&& !HangmanSolver.wordContainsProposedChar(getValueAt(index, column))) {
 							double corr = stringCorrelation(value, getValueAt(index, column));
 
 							if (corr > maxCorr.get()) {
