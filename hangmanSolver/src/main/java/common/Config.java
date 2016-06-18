@@ -19,4 +19,7 @@ public class Config {
 	public static String cldrNamePattern = "/languages/cldr/wn-cldr-{langCode}.tab";
 	public static String wiktNamePattern = "/languages/wikt/wn-wikt-{langCode}.tab";
 	public static URL languageCodes = Language.class.getResource("/languages/LanguageCodes.tab");
+	
+	// View
+	public static double thresholdToShowWord = 0.5; 
 }

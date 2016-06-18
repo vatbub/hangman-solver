@@ -16,7 +16,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import algorithm.HangmanSolver;
+import algorithm.*;
+import common.Config;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.beans.property.SimpleListProperty;
@@ -33,6 +34,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -50,7 +52,9 @@ public class MainWindow extends Application implements Initializable {
 	}
 
 	private ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
-	private String currentSolution;
+	private Result currentSolution;
+	private boolean shareThoughtsBool;
+	private String lastThought;
 
 	@FXML // ResourceBundle that was given to the FXMLLoader
 	private ResourceBundle resources;
@@ -78,12 +82,18 @@ public class MainWindow extends Application implements Initializable {
 
 	@FXML // fx:id="result"
 	private TextField result; // Value injected by FXMLLoader
-	
+
+	@FXML
+	private CheckBox shareThoughtsCheckbox;
+
+	@FXML
+	private Label thoughts;
+
 	@FXML
 	private Button newGameButton;
-	
+
 	@FXML
-	void newGameButtonOnAction(ActionEvent event){
+	void newGameButtonOnAction(ActionEvent event) {
 		algorithm.HangmanSolver.proposedSolutions.clear();
 		currentSequence.setText("");
 	}
@@ -121,6 +131,18 @@ public class MainWindow extends Application implements Initializable {
 		LicenseWindow.show(bundle.getString("licenseWindowTitle"));
 	}
 
+	@FXML
+	void shareThoughtsCheckboxOnAction(ActionEvent event) {
+		shareThoughtsBool = shareThoughtsCheckbox.isSelected();
+
+		if (shareThoughtsBool) {
+			setThought();
+		} else {
+			// Clear the thoughts label
+			thoughts.setText("");
+		}
+	}
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -151,16 +173,41 @@ public class MainWindow extends Application implements Initializable {
 		// Initialize your logic here: all @FXML variables will have been
 		// injected
 		loadLanguageList();
+		shareThoughtsCheckbox.setSelected(true);
 	}
 
 	void launchAlgorithm() {
-		currentSolution = algorithm.HangmanSolver.solve(currentSequence.getText(), Language.getSupportedLanguages().get(languageSelector.getSelectionModel().getSelectedIndex()));
-		result.setText(currentSolution);
+		currentSolution = HangmanSolver.solve(currentSequence.getText(),
+				Language.getSupportedLanguages().get(languageSelector.getSelectionModel().getSelectedIndex()));
+		result.setText(currentSolution.result);
+
+		if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
+			String thoughtText = bundle.getString("thinkOfAWord")
+					.replace("<percent>", Double.toString(currentSolution.bestWordScore * 100))
+					.replace("<word>", currentSolution.bestWord);
+			setThought(thoughtText);
+		}else {
+			setThought(bundle.getString("dontThinkAWord"));
+		}
+
+	}
+
+	public void setThought() {
+		setThought(lastThought);
+	}
+
+	public void setThought(String thought) {
+
+		lastThought = thought;
+
+		if (shareThoughtsBool) {
+			thoughts.setText(thought);
+		}
 	}
 
 	private void loadLanguageList() {
 		System.out.println("Loading language list...");
-		
+
 		ObservableList<String> items = FXCollections.observableArrayList();
 
 		// Load the languages

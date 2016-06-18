@@ -16,7 +16,9 @@ public class HangmanSolver {
 
 	public static List<String> proposedSolutions = new ArrayList<String>();
 
-	public static String solve(String currentSequence, Language lang) {
+	public static Result solve(String currentSequence, Language lang) {
+		
+		Result res = new Result();
 
 		if (!lang.equals(langOld) || wiktDatabase == null || cldrDatabase == null) {
 			// Load language databases
@@ -43,36 +45,39 @@ public class HangmanSolver {
 			// Check if there are words that match 90%
 			String bestWordWikt = wiktDatabase.getValueWithHighestCorrelation(2, word, proposedSolutions);
 			String bestWordCldr = cldrDatabase.getValueWithHighestCorrelation(2, word, proposedSolutions);
-			String bestWord;
 
 			System.out.println(bestWordWikt);
 			System.out.println(bestWordCldr);
 			System.out.println(TabFile.stringCorrelation(word, bestWordWikt)); // __l__h_n
 
 			if (TabFile.stringCorrelation(word, bestWordWikt) >= TabFile.stringCorrelation(word, bestWordCldr)) {
-				bestWord = bestWordWikt;
+				res.bestWord = bestWordWikt;
 			} else {
-				bestWord = bestWordCldr;
+				res.bestWord = bestWordCldr;
 			}
+			
+			res.bestWordScore=TabFile.stringCorrelation(word, res.bestWord);
 
-			if (TabFile.stringCorrelation(word, bestWord) >= Config.thresholdToSelectWord(word.length())) {
-				proposedSolutions.add(bestWord);
-				return bestWord;
+			if (res.bestWordScore >= Config.thresholdToSelectWord(word.length())) {
+				proposedSolutions.add(res.bestWord);
+				res.result=res.bestWord;
+				return res;
 			}
 
 			// apparently no direct match, get the most used letter from the
 			// results
 
 			// Get all chars from the bestWord
-			char[] priorityChars = bestWord.toCharArray();
+			char[] priorityChars = res.bestWord.toCharArray();
 
-			String res = Character.toString(getMostFrequentChar(wordsWithEqualLength, priorityChars));
-			proposedSolutions.add(res);
+			res.result = Character.toString(getMostFrequentChar(wordsWithEqualLength, priorityChars));
+			proposedSolutions.add(res.result);
 			return res;
 
 		}
-
-		return "Not ready";
+		
+		res.result = "";
+		return res;
 	}
 
 	private static void loadLanguageDatabases(Language lang) {
