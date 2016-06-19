@@ -14,10 +14,13 @@ public class HangmanSolver {
 	private static TabFile cldrDatabase;
 
 	public static List<String> proposedSolutions = new ArrayList<String>();
+	
+	private static String currentSequenceCopy;
 
 	public static Result solve(String currentSequence, Language lang) {
 
 		Result res = new Result();
+		currentSequenceCopy = currentSequence;
 
 		if (!lang.equals(langOld) || wiktDatabase == null || cldrDatabase == null) {
 			// Load language databases
@@ -224,13 +227,14 @@ public class HangmanSolver {
 		return res;
 	}
 
-	public static boolean wordContainsProposedChar(String word) {
+	public static boolean wordContainsWrongChar(String word) {
 
 		char[] chars = word.toCharArray();
 
 		for (char chr : chars) {
-			if (proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))) {
+			if (!currentSequenceCopy.toUpperCase().contains(Character.toString(Character.toUpperCase(chr))) && proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))) {
 				// if (proposedSolutions.contains(Character.toString((chr)))){
+				System.out.println("Rejected char: " + Character.toString(chr));
 				return true;
 			}
 		}

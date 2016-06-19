@@ -111,7 +111,7 @@ public class TabFile {
 						
 						if (value.length() == getValueAt(index, column).length()
 								&& !ignoredWords.contains(getValueAt(index, column))
-								&& !HangmanSolver.wordContainsProposedChar(getValueAt(index, column))) {
+								&& !HangmanSolver.wordContainsWrongChar(getValueAt(index, column))) {
 							double corr = stringCorrelation(value, getValueAt(index, column));
 
 							if (corr > maxCorr.get()) {
