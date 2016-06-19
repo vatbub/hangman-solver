@@ -15,12 +15,11 @@ public class HangmanSolver {
 
 	public static List<String> proposedSolutions = new ArrayList<String>();
 	
-	private static String currentSequenceCopy;
+	private static String currentSequenceWord;
 
 	public static Result solve(String currentSequence, Language lang) {
 
 		Result res = new Result();
-		currentSequenceCopy = currentSequence;
 
 		if (!lang.equals(langOld) || wiktDatabase == null || cldrDatabase == null) {
 			// Load language databases
@@ -42,6 +41,7 @@ public class HangmanSolver {
 
 		// Go through all words
 		for (String word : words) {
+			currentSequenceWord = word;
 			// Get all words from the database with equal length
 			List<String> wordsWithEqualLength = wiktDatabase.getValuesWithLength(2, word.length());
 			wordsWithEqualLength.addAll(cldrDatabase.getValuesWithLength(2, word.length()));
@@ -232,8 +232,7 @@ public class HangmanSolver {
 		char[] chars = word.toCharArray();
 
 		for (char chr : chars) {
-			if (!currentSequenceCopy.toUpperCase().contains(Character.toString(Character.toUpperCase(chr))) && proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))) {
-				// if (proposedSolutions.contains(Character.toString((chr)))){
+			if (!currentSequenceWord.toUpperCase().contains(Character.toString(Character.toUpperCase(chr))) && proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))) {
 				System.out.println("Rejected char: " + Character.toString(chr));
 				return true;
 			}
