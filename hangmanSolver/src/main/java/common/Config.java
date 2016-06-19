@@ -21,5 +21,5 @@ public class Config {
 	public static URL languageCodes = Language.class.getResource("/languages/LanguageCodes.tab");
 	
 	// View
-	public static double thresholdToShowWord = 0.5; 
+	public static double thresholdToShowWord = 0.2; 
 }
