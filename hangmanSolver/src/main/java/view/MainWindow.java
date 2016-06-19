@@ -85,6 +85,9 @@ public class MainWindow extends Application implements Initializable {
 	void newGameButtonOnAction(ActionEvent event) {
 		algorithm.HangmanSolver.proposedSolutions.clear();
 		currentSequence.setText("");
+		proposedSolutions.setText("");
+		setThought("");
+		result.setText("");
 	}
 
 	/**
