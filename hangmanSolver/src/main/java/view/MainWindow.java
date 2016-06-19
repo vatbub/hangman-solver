@@ -30,6 +30,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import languages.Language;
+import view.noLanguageSelected.NoLanguageSelected;
+import view.noSequenceEntered.NoSequenceEntered;
 
 public class MainWindow extends Application implements Initializable {
 
@@ -77,7 +79,7 @@ public class MainWindow extends Application implements Initializable {
 
 	@FXML
 	private Button newGameButton;
-	
+
 	@FXML
 	private TextArea proposedSolutions;
 
@@ -88,8 +90,8 @@ public class MainWindow extends Application implements Initializable {
 		proposedSolutions.setText("");
 		setThought("");
 		result.setText("");
-		
-		//  Submit info if game was won
+
+		// Submit info if game was won
 		AskIfIWin.show(bundle.getString("wellPerformedWindowTitle"));
 	}
 
@@ -173,26 +175,34 @@ public class MainWindow extends Application implements Initializable {
 	}
 
 	void launchAlgorithm() {
-		currentSolution = HangmanSolver.solve(currentSequence.getText(),
-				Language.getSupportedLanguages().get(languageSelector.getSelectionModel().getSelectedIndex()));
-		result.setText(currentSolution.result);
-		
-		String proposedSolutionsString = "";
-		for (String solution:HangmanSolver.proposedSolutions){
-			proposedSolutionsString = proposedSolutionsString + solution + ", ";
-		}
-		
-		// remove last ,
-		proposedSolutionsString = proposedSolutionsString.substring(0, proposedSolutionsString.length()-2);
-		proposedSolutions.setText(proposedSolutionsString);
+		try {
+			currentSolution = HangmanSolver.solve(currentSequence.getText(),
+					Language.getSupportedLanguages().get(languageSelector.getSelectionModel().getSelectedIndex()));
+			result.setText(currentSolution.result);
 
-		if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
-			String thoughtText = bundle.getString("thinkOfAWord")
-					.replace("<percent>", Double.toString(Math.round(currentSolution.bestWordScore * 100)))
-					.replace("<word>", currentSolution.bestWord);
-			setThought(thoughtText);
-		}else {
-			setThought(bundle.getString("dontThinkAWord"));
+			String proposedSolutionsString = "";
+			for (String solution : HangmanSolver.proposedSolutions) {
+				proposedSolutionsString = proposedSolutionsString + solution + ", ";
+			}
+
+			// remove last ,
+			proposedSolutionsString = proposedSolutionsString.substring(0, proposedSolutionsString.length() - 2);
+			proposedSolutions.setText(proposedSolutionsString);
+
+			if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
+				String thoughtText = bundle.getString("thinkOfAWord")
+						.replace("<percent>", Double.toString(Math.round(currentSolution.bestWordScore * 100)))
+						.replace("<word>", currentSolution.bestWord);
+				setThought(thoughtText);
+			} else {
+				setThought(bundle.getString("dontThinkAWord"));
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			// No language selected
+			NoLanguageSelected.show();
+		} catch (StringIndexOutOfBoundsException e2){
+			// No sequence entered
+			NoSequenceEntered.show();
 		}
 
 	}
