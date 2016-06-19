@@ -31,6 +31,6 @@
     <Button fx:id="creditsButton" mnemonicParsing="false" onAction="#creditsButtonOnAction" prefWidth="572.0" text="%licenseButton" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="265.0" />
     <Button fx:id="newGameButton" mnemonicParsing="false" onAction="#newGameButtonOnAction" prefWidth="572.0" text="%newGameButton" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="298.0" />
     <CheckBox fx:id="shareThoughtsCheckbox" mnemonicParsing="false" onAction="#shareThoughtsCheckboxOnAction" prefWidth="572.0" text="%shareThoughtsCheckbox" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="340.0" />
-    <Label id="thougts" fx:id="thoughts" prefWidth="572.0" text="" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="376.0" />
+    <Label id="thougts" fx:id="thoughts" alignment="TOP_LEFT" labelFor="$thoughts" prefWidth="572.0" text="" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="376.0" />
   </children>
 </AnchorPane>
