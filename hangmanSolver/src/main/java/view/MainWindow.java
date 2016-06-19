@@ -159,6 +159,7 @@ public class MainWindow extends Application implements Initializable {
 		// injected
 		loadLanguageList();
 		shareThoughtsCheckbox.setSelected(true);
+		shareThoughtsBool = true;
 	}
 
 	void launchAlgorithm() {
@@ -168,7 +169,7 @@ public class MainWindow extends Application implements Initializable {
 
 		if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
 			String thoughtText = bundle.getString("thinkOfAWord")
-					.replace("<percent>", Double.toString(currentSolution.bestWordScore * 100))
+					.replace("<percent>", Double.toString(Math.round(currentSolution.bestWordScore * 100)))
 					.replace("<word>", currentSolution.bestWord);
 			setThought(thoughtText);
 		}else {
