@@ -16,7 +16,7 @@ public class HangmanSolver {
 	public static List<String> proposedSolutions = new ArrayList<String>();
 
 	public static Result solve(String currentSequence, Language lang) {
-		
+
 		Result res = new Result();
 
 		if (!lang.equals(langOld) || wiktDatabase == null || cldrDatabase == null) {
@@ -30,10 +30,10 @@ public class HangmanSolver {
 		// Remove all words that don't contain an underscore as they are fully
 		// solved
 		int indexCorr = 0;
-		for (int i=0; i<words.size(); i++) {
+		for (int i = 0; i < words.size(); i++) {
 			if (!words.get(i).contains("_")) {
-				words.remove(i-indexCorr);
-				indexCorr = indexCorr+1;
+				words.remove(i - indexCorr);
+				indexCorr = indexCorr + 1;
 			}
 		}
 
@@ -46,37 +46,53 @@ public class HangmanSolver {
 			// Check if there are words that match 90%
 			String bestWordWikt = wiktDatabase.getValueWithHighestCorrelation(2, word, proposedSolutions);
 			String bestWordCldr = cldrDatabase.getValueWithHighestCorrelation(2, word, proposedSolutions);
+			boolean foundBestWord = true;
 
 			System.out.println(bestWordWikt);
 			System.out.println(bestWordCldr);
-			System.out.println(TabFile.stringCorrelation(word, bestWordWikt)); // __l__h_n
 
-			if (TabFile.stringCorrelation(word, bestWordWikt) >= TabFile.stringCorrelation(word, bestWordCldr)) {
+			if (bestWordWikt.length()==0 && bestWordCldr.length()==0) {
+				// dictionaries are both used up
+				System.out.println("dictionaries used up");
+				foundBestWord = false;
+			}else if (bestWordWikt.equals("")) {
+				res.bestWord = bestWordCldr;
+			} else if (bestWordCldr.equals("")) {
+				res.bestWord = bestWordWikt;
+			} else if (TabFile.stringCorrelation(word, bestWordWikt) >= TabFile.stringCorrelation(word, bestWordCldr)) {
 				res.bestWord = bestWordWikt;
 			} else {
 				res.bestWord = bestWordCldr;
 			}
-			
-			res.bestWordScore=TabFile.stringCorrelation(word, res.bestWord);
 
-			if (res.bestWordScore >= Config.thresholdToSelectWord(word.length())) {
-				proposedSolutions.add(res.bestWord);
-				res.result=res.bestWord;
-				return res;
+			if (foundBestWord) {
+				res.bestWordScore = TabFile.stringCorrelation(word, res.bestWord);
+
+				System.out.println(res.bestWordScore);
+
+				if (res.bestWordScore >= Config.thresholdToSelectWord(word.length())) {
+					proposedSolutions.add(res.bestWord);
+					res.result = res.bestWord;
+					return res;
+				}
+
+				// apparently no direct match, get the most used letter from the
+				// results
+
+				// Get all chars from the bestWord
+				char[] priorityChars = res.bestWord.toCharArray();
+
+				res.result = Character.toString(getMostFrequentChar(wordsWithEqualLength, priorityChars));
+			} else {
+				// No bestWord found
+				System.out.println("No best word found, using most common chars only");
+				res.result = Character.toString(getMostFrequentChar(wordsWithEqualLength));
 			}
-
-			// apparently no direct match, get the most used letter from the
-			// results
-
-			// Get all chars from the bestWord
-			char[] priorityChars = res.bestWord.toCharArray();
-
-			res.result = Character.toString(getMostFrequentChar(wordsWithEqualLength, priorityChars));
 			proposedSolutions.add(res.result);
 			return res;
 
 		}
-		
+
 		res.result = "";
 		return res;
 	}
@@ -90,6 +106,10 @@ public class HangmanSolver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private static char getMostFrequentChar(List<String> words) {
+		return getMostFrequentChar(words, new char[0]);
 	}
 
 	private static char getMostFrequentChar(List<String> words, char[] priorityChars) {
@@ -142,9 +162,9 @@ public class HangmanSolver {
 			// priority chars specified
 
 			// convert priorityChars to lower case
-			for (int j=0; j<priorityChars.length; j++) {
-					// convert to lower case
-					priorityChars[j] = Character.toLowerCase(priorityChars[j]);
+			for (int j = 0; j < priorityChars.length; j++) {
+				// convert to lower case
+				priorityChars[j] = Character.toLowerCase(priorityChars[j]);
 			}
 
 			for (int i = 0; i < 26; i++) {
@@ -155,11 +175,11 @@ public class HangmanSolver {
 					maxCount = charCounts.get(i).get();
 				}
 			}
-		} 
-		
-		if (priorityChars.length == 0 || maxCount==-1){
+		}
+
+		if (priorityChars.length == 0 || maxCount == -1) {
 			// No priorityChars specified or all priority chars already proposed
-			
+
 			for (int i = 0; i < 26; i++) {
 				if (charCounts.get(i).get() > maxCount
 						&& !proposedSolutions.contains(Character.toString((char) ('A' + i)))) {
@@ -171,14 +191,14 @@ public class HangmanSolver {
 
 		return (char) ('A' + maxIndex);
 	}
-	
-	private static boolean charArrayContais(char[] array, char value){
-		for (char c:array){
-			if (c==value){
+
+	private static boolean charArrayContais(char[] array, char value) {
+		for (char c : array) {
+			if (c == value) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -203,18 +223,18 @@ public class HangmanSolver {
 
 		return res;
 	}
-	
-	public static boolean wordContainsProposedChar(String word){
-		
+
+	public static boolean wordContainsProposedChar(String word) {
+
 		char[] chars = word.toCharArray();
-		
-		for (char chr:chars){
-			// if (proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))){
-			if (proposedSolutions.contains(Character.toString((chr)))){
+
+		for (char chr : chars) {
+			if (proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))) {
+				// if (proposedSolutions.contains(Character.toString((chr)))){
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 }
