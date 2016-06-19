@@ -22,4 +22,9 @@ public class Config {
 	
 	// View
 	public static double thresholdToShowWord = 0.2; 
+	
+	// IFTTT
+	public static String iftttMakerApiKey = "dbjf67CBpZit4QOBthB0xW";
+	public static String iftttWinEvent = "hangmanSolverWon";
+	public static String iftttLooseEvent = "hangmanSolverLost";
 }

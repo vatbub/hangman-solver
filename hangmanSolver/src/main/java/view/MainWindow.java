@@ -88,6 +88,9 @@ public class MainWindow extends Application implements Initializable {
 		proposedSolutions.setText("");
 		setThought("");
 		result.setText("");
+		
+		//  Submit info if game was won
+		AskIfIWin.show(bundle.getString("wellPerformedWindowTitle"));
 	}
 
 	/**
