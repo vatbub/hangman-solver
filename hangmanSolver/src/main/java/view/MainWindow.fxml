@@ -10,7 +10,7 @@
 <?import javafx.scene.text.*?>
 <?scenebuilder-preview-i18n-resource strings/messages.properties?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="417.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.MainWindow">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="517.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.MainWindow">
   <children>
     <Label fx:id="actionLabel" maxWidth="1.7976931348623157E308" prefWidth="572.0" text="%enterInitialSequence" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="84.0" />
     <TextField fx:id="currentSequence" maxWidth="1.7976931348623157E308" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="120.0" />
@@ -31,6 +31,8 @@
     <Button fx:id="creditsButton" mnemonicParsing="false" onAction="#creditsButtonOnAction" prefWidth="572.0" text="%licenseButton" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="265.0" />
     <Button fx:id="newGameButton" mnemonicParsing="false" onAction="#newGameButtonOnAction" prefWidth="572.0" text="%newGameButton" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="298.0" />
     <CheckBox fx:id="shareThoughtsCheckbox" mnemonicParsing="false" onAction="#shareThoughtsCheckboxOnAction" prefWidth="572.0" text="%shareThoughtsCheckbox" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="340.0" />
-    <Label id="thougts" fx:id="thoughts" alignment="TOP_LEFT" labelFor="$thoughts" prefWidth="572.0" text="" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="376.0" />
+    <Label id="thougts" fx:id="thoughts" alignment="TOP_LEFT" labelFor="$thoughts" prefHeight="27.0" prefWidth="572.0" text="" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="376.0" />
+    <Label prefWidth="572.0" text="%proposedSolutions.Label" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="410.0" />
+    <TextArea fx:id="proposedSolutions" editable="false" prefHeight="60.0" prefWidth="572.0" wrapText="true" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="443.0" />
   </children>
 </AnchorPane>

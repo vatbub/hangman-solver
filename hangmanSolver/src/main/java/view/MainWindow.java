@@ -26,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import languages.Language;
@@ -76,6 +77,9 @@ public class MainWindow extends Application implements Initializable {
 
 	@FXML
 	private Button newGameButton;
+	
+	@FXML
+	private TextArea proposedSolutions;
 
 	@FXML
 	void newGameButtonOnAction(ActionEvent event) {
@@ -166,6 +170,15 @@ public class MainWindow extends Application implements Initializable {
 		currentSolution = HangmanSolver.solve(currentSequence.getText(),
 				Language.getSupportedLanguages().get(languageSelector.getSelectionModel().getSelectedIndex()));
 		result.setText(currentSolution.result);
+		
+		String proposedSolutionsString = "";
+		for (String solution:HangmanSolver.proposedSolutions){
+			proposedSolutionsString = proposedSolutionsString + solution + ", ";
+		}
+		
+		// remove last ,
+		proposedSolutionsString = proposedSolutionsString.substring(0, proposedSolutionsString.length()-2);
+		proposedSolutions.setText(proposedSolutionsString);
 
 		if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
 			String thoughtText = bundle.getString("thinkOfAWord")
