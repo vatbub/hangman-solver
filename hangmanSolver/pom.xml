@@ -27,6 +27,17 @@
 		<url>http://fokprojects.mo-mar.de/</url>
 	</organization>
 
+	<distributionManagement>
+		<snapshotRepository>
+			<id>dropboxSnapshots</id>
+			<url>file:///C:/Users/frede/Dropbox/hangman-repo/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>dropboxRelease</id>
+			<url>file:///C:/Users/frede/Dropbox/hangman-repo/release</url>
+		</repository>
+	</distributionManagement>
+
 	<scm>
 		<connection>scm:git:git@gitlab.lrz.de:ga59tim/hangman-solver.git</connection>
 		<url>scm:git:git@gitlab.lrz.de:ga59tim/hangman-solver.git</url>
