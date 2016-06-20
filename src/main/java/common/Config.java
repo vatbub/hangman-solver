@@ -27,4 +27,19 @@ public class Config {
 	public static String iftttMakerApiKey = "dbjf67CBpZit4QOBthB0xW";
 	public static String iftttWinEvent = "hangmanSolverWon";
 	public static String iftttLooseEvent = "hangmanSolverLost";
+	
+	/**
+	 * Returns the current artifact version
+	 * 
+	 * @return The current artifact version or the String unknown if the version
+	 *         cannot be determined.
+	 */
+	public static String getAppVersion() {
+		String ver = Config.class.getPackage().getImplementationVersion();
+		if (ver == null) {
+			return "unknown";
+		} else {
+			return ver;
+		}
+	}
 }
