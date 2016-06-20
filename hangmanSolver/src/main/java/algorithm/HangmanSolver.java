@@ -20,6 +20,7 @@ public class HangmanSolver {
 	public static Result solve(String currentSequence, Language lang) {
 
 		Result res = new Result();
+		int counter = 0;
 
 		if (!lang.equals(langOld) || wiktDatabase == null || cldrDatabase == null) {
 			// Load language databases
@@ -33,7 +34,7 @@ public class HangmanSolver {
 		// solved
 		int indexCorr = 0;
 		for (int i = 0; i < words.size(); i++) {
-			if (!words.get(i).contains("_")) {
+			if (!words.get(i-indexCorr).contains("_")) {
 				words.remove(i - indexCorr);
 				indexCorr = indexCorr + 1;
 			}
@@ -41,6 +42,12 @@ public class HangmanSolver {
 
 		// Go through all words
 		for (String word : words) {
+			if (counter==2){
+				System.out.println("Stopping...");
+			}
+			System.out.println("counter = " + counter);
+			System.out.println("word = " + word);
+			counter++;
 			currentSequenceWord = word;
 			// Get all words from the database with equal length
 			List<String> wordsWithEqualLength = wiktDatabase.getValuesWithLength(2, word.length());
