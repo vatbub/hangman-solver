@@ -33,7 +33,7 @@ public class Internet {
 	 * 
 	 * @param IFTTTMakerChannelApiKey Your Maker API Key. Get your one on <a href="https://ifttt.com/maker">https://ifttt.com/maker</a>
 	 * @param eventName The name of the event to trigger.
-	 * @param Details1 You can send up to three additional fields to the MAker channel which you can use then as IFTTT ingredients. See {@link https://maker.ifttt.com/use/} for more information.
+	 * @param Details1 You can send up to three additional fields to the MAker channel which you can use then as IFTTT ingredients. See <a href="https://maker.ifttt.com/use/">https://maker.ifttt.com/use/</a> for more information.
 	 * @throws IOException Should actually never be thrown but occurs if something is wrong with the connection (e. g. not connected)
 	 */
 	public static String sendEventToIFTTTMakerChannel(String IFTTTMakerChannelApiKey, String eventName, String Details1) throws IOException {
@@ -45,7 +45,7 @@ public class Internet {
 	 * 
 	 * @param IFTTTMakerChannelApiKey Your Maker API Key. Get your one on <a href="https://ifttt.com/maker">https://ifttt.com/maker</a>
 	 * @param eventName The name of the event to trigger.
-	 * @param Details1 You can send up to three additional fields to the MAker channel which you can use then as IFTTT ingredients. See {@link https://maker.ifttt.com/use/} for more information.
+	 * @param Details1 You can send up to three additional fields to the MAker channel which you can use then as IFTTT ingredients. See <a href="https://maker.ifttt.com/use/">https://maker.ifttt.com/use/</a> for more information.
 	 * @param Details2 The second additional parameter.
 	 * @throws IOException Should actually never be thrown but occurs if something is wrong with the connection (e. g. not connected)
 	 */
@@ -59,7 +59,7 @@ public class Internet {
 	 * 
 	 * @param IFTTTMakerChannelApiKey Your Maker API Key. Get your one on <a href="https://ifttt.com/maker">https://ifttt.com/maker</a>
 	 * @param eventName The name of the event to trigger.
-	 * @param Details1 You can send up to three additional fields to the MAker channel which you can use then as IFTTT ingredients. See {@link https://maker.ifttt.com/use/} for more information.
+	 * @param Details1 You can send up to three additional fields to the MAker channel which you can use then as IFTTT ingredients. See <a href="https://maker.ifttt.com/use/">https://maker.ifttt.com/use/</a> for more information.
 	 * @param Details2 The second additional parameter.
 	 * @param Details3 The third additional parameter.
 	 * @throws IOException Should actually never be thrown but occurs if something is wrong with the connection (e. g. not connected)
