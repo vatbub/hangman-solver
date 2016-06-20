@@ -3,6 +3,7 @@
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.collections.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
@@ -10,7 +11,7 @@
 <?import javafx.scene.text.*?>
 <?scenebuilder-preview-i18n-resource strings/messages.properties?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="517.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.MainWindow">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="532.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.MainWindow">
   <children>
     <Label fx:id="actionLabel" maxWidth="1.7976931348623157E308" prefWidth="572.0" text="%enterInitialSequence" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="84.0" />
     <ComboBox fx:id="languageSelector" editable="false" prefWidth="572.0" promptText="%languageSelector.PromptText" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="43.0">
@@ -33,6 +34,26 @@
     <CheckBox fx:id="shareThoughtsCheckbox" mnemonicParsing="false" onAction="#shareThoughtsCheckboxOnAction" prefWidth="572.0" text="%shareThoughtsCheckbox" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="340.0" />
     <Label id="thougts" fx:id="thoughts" alignment="TOP_LEFT" labelFor="$thoughts" prefHeight="27.0" prefWidth="572.0" text="" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="376.0" />
     <Label prefWidth="572.0" text="%proposedSolutions.Label" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="410.0" />
-    <TextArea fx:id="proposedSolutions" editable="false" prefHeight="60.0" prefWidth="572.0" wrapText="true" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="443.0" />
+    <TextArea fx:id="proposedSolutions" editable="false" prefHeight="55.0" prefWidth="572.0" wrapText="true" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="443.0" />
+    <HBox prefHeight="25.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0">
+      <children>
+        <Label text="%version.label">
+          <HBox.margin>
+            <Insets left="14.0" />
+          </HBox.margin>
+        </Label>
+        <Label fx:id="versionLabel" text="unknown">
+          <HBox.margin>
+            <Insets left="5.0" />
+          </HBox.margin>
+        </Label>
+        <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+        <Hyperlink fx:id="updateLink" onAction="#updateLinkOnAction" text="%updateLink" textFill="#0066ff">
+          <HBox.margin>
+            <Insets right="14.0" />
+          </HBox.margin>
+        </Hyperlink>
+      </children>
+    </HBox>
   </children>
 </AnchorPane>

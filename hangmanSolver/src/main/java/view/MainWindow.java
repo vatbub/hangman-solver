@@ -25,6 +25,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -82,6 +83,18 @@ public class MainWindow extends Application implements Initializable {
 
 	@FXML
 	private TextArea proposedSolutions;
+
+	@FXML // fx:id="updateLink"
+	private Hyperlink updateLink; // Value injected by FXMLLoader
+
+	@FXML // fx:id="versionLabel"
+	private Label versionLabel; // Value injected by FXMLLoader
+
+	// Handler for Hyperlink[fx:id="updateLink"] onAction
+	@FXML
+	void updateLinkOnAction(ActionEvent event) {
+		// handle the event here
+	}
 
 	@FXML
 	void newGameButtonOnAction(ActionEvent event) {
@@ -201,7 +214,7 @@ public class MainWindow extends Application implements Initializable {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			// No language selected
 			NoLanguageSelected.show();
-		} catch (StringIndexOutOfBoundsException e2){
+		} catch (StringIndexOutOfBoundsException e2) {
 			// No sequence entered
 			NoSequenceEntered.show();
 		}
