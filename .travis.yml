@@ -11,3 +11,4 @@ deploy:
   skip_cleanup: true
   on:
     repo: vatbub/hangman-solver
+	branch: release
