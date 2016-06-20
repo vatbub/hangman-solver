@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fokprojects</groupId>
 	<artifactId>hangmanSolver</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>Hangman Solver</name>
 	<description>An application that sloves Hangman</description>
 
@@ -41,7 +41,7 @@
 		<connection>scm:git:git@gitlab.lrz.de:ga59tim/hangman-solver.git</connection>
 		<url>scm:git:git@gitlab.lrz.de:ga59tim/hangman-solver.git</url>
 		<developerConnection>scm:git:git@gitlab.lrz.de:ga59tim/hangman-solver.git</developerConnection>
-		<tag>hangmanSolver-0.0.1</tag>
+		<tag>testRelease</tag>
 	</scm>
 
 	<build>
