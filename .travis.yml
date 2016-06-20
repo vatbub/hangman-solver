@@ -1,6 +1,11 @@
 language: java
 jdk:
 - oraclejdk8
+# whitelist
+branches:
+  only:
+    - master
+    - release
 after_success:
 - mvn javadoc:javadoc
 deploy:
