@@ -240,7 +240,6 @@ public class HangmanSolver {
 
 		for (char chr : chars) {
 			if (!currentSequenceWord.toUpperCase().contains(Character.toString(Character.toUpperCase(chr))) && proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))) {
-				System.out.println("Rejected char: " + Character.toString(chr));
 				return true;
 			}
 		}
