@@ -38,9 +38,9 @@
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:git:git@gitlab.lrz.de:ga59tim/hangman-solver.git</connection>
-		<url>scm:git:git@gitlab.lrz.de:ga59tim/hangman-solver.git</url>
-		<developerConnection>scm:git:git@gitlab.lrz.de:ga59tim/hangman-solver.git</developerConnection>
+		<connection>scm:git:git@github.com:vatbub/hangman-solver.git</connection>
+		<url>scm:git:git@github.com:vatbub/hangman-solver.git</url>
+		<developerConnection>scm:git:git@github.com:vatbub/hangman-solver.git</developerConnection>
 		<tag>testRelease</tag>
 	</scm>
 
