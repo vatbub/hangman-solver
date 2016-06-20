@@ -10,7 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 /**
- * Code taken from {@link http://stackoverflow.com/a/27384068}
+ * Code taken from <a href="http://stackoverflow.com/a/27384068">http://stackoverflow.com/a/27384068</a>
  * 
  * @author frede
  *
