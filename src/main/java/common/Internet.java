@@ -20,7 +20,7 @@ public class Internet {
 	/**
 	 * Sends an event to the IFTTT Maker Channel. See <a href="https://maker.ifttt.com/use/">https://maker.ifttt.com/use/</a> for more information.
 	 * 
-	 * @param IFTTTMakerChannelApiKey Your Maker API Key. Get your one on <a href="https://ifttt.com/maker"</a>
+	 * @param IFTTTMakerChannelApiKey Your Maker API Key. Get your one on <a href="https://ifttt.com/maker">https://ifttt.com/maker</a>
 	 * @param eventName The name of the event to trigger.
 	 * @throws IOException Should actually never be thrown but occurs if something is wrong with the connection (e. g. not connected)
 	 */
