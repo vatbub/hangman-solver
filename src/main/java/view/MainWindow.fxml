@@ -37,18 +37,17 @@
     <TextArea fx:id="proposedSolutions" editable="false" prefHeight="55.0" prefWidth="572.0" wrapText="true" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="443.0" />
     <HBox prefHeight="25.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0">
       <children>
-        <Label text="%version.label">
+        <Label prefHeight="28.0" text="%version.label" HBox.hgrow="ALWAYS">
           <HBox.margin>
             <Insets left="14.0" />
           </HBox.margin>
         </Label>
-        <Label fx:id="versionLabel" text="unknown">
+        <Label fx:id="versionLabel" alignment="CENTER_LEFT" prefHeight="28.0" text="unknown" HBox.hgrow="ALWAYS">
           <HBox.margin>
             <Insets left="5.0" />
           </HBox.margin>
         </Label>
-        <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-        <Hyperlink fx:id="updateLink" onAction="#updateLinkOnAction" text="%updateLink" textFill="#0066ff">
+        <Hyperlink fx:id="updateLink" minHeight="-1.0" onAction="#updateLinkOnAction" prefHeight="-1.0" text="%updateLink" textFill="#0066ff" HBox.hgrow="ALWAYS">
           <HBox.margin>
             <Insets right="14.0" />
           </HBox.margin>
