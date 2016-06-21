@@ -20,3 +20,4 @@ deploy:
   on:
     repo: vatbub/hangman-solver
     branch: release
+    tag: true
