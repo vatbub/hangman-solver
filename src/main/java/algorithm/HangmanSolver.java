@@ -9,7 +9,7 @@ import languages.*;
 
 public class HangmanSolver {
 
-	private static Language langOld;
+	private static Language langOld; 
 	private static TabFile wiktDatabase;
 	private static TabFile cldrDatabase;
 
