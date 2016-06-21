@@ -1,4 +1,5 @@
 package common;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import languages.Language;
@@ -28,6 +29,9 @@ public class Config {
 	public static String iftttWinEvent = "hangmanSolverWon";
 	public static String iftttLooseEvent = "hangmanSolverLost";
 	
+	// Updates
+	public static URL updateDownloadPage = getUpdateDownloadPage();
+	
 	/**
 	 * Returns the current artifact version
 	 * 
@@ -42,4 +46,15 @@ public class Config {
 			return ver;
 		}
 	}
+	
+	private static URL getUpdateDownloadPage(){
+		try {
+			return new URL("https://github.com/vatbub/hangman-solver/releases");
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 }
