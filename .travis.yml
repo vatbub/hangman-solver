@@ -15,7 +15,7 @@ deploy:
   file_glob: true
   file: 
     - target/hangmanSolver-*-SNAPSHOT-jar-with-dependencies.jar
-    - hangmanSolver-*-SNAPSHOT-javadoc.jar
+    - target/hangmanSolver-*-SNAPSHOT-javadoc.jar
   skip_cleanup: true
   on:
     repo: vatbub/hangman-solver
