@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fokprojects</groupId>
 	<artifactId>hangmanSolver</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<name>Hangman Solver</name>
 	<description>An application that sloves Hangman</description>
 
@@ -117,6 +117,16 @@
 									<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 								</manifest>
 							</archive>
+							<resources>
+								<resource>
+									<directory>src/main/java</directory>
+									<includes>
+										<include>**/.*tab</include>
+										<include>**/*.fxml</include>
+										<include>**/*.properties</include>
+									</includes>
+								</resource>
+							</resources>
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>
 							</descriptorRefs>
