@@ -103,4 +103,23 @@ public class Internet {
 		}
 
 	}
+	
+	/**
+	 * Sends a GET request to url and retreives the server response
+	 * @param url The url to call.
+	 * @return The server response
+	 * @throws IOException No Internet connection
+	 */
+	public static String webread(URL url) throws IOException {
+	      StringBuilder result = new StringBuilder();
+	      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	      conn.setRequestMethod("GET");
+	      BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	      String line;
+	      while ((line = rd.readLine()) != null) {
+	         result.append(line);
+	      }
+	      rd.close();
+	      return result.toString();
+	   }
 }
