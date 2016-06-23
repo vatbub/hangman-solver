@@ -29,11 +29,11 @@
 	<distributionManagement>
 		<snapshotRepository>
 			<id>hangmanSnapshots</id>
-			<url>ftp://vatbub.bplaced.net/hangmanSolver/snapshots</url>
+			<url>ftp://vatbub.bplaced.net/mavenRepo/snapshots</url>
 		</snapshotRepository>
 		<repository>
 			<id>hangmanRelease</id>
-			<url>ftp://vatbub.bplaced.net/hangmanSolver/release</url>
+			<url>ftp://vatbub.bplaced.net/mavenRepo/release</url>
 		</repository>
 	</distributionManagement>
 
