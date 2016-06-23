@@ -29,12 +29,12 @@
 
 	<distributionManagement>
 		<snapshotRepository>
-			<id>dropboxSnapshots</id>
-			<url>file:///C:/Users/frede/Dropbox/hangman-repo/snapshots</url>
+			<id>hangmanSnapshots</id>
+			<url>ftp://vatbub.bplaced.net/hangmanSolver/snapshots</url>
 		</snapshotRepository>
 		<repository>
-			<id>dropboxRelease</id>
-			<url>file:///C:/Users/frede/Dropbox/hangman-repo/release</url>
+			<id>hangmanRelease</id>
+			<url>ftp://vatbub.bplaced.net/hangmanSolver/release</url>
 		</repository>
 	</distributionManagement>
 
@@ -47,6 +47,14 @@
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
+		<extensions>
+			<!-- Enabling the use of FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
