@@ -1,0 +1,23 @@
+ <settings>
+	<localRepository/>
+	<interactiveMode/>
+	<usePluginRegistry/>
+	<offline/>
+	<pluginGroups/>
+	<servers>
+		<server>
+			<id>hangmanSnapshots</id>
+			<username>${env.CI_DEPLOY_USERNAME}</username>
+			<password>${env.CI_DEPLOY_PASSWORD}</password>
+		</server>
+		<server>
+			<id>hangmanRelease</id>
+			<username>${env.CI_DEPLOY_USERNAME}</username>
+			<password>${env.CI_DEPLOY_PASSWORD}</password>
+		</server>
+	</servers>
+	<mirrors/>
+	<proxies/>
+	<profiles/>
+	<activeProfiles/>
+</settings>
