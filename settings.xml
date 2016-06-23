@@ -6,12 +6,12 @@
 	<pluginGroups/>
 	<servers>
 		<server>
-			<id>hangmanSnapshots</id>
+			<id>fokSnapshots</id>
 			<username>${env.CI_DEPLOY_USERNAME}</username>
 			<password>${env.CI_DEPLOY_PASSWORD}</password>
 		</server>
 		<server>
-			<id>hangmanRelease</id>
+			<id>fokRelease</id>
 			<username>${env.CI_DEPLOY_USERNAME}</username>
 			<password>${env.CI_DEPLOY_PASSWORD}</password>
 		</server>
