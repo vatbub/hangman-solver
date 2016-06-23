@@ -28,11 +28,11 @@
 
 	<distributionManagement>
 		<snapshotRepository>
-			<id>hangmanSnapshots</id>
+			<id>fokSnapshots</id>
 			<url>ftp://vatbub.bplaced.net/mavenRepo/snapshots</url>
 		</snapshotRepository>
 		<repository>
-			<id>hangmanRelease</id>
+			<id>fokRelease</id>
 			<url>ftp://vatbub.bplaced.net/mavenRepo/release</url>
 		</repository>
 	</distributionManagement>
