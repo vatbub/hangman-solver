@@ -7,36 +7,6 @@
 	<name>Hangman Solver</name>
 	<description>An application that sloves Hangman</description>
 
-	<licenses>
-		<license>
-			<name>Apache 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>dropboxRelease</distribution>
-			<comments>A business-friendly OSS license</comments>
-		</license>
-		<license>
-			<name>Apache 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>dropboxSnapshots</distribution>
-			<comments>A business-friendly OSS license</comments>
-		</license>
-	</licenses>
-
-	<organization>
-		<name>Frederik Kammel</name>
-		<url>http://fokprojects.mo-mar.de/</url>
-	</organization>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>fokSnapshots</id>
-			<url>ftp://vatbub.bplaced.net/mavenRepo/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>fokRelease</id>
-			<url>ftp://vatbub.bplaced.net/mavenRepo/release</url>
-		</repository>
-	</distributionManagement>
 
 	<scm>
 		<connection>scm:git:git@github.com:vatbub/hangman-solver.git</connection>
@@ -47,67 +17,7 @@
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
-		<extensions>
-			<!-- Enabling the use of FTP -->
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ftp</artifactId>
-				<version>1.0-beta-6</version>
-			</extension>
-		</extensions>
 		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<version>1.8</version>
-				<configuration>
-					<licenseName>apache_v2</licenseName>
-				</configuration>
-				<executions>
-					<execution>
-						<id>download-licenses</id>
-						<goals>
-							<goal>download-licenses</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/lib</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version>
-				<configuration>
-					<goals>deploy</goals>
-					<autoversionsubmodules>true</autoversionsubmodules>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -121,23 +31,8 @@
 							<archive>
 								<manifest>
 									<mainClass>view.MainWindow</mainClass>
-									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-									<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 								</manifest>
 							</archive>
-							<resources>
-								<resource>
-									<directory>src/main/java</directory>
-									<includes>
-										<include>**/.*tab</include>
-										<include>**/*.fxml</include>
-										<include>**/*.properties</include>
-									</includes>
-								</resource>
-							</resources>
-							<descriptorRefs>
-								<descriptorRef>jar-with-dependencies</descriptorRef>
-							</descriptorRefs>
 						</configuration>
 					</execution>
 				</executions>
