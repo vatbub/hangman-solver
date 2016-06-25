@@ -1,8 +1,8 @@
 package common;
 
-import javax.json.Json;
+/*import javax.json.Json;
 import javax.json.JsonReader;
-import javax.json.JsonReaderFactory;
+import javax.json.JsonReaderFactory;*/
 
 public class UpdateChecker {
 	
@@ -29,7 +29,7 @@ public class UpdateChecker {
 		
 		
 		
-		JsonReaderFactory factory = Json.createReaderFactory(null);
+		//JsonReaderFactory factory = Json.createReaderFactory(null);
 		//JsonReader reader1 = factory.createReader(null);
 		
 		return null;
