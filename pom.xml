@@ -22,7 +22,7 @@
   <parent>
     <groupId>fokprojects</groupId>
     <artifactId>parentPom</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
   </parent>
 
 	<scm>
@@ -63,10 +63,10 @@
 			<artifactId>javax.json</artifactId>
 			<version>1.0.4</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>fokprojects</groupId>
 			<artifactId>common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+		</dependency>  -->
 	</dependencies>
 </project>
