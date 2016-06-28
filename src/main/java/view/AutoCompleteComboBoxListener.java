@@ -17,6 +17,7 @@ import javafx.scene.input.KeyEvent;
  * @param <T>
  */
 
+@SuppressWarnings("restriction")
 public class AutoCompleteComboBoxListener<T> {
 
 	private ComboBox<T> comboBox;
@@ -99,6 +100,7 @@ public class AutoCompleteComboBoxListener<T> {
 	 * focus. If not, programmatically press enter key to add new entry to list.
 	 *
 	 */
+	@SuppressWarnings("rawtypes")
 	private void selectClosestResultBasedOnTextFieldValue(boolean affect, boolean inFocus) {
 		ObservableList items = AutoCompleteComboBoxListener.this.comboBox.getItems();
 		boolean found = false;

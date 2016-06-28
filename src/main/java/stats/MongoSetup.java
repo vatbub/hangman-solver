@@ -1,8 +1,5 @@
 package stats;
 
-import java.io.Closeable;
-import java.io.IOException;
-
 import org.bson.Document;
 
 import com.mongodb.*;

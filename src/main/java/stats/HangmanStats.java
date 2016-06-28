@@ -1,11 +1,7 @@
 package stats;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.SynchronousQueue;
-
 import org.bson.Document;
 
 import com.mongodb.client.*;

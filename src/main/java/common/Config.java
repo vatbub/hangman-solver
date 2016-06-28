@@ -3,8 +3,6 @@ import java.io.File;
 import java.net.URL;
 
 import com.mongodb.MongoClientURI;
-import com.mongodb.ServerAddress;
-
 import languages.Language;
 
 public class Config {
