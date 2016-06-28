@@ -33,6 +33,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import languages.Language;
+import stats.HangmanStats;
 import stats.MongoSetup;
 import view.noLanguageSelected.NoLanguageSelected;
 import view.noSequenceEntered.NoSequenceEntered;
@@ -175,6 +176,7 @@ public class MainWindow extends Application implements Initializable {
 		        	  // Executed when Mian Window is closed
 		        	  System.out.println("Shutting down....");
 		        	  MongoSetup.close();
+		        	  HangmanStats.uploadThread.interrupt();
 		              System.out.println("Good bye");
 		          }
 		      });        

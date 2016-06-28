@@ -24,5 +24,13 @@ public class MongoSetup {
 		mongoClient.close();
 	}
 
+	public static boolean isReachable(){
+		try {
+			mongoClient.getAddress();
+			return true;
+		} catch (Exception e){
+			return false;
+		}
+	}
 	
 }
