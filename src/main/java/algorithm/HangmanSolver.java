@@ -6,15 +6,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import common.Config;
 import languages.*;
+import stats.HangmanStats;
 
 public class HangmanSolver {
 
-	private static Language langOld; 
+	private static Language langOld;
 	private static TabFile wiktDatabase;
 	private static TabFile cldrDatabase;
 
 	public static List<String> proposedSolutions = new ArrayList<String>();
-	
+
 	private static String currentSequenceWord;
 
 	public static Result solve(String currentSequence, Language lang) {
@@ -34,7 +35,14 @@ public class HangmanSolver {
 		// solved
 		int indexCorr = 0;
 		for (int i = 0; i < words.size(); i++) {
-			if (!words.get(i-indexCorr).contains("_")) {
+			if (!words.get(i - indexCorr).contains("_")) {
+				if (!words.get(i - indexCorr).equals("")) {
+					// Submit the word to the internet db.
+					// Although this method is called quite often, it keeps
+					// track of
+					// the submissions to avoid duplicates.
+					HangmanStats.addWordToDatabase(words.get(i - indexCorr), lang);
+				}
 				words.remove(i - indexCorr);
 				indexCorr = indexCorr + 1;
 			}
@@ -42,7 +50,7 @@ public class HangmanSolver {
 
 		// Go through all words
 		for (String word : words) {
-			if (counter==2){
+			if (counter == 2) {
 				System.out.println("Stopping...");
 			}
 			System.out.println("counter = " + counter);
@@ -61,11 +69,11 @@ public class HangmanSolver {
 			System.out.println(bestWordWikt);
 			System.out.println(bestWordCldr);
 
-			if (bestWordWikt.length()==0 && bestWordCldr.length()==0) {
+			if (bestWordWikt.length() == 0 && bestWordCldr.length() == 0) {
 				// dictionaries are both used up
 				System.out.println("dictionaries used up");
 				foundBestWord = false;
-			}else if (bestWordWikt.equals("")) {
+			} else if (bestWordWikt.equals("")) {
 				res.bestWord = bestWordCldr;
 			} else if (bestWordCldr.equals("")) {
 				res.bestWord = bestWordWikt;
@@ -239,7 +247,8 @@ public class HangmanSolver {
 		char[] chars = word.toCharArray();
 
 		for (char chr : chars) {
-			if (!currentSequenceWord.toUpperCase().contains(Character.toString(Character.toUpperCase(chr))) && proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))) {
+			if (!currentSequenceWord.toUpperCase().contains(Character.toString(Character.toUpperCase(chr)))
+					&& proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))) {
 				return true;
 			}
 		}

@@ -17,6 +17,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,7 +31,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import languages.Language;
+import stats.MongoSetup;
 import view.noLanguageSelected.NoLanguageSelected;
 import view.noSequenceEntered.NoSequenceEntered;
 
@@ -166,6 +169,16 @@ public class MainWindow extends Application implements Initializable {
 			primaryStage.setMinHeight(scene.getRoot().minHeight(0) + 70);
 
 			primaryStage.setScene(scene);
+			
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		          public void handle(WindowEvent we) {
+		        	  // Executed when Mian Window is closed
+		        	  System.out.println("Shutting down....");
+		        	  MongoSetup.close();
+		              System.out.println("Good bye");
+		          }
+		      });        
+			
 			primaryStage.show();
 		} catch (Exception e) {
 			e.printStackTrace();

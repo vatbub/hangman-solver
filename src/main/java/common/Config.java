@@ -2,6 +2,9 @@ package common;
 import java.io.File;
 import java.net.URL;
 
+import com.mongodb.MongoClientURI;
+import com.mongodb.ServerAddress;
+
 import languages.Language;
 
 public class Config {
@@ -43,6 +46,13 @@ public class Config {
 			return ver;
 		}
 	}
+	
+	//MongoDB
+	public static MongoClientURI mongoDBServerAddress = new MongoClientURI("mongodb://user:ljkhfgsd98675@ds019634.mlab.com:19634/hangmanstats");
+	public static String mongoDBDatabaseName = "hangmanstats";
+	public static String mongoDBWordsUsedCollectionName = "wordsused";
+	
+	//General
 	
 	/**
 	 * Gets the appData directory of the os. In case the current OS is Windows,
