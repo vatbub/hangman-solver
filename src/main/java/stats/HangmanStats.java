@@ -93,5 +93,6 @@ public class HangmanStats {
 			System.out.println("Submission done.");
 		}
 
+
 	}
 }

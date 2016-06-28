@@ -32,5 +32,4 @@ public class MongoSetup {
 			return false;
 		}
 	}
-	
 }
