@@ -54,5 +54,6 @@
         </Hyperlink>
       </children>
     </HBox>
+    <RadioButton layoutX="298.0" layoutY="360.0" mnemonicParsing="false" text="RadioButton" />
   </children>
 </AnchorPane>
