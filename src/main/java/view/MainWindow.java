@@ -160,6 +160,10 @@ public class MainWindow extends Application implements Initializable {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			common.Common.setAppName("hangmanSolver");
+			if (HangmanStats.uploadThread.isAlive() == false) {
+				HangmanStats.uploadThread.start();
+			}
 			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"), bundle);
 			Scene scene = new Scene(root);
 			// scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());

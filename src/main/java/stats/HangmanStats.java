@@ -32,9 +32,9 @@ public class HangmanStats {
 		public void run() {
 			this.setName("uploadThread");
 			System.out.println("Starting " + this.getName() + "...");
-			
+
 			readDocQueueFromPreferences();
-			
+
 			while (!interrupted) {
 				if (MongoSetup.isReachable()) {
 					if (!docQueue.isEmpty()) {
@@ -44,6 +44,8 @@ public class HangmanStats {
 						MongoCollection<Document> coll = MongoSetup.getWordsUsedCollection();
 						Document doc = coll.find(Filters.and(Filters.eq("word", word), Filters.eq("lang", langCode)))
 								.first();
+
+						System.out.println("Transferring word " + word + "...");
 
 						if (doc == null) {
 							// word never added prior to this
@@ -90,25 +92,27 @@ public class HangmanStats {
 	 * Reads the persistent copy of the docQueue if one exists and merges it
 	 * with the docQueue in memory.
 	 */
-	private static void readDocQueueFromPreferences(){
+	private static void readDocQueueFromPreferences() {
 		System.out.println("Reading docQueue from disk...");
-		
+
 		String persStr = preferences.getPreference(persistentDocQueueKey, "");
 		
-		String[] docs = persStr.split("\n");
-		
-		for (String newDoc:docs){
-			Document doc = Document.parse(newDoc);
-			if (!docQueue.contains(doc)){
-				try {
-					docQueue.put(doc);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		if (!persStr.equals("")) {
+			String[] docs = persStr.split("\n");
+
+			for (String newDoc : docs) {
+				Document doc = Document.parse(newDoc);
+				if (!docQueue.contains(doc)) {
+					try {
+						docQueue.put(doc);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
-		
+
 	}
 
 	/**
