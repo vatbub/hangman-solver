@@ -15,6 +15,8 @@ public class Config {
 			return 0.8;
 		}
 	}
+	
+	public static int maxTurnCountToLoose = 11;
 
 	// Language class
 	// {langCode} will be replaced by the language code
@@ -29,21 +31,6 @@ public class Config {
 	public static String iftttMakerApiKey = "dbjf67CBpZit4QOBthB0xW";
 	public static String iftttWinEvent = "hangmanSolverWon";
 	public static String iftttLooseEvent = "hangmanSolverLost";
-	
-	/**
-	 * Returns the current artifact version
-	 * 
-	 * @return The current artifact version or the String unknown if the version
-	 *         cannot be determined.
-	 */
-	public static String getAppVersion() {
-		String ver = Config.class.getPackage().getImplementationVersion();
-		if (ver == null) {
-			return "unknown";
-		} else {
-			return ver;
-		}
-	}
 	
 	//MongoDB
 	public static MongoClientURI mongoDBServerAddress = new MongoClientURI("mongodb://user:ljkhfgsd98675@ds019634.mlab.com:19634/hangmanstats");
@@ -84,4 +71,7 @@ public class Config {
 
 		return workingDirectory + File.separator + "hangmanSolver" + File.separator;
 	}
+	
+	// HangmanView
+	public static double windowGap = 5;
 }
