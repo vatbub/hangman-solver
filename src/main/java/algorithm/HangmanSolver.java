@@ -255,4 +255,15 @@ public class HangmanSolver {
 
 		return false;
 	}
+	
+	public static int getWrongGuessCount(){
+		List<String> wrongSolutions = new ArrayList<String>();
+		for (String solution:proposedSolutions){
+			if (wordContainsWrongChar(solution)){
+				wrongSolutions.add(solution);
+			}
+		}
+		
+		return wrongSolutions.size();
+	}
 }
