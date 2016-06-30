@@ -20,3 +20,6 @@ One evening when we were testing the algorithm, we had the idea to launch a soci
   - Next, we will collect what words are the most used in hangman
   - Which will give us a better dictionary
   - And most importantly a good overview about what humans are thinking about most of the time.
+
+#Current build status
+![Travis build status](https://travis-ci.org/vatbub/hangman-solver.svg?branch=master)
