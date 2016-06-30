@@ -204,7 +204,7 @@ public class MainWindow extends Application implements Initializable {
 		loadLanguageList();
 		shareThoughtsCheckbox.setSelected(true);
 		shareThoughtsBool = true;
-		versionLabel.setText(Config.getAppVersion());
+		versionLabel.setText(common.Common.getAppVersion());
 		new AutoCompleteComboBoxListener<String>(languageSelector);
 	}
 
