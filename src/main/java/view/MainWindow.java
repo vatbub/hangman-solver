@@ -4,11 +4,6 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
-/**
- * Sample Skeleton for "MainWindow.fxml" Controller Class
- * You can copy and paste this code into your favorite IDE
- **/
-
 import java.net.URL;
 import java.util.ResourceBundle;
 import algorithm.*;
@@ -38,6 +33,9 @@ import stats.MongoSetup;
 import view.noLanguageSelected.NoLanguageSelected;
 import view.noSequenceEntered.NoSequenceEntered;
 
+/**
+ * The apps MainWindow controller class.
+ **/
 public class MainWindow extends Application implements Initializable {
 
 	public static void main(String[] args) {
@@ -49,58 +47,110 @@ public class MainWindow extends Application implements Initializable {
 	private boolean shareThoughtsBool;
 	private String lastThought;
 
-	@FXML // ResourceBundle that was given to the FXMLLoader
+	@FXML 
+	/**
+	 * ResourceBundle that was given to the FXMLLoader
+	 */
 	private ResourceBundle resources;
 
-	@FXML // URL location of the FXML file that was given to the FXMLLoader
+	@FXML
+	/**
+	 * URL location of the FXML file that was given to the FXMLLoader
+	 */
 	private URL location;
 
-	@FXML // fx:id="actionLabel"
+	@FXML
+	/**
+	 * fx:id="actionLabel"
+	 */
 	private Label actionLabel; // Value injected by FXMLLoader
 
-	@FXML // fx:id="copyButton"
+	@FXML 
+	/**
+	 * fx:id="copyButton"
+	 */
 	private Button copyButton; // Value injected by FXMLLoader
 
 	@FXML
+	/**
+	 * fx:id="creditsButton"
+	 */
 	private Button creditsButton;
 
-	@FXML // fx:id="currentSequence"
+	@FXML 
+	/**
+	 * fx:id="currentSequence"
+	 */
 	private TextField currentSequence; // Value injected by FXMLLoader
 
-	@FXML // fx:id="getNextLetter"
+	@FXML 
+	/**
+	 * fx:id="getNextLetter"
+	 */
 	private Button getNextLetter; // Value injected by FXMLLoader
 
-	@FXML // fx:id="languageSelector"
+	@FXML 
+	/**fx:id="languageSelector"
+	 * 
+	 */
 	private ComboBox<String> languageSelector; // Value injected by FXMLLoader
 
-	@FXML // fx:id="result"
+	@FXML 
+	/**
+	 * fx:id="result"
+	 */
 	private TextField result; // Value injected by FXMLLoader
 
 	@FXML
+	/**
+	 * fx:id="shareThoughtsCheckbox"
+	 */
 	private CheckBox shareThoughtsCheckbox;
 
 	@FXML
+	/**
+	 * fx:id="thoughts"
+	 */
 	private Label thoughts;
 
 	@FXML
+	/**
+	 * fx:id="newGameButton"
+	 */
 	private Button newGameButton;
 
 	@FXML
+	/**
+	 * fx:id="proposedSolutions"
+	 */
 	private TextArea proposedSolutions;
 
-	@FXML // fx:id="updateLink"
+	@FXML 
+	/**
+	 * fx:id="updateLink"
+	 */
 	private Hyperlink updateLink; // Value injected by FXMLLoader
 
-	@FXML // fx:id="versionLabel"
+	@FXML 
+	/**
+	 * fx:id="versionLabel"
+	 */
 	private Label versionLabel; // Value injected by FXMLLoader
 
-	// Handler for Hyperlink[fx:id="updateLink"] onAction
 	@FXML
+	/**
+	 * Handler for Hyperlink[fx:id="updateLink"] onAction
+	 * @param event The event object that contains information about the event.
+	 */
 	void updateLinkOnAction(ActionEvent event) {
-		// handle the event here
+		// TODO: handle the event here
 	}
 
 	@FXML
+	/**
+	 * Handler for Hyperlink[fx:id="newGameButton"] onAction
+	 * @param event The event object that contains information about the event.
+	 */
 	void newGameButtonOnAction(ActionEvent event) {
 		algorithm.HangmanSolver.proposedSolutions.clear();
 		currentSequence.setText("");
@@ -141,11 +191,19 @@ public class MainWindow extends Application implements Initializable {
 	}
 
 	@FXML
+	/**
+	 * Handler for Hyperlink[fx:id="creditsButton"] onAction
+	 * @param event The event object that contains information about the event.
+	 */
 	void creditsButtonOnAction(ActionEvent event) {
 		LicenseWindow.show(bundle.getString("licenseWindowTitle"));
 	}
 
 	@FXML
+	/**
+	 * Handler for Hyperlink[fx:id="shareThoughtsCheckbox"] onAction
+	 * @param event The event object that contains information about the event.
+	 */
 	void shareThoughtsCheckboxOnAction(ActionEvent event) {
 		shareThoughtsBool = shareThoughtsCheckbox.isSelected();
 
@@ -158,6 +216,9 @@ public class MainWindow extends Application implements Initializable {
 	}
 
 	@Override
+	/**
+	 * Method is invoked by JavaFX after the application launch
+	 */
 	public void start(Stage primaryStage) {
 		try {
 			common.Common.setAppName("hangmanSolver");
@@ -191,6 +252,9 @@ public class MainWindow extends Application implements Initializable {
 		}
 	}
 
+	/**
+	 * Method is invoked by the FXML Loader after all variables have been injected.
+	 */
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		assert actionLabel != null : "fx:id=\"actionLabel\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert copyButton != null : "fx:id=\"copyButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
@@ -205,9 +269,14 @@ public class MainWindow extends Application implements Initializable {
 		shareThoughtsCheckbox.setSelected(true);
 		shareThoughtsBool = true;
 		versionLabel.setText(common.Common.getAppVersion());
+		
+		// Initialize the language search field.
 		new AutoCompleteComboBoxListener<String>(languageSelector);
 	}
 
+	/**
+	 * This method launches the algorithm and writes its results into the gui.
+	 */
 	void launchAlgorithm() {
 		try {
 			currentSolution = HangmanSolver.solve(currentSequence.getText(),
@@ -241,10 +310,17 @@ public class MainWindow extends Application implements Initializable {
 
 	}
 
+	/**
+	 * Writes the last thought into the thoughts-label.
+	 */
 	public void setThought() {
 		setThought(lastThought);
 	}
 
+	/**
+	 * Writes the given thought into the thoughts-label. The last thought is remembered and can be recalled with {@code setThought()}. 
+	 * @param thought The thought to be written to the gui.
+	 */
 	public void setThought(String thought) {
 
 		lastThought = thought;
@@ -254,6 +330,9 @@ public class MainWindow extends Application implements Initializable {
 		}
 	}
 
+	/**
+	 * Loads the available languages into the gui dropdown.
+	 */
 	private void loadLanguageList() {
 		System.out.println("Loading language list...");
 
