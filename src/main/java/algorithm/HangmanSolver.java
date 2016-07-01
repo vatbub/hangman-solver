@@ -8,16 +8,39 @@ import common.Config;
 import languages.*;
 import stats.HangmanStats;
 
+/**
+ * A class that holds all methods and algorithms to solve a hangman puzzle.
+ * 
+ * @author frede
+ *
+ */
 public class HangmanSolver {
 
 	private static Language langOld;
 	private static TabFile wiktDatabase;
 	private static TabFile cldrDatabase;
 
+	/**
+	 * A {@link List} that contains all characters and words that the computer
+	 * has guessed.
+	 */
 	public static List<String> proposedSolutions = new ArrayList<String>();
 
 	private static String currentSequenceWord;
 
+	/**
+	 * Solves a Hangman puzzle.
+	 * 
+	 * @param currentSequence
+	 *            The current letter sequence. The sequence must be something
+	 *            like this: ___a__ where the underscores _ are the unknown
+	 *            letters.
+	 * @param lang
+	 *            The {@link Language} that the user is playing in.
+	 * @return An Object that contains info about the current game and the next
+	 *         guess.
+	 * @see Result
+	 */
 	public static Result solve(String currentSequence, Language lang) {
 
 		Result res = new Result();
@@ -115,6 +138,12 @@ public class HangmanSolver {
 		return res;
 	}
 
+	/**
+	 * Loads a language database for processing.
+	 * 
+	 * @param lang
+	 *            The {@link Language} to load.
+	 */
 	private static void loadLanguageDatabases(Language lang) {
 		try {
 			System.out.println("Loading language databases for " + lang.getHumanReadableName());
@@ -126,10 +155,29 @@ public class HangmanSolver {
 		}
 	}
 
+	/**
+	 * Returns the most frequent char in the given word list.
+	 * 
+	 * @param words
+	 *            The list for which the most frequent char will be determined.
+	 * @return The most frequent char.
+	 */
 	private static char getMostFrequentChar(List<String> words) {
 		return getMostFrequentChar(words, new char[0]);
 	}
 
+	/**
+	 * Returns the most frequent char in the given word list.
+	 * 
+	 * @param words
+	 *            The list for which the most frequent char will be determined.
+	 * @param priorityChars
+	 *            The ranking of most frequent chars will be filtered so that it
+	 *            only contains priorityChars that were not yet proposed. If the
+	 *            ranking is empty after filtering, no filter is appliyed and
+	 *            the method acts like {@code getMostFrequentChar(words)}
+	 * @return The most frequent char.
+	 */
 	private static char getMostFrequentChar(List<String> words, char[] priorityChars) {
 		ArrayList<Thread> threads = new ArrayList<Thread>();
 		AtomicInteger currentIndex = new AtomicInteger(0);
@@ -210,6 +258,12 @@ public class HangmanSolver {
 		return (char) ('A' + maxIndex);
 	}
 
+	/**
+	 * Checks if the specified array contains the specified char.
+	 * @param array The array to be checked.
+	 * @param value The char to look for.
+	 * @return {@code true} if the char can be found in the array, {@code false} otherwise.
+	 */
 	private static boolean charArrayContais(char[] array, char value) {
 		for (char c : array) {
 			if (c == value) {
@@ -220,6 +274,11 @@ public class HangmanSolver {
 		return false;
 	}
 
+	/**
+	 * Counts how often each char appears in the given {@link String}
+	 * @param str The string of which the chars shall be counted.
+	 * @return an array where the 0-position shows
+	 */
 	private static int[] countAllCharsInString(String str) {
 		int[] res = new int[26];
 
@@ -255,15 +314,15 @@ public class HangmanSolver {
 
 		return false;
 	}
-	
-	public static int getWrongGuessCount(){
+
+	public static int getWrongGuessCount() {
 		List<String> wrongSolutions = new ArrayList<String>();
-		for (String solution:proposedSolutions){
-			if (wordContainsWrongChar(solution)){
+		for (String solution : proposedSolutions) {
+			if (wordContainsWrongChar(solution)) {
 				wrongSolutions.add(solution);
 			}
 		}
-		
+
 		return wrongSolutions.size();
 	}
 }
