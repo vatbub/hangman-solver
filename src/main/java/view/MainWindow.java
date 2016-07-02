@@ -160,8 +160,8 @@ public class MainWindow extends Application implements Initializable {
 	 */
 	void newGameButtonOnAction(ActionEvent event) {
 		algorithm.HangmanSolver.proposedSolutions.clear();
-		applyButton.setDisable(false);
-		languageSelector.setDisable(true);
+		applyButton.setDisable(true);
+		languageSelector.setDisable(false);
 		currentSequence.setText("");
 		proposedSolutions.setText("");
 		setThought("");
@@ -385,7 +385,7 @@ public class MainWindow extends Application implements Initializable {
 		try {
 			// modify GUI
 			languageSelector.setDisable(true);
-			
+
 			currentSolution = HangmanSolver.solve(currentSequence.getText(),
 					Language.getSupportedLanguages().get(languageSelector.getSelectionModel().getSelectedIndex()));
 			result.setText(currentSolution.result);
@@ -400,21 +400,33 @@ public class MainWindow extends Application implements Initializable {
 			proposedSolutions.setText(proposedSolutionsString);
 
 			String thoughtText = "";
-			if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
-				applyButton.setDisable(false);
-				thoughtText = bundle.getString("thinkOfAWord")
-						.replace("<percent>", Double.toString(Math.round(currentSolution.bestWordScore * 100)))
-						.replace("<word>", currentSolution.bestWord);
-			} else {
-				applyButton.setDisable(true);
-				thoughtText = bundle.getString("dontThinkAWord");
+			switch (currentSolution.gameState) {
+			case GAME_LOST:
+				thoughtText = "I guess I lost :(";
+				break;
+
+			case GAME_WON:
+				thoughtText = "Yeah, I won, right?";
+				break;
+				
+			case GAME_RUNNING:
+				if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
+					applyButton.setDisable(false);
+					thoughtText = bundle.getString("thinkOfAWord")
+							.replace("<percent>", Double.toString(Math.round(currentSolution.bestWordScore * 100)))
+							.replace("<word>", currentSolution.bestWord);
+				} else {
+					applyButton.setDisable(true);
+					thoughtText = bundle.getString("dontThinkAWord");
+				}
+
+				// Add the remeaning wrong guesses
+				thoughtText = thoughtText + " " + bundle.getString("remeaningWrongGuesses").replace("<number>",
+						Integer.toString(Config.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
+				break;
 			}
-
-			// Add the remeaning wrong guesses
-			thoughtText = thoughtText + " " + bundle.getString("remeaningWrongGuesses").replace("<number>",
-					Integer.toString(Config.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
-
 			setThought(thoughtText);
+
 		} catch (ArrayIndexOutOfBoundsException e) {
 			// No language selected
 			NoLanguageSelected.show();

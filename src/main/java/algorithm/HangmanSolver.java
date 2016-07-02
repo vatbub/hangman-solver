@@ -44,9 +44,10 @@ public class HangmanSolver {
 	public static Result solve(String currentSequence, Language lang) {
 
 		Result res = new Result();
-		
+
 		res.lang = lang;
-		
+		res.gameState = winDetector(currentSequence);
+
 		int counter = 0;
 
 		if (!lang.equals(langOld) || wiktDatabase == null || cldrDatabase == null) {
@@ -321,8 +322,11 @@ public class HangmanSolver {
 
 	/**
 	 * Checks if the given word contains a char that is proven to be wrong.
-	 * @param word The word to be checked.
-	 * @return {@code true} if the word contains a wrong char, {@code false} otherwise.
+	 * 
+	 * @param word
+	 *            The word to be checked.
+	 * @return {@code true} if the word contains a wrong char, {@code false}
+	 *         otherwise.
 	 */
 	public static boolean wordContainsWrongChar(String word) {
 
@@ -340,6 +344,7 @@ public class HangmanSolver {
 
 	/**
 	 * Returns the number of wrong guesses done so far.
+	 * 
 	 * @return The number of wrong guesses done so far.
 	 */
 	public static int getWrongGuessCount() {
@@ -350,11 +355,43 @@ public class HangmanSolver {
 			}
 		}
 
-		// -1 to exclude the last guess (as the user did not respond to it yet if it is wrong or not)
-		return wrongSolutions.size()-1;
+		// -1 to exclude the last guess (as the user did not respond to it yet
+		// if it is wrong or not)
+		return wrongSolutions.size() - 1;
 	}
-	
-	/*public GameState winDetector(){
+
+	/**
+	 * Checks if the computer has won or lost the game or the game is still running
+	 * @param currentSequence The current letter sequence.
+	 * @return The current {@link GameState}
+	 */
+	public static GameState winDetector(String currentSequence) {
+		// Split the pattern up in words
+		ArrayList<String> words = new ArrayList<String>(Arrays.asList(currentSequence.split(" ")));
+
+		// Remove all words that don't contain an underscore as they are fully
+		// solved
+		int indexCorr = 0;
+		for (int i = 0; i < words.size(); i++) {
+			if (!words.get(i - indexCorr).contains("_")) {
+				words.remove(i - indexCorr);
+				indexCorr = indexCorr + 1;
+			}
+		}
 		
-	}*/
+		// If all words are solved, the list is now empty and the computer hhas won the game.
+		if (words.size()==0){
+			return GameState.GAME_WON;
+		}
+		
+		// If we did not win the game, it can be runnning or we could have lost it.
+		
+		// If the current wrong guess count is bigger than or equal to the permitted wrong guess count, we've lost.
+		if (getWrongGuessCount()>=Config.maxTurnCountToLoose){
+			return GameState.GAME_LOST;
+		}
+		
+		// If we did not win nor loose, the game is still running
+		return GameState.GAME_RUNNING;
+	}
 }
