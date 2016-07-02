@@ -22,4 +22,4 @@ One evening when we were testing the algorithm, we had the idea to launch a soci
   - And most importantly a good overview about what humans are thinking about most of the time.
 
 #Current build status
-![Travis build status](https://travis-ci.org/vatbub/hangman-solver.svg?branch=master)
+[![Travis build status](https://travis-ci.org/vatbub/hangman-solver.svg?branch=master)](https://travis-ci.org/vatbub/hangman-solver/)
