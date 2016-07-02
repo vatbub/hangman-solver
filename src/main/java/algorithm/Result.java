@@ -14,7 +14,7 @@ public class Result {
 	 * 
 	 * @see GameState
 	 */
-	GameState gameState;
+	public GameState gameState;
 	/**
 	 * The next guess.
 	 */
