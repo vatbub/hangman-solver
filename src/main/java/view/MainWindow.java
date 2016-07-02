@@ -292,14 +292,19 @@ public class MainWindow extends Application implements Initializable {
 			proposedSolutionsString = proposedSolutionsString.substring(0, proposedSolutionsString.length() - 2);
 			proposedSolutions.setText(proposedSolutionsString);
 
+			String thoughtText = "";
 			if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
-				String thoughtText = bundle.getString("thinkOfAWord")
+				thoughtText = bundle.getString("thinkOfAWord")
 						.replace("<percent>", Double.toString(Math.round(currentSolution.bestWordScore * 100)))
 						.replace("<word>", currentSolution.bestWord);
-				setThought(thoughtText);
 			} else {
-				setThought(bundle.getString("dontThinkAWord"));
+				thoughtText= bundle.getString("dontThinkAWord");
 			}
+			
+			// Add the remeaning wrong guesses
+			thoughtText = thoughtText + " " + bundle.getString("remeaningWrongGuesses").replace("<number>", Integer.toString(Config.maxTurnCountToLoose-HangmanSolver.getWrongGuessCount()));
+			
+			setThought(thoughtText);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			// No language selected
 			NoLanguageSelected.show();

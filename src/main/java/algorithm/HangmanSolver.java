@@ -347,6 +347,7 @@ public class HangmanSolver {
 			}
 		}
 
-		return wrongSolutions.size();
+		// -1 to exclude the last guess (as the user did not respond to it yet if it is wrong or not)
+		return wrongSolutions.size()-1;
 	}
 }
