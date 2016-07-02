@@ -1,5 +1,7 @@
 package algorithm;
 
+import languages.Language;
+
 /**
  * Represents a result of {@link HangmanSolver#solve}
  * 
@@ -28,4 +30,9 @@ public class Result {
 	 * {@link languages.TabFile#stringCorrelation}
 	 */
 	public double bestWordScore;
+	
+	/**
+	 * The language of the solution
+	 */
+	public Language lang;
 }

@@ -44,6 +44,9 @@ public class HangmanSolver {
 	public static Result solve(String currentSequence, Language lang) {
 
 		Result res = new Result();
+		
+		res.lang = lang;
+		
 		int counter = 0;
 
 		if (!lang.equals(langOld) || wiktDatabase == null || cldrDatabase == null) {
@@ -350,4 +353,8 @@ public class HangmanSolver {
 		// -1 to exclude the last guess (as the user did not respond to it yet if it is wrong or not)
 		return wrongSolutions.size()-1;
 	}
+	
+	/*public GameState winDetector(){
+		
+	}*/
 }

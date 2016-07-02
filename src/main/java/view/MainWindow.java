@@ -5,6 +5,8 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import algorithm.*;
 import common.Config;
@@ -47,7 +49,7 @@ public class MainWindow extends Application implements Initializable {
 	private boolean shareThoughtsBool;
 	private String lastThought;
 
-	@FXML 
+	@FXML
 	/**
 	 * ResourceBundle that was given to the FXMLLoader
 	 */
@@ -65,11 +67,11 @@ public class MainWindow extends Application implements Initializable {
 	 */
 	private Label actionLabel; // Value injected by FXMLLoader
 
-	@FXML 
+	@FXML
 	/**
-	 * fx:id="copyButton"
+	 * fx:id="applyButton"
 	 */
-	private Button copyButton; // Value injected by FXMLLoader
+	private Button applyButton; // Value injected by FXMLLoader
 
 	@FXML
 	/**
@@ -77,25 +79,26 @@ public class MainWindow extends Application implements Initializable {
 	 */
 	private Button creditsButton;
 
-	@FXML 
+	@FXML
 	/**
 	 * fx:id="currentSequence"
 	 */
 	private TextField currentSequence; // Value injected by FXMLLoader
 
-	@FXML 
+	@FXML
 	/**
 	 * fx:id="getNextLetter"
 	 */
 	private Button getNextLetter; // Value injected by FXMLLoader
 
-	@FXML 
-	/**fx:id="languageSelector"
+	@FXML
+	/**
+	 * fx:id="languageSelector"
 	 * 
 	 */
 	private ComboBox<String> languageSelector; // Value injected by FXMLLoader
 
-	@FXML 
+	@FXML
 	/**
 	 * fx:id="result"
 	 */
@@ -125,13 +128,13 @@ public class MainWindow extends Application implements Initializable {
 	 */
 	private TextArea proposedSolutions;
 
-	@FXML 
+	@FXML
 	/**
 	 * fx:id="updateLink"
 	 */
 	private Hyperlink updateLink; // Value injected by FXMLLoader
 
-	@FXML 
+	@FXML
 	/**
 	 * fx:id="versionLabel"
 	 */
@@ -140,7 +143,9 @@ public class MainWindow extends Application implements Initializable {
 	@FXML
 	/**
 	 * Handler for Hyperlink[fx:id="updateLink"] onAction
-	 * @param event The event object that contains information about the event.
+	 * 
+	 * @param event
+	 *            The event object that contains information about the event.
 	 */
 	void updateLinkOnAction(ActionEvent event) {
 		// TODO: handle the event here
@@ -149,10 +154,14 @@ public class MainWindow extends Application implements Initializable {
 	@FXML
 	/**
 	 * Handler for Hyperlink[fx:id="newGameButton"] onAction
-	 * @param event The event object that contains information about the event.
+	 * 
+	 * @param event
+	 *            The event object that contains information about the event.
 	 */
 	void newGameButtonOnAction(ActionEvent event) {
 		algorithm.HangmanSolver.proposedSolutions.clear();
+		applyButton.setDisable(false);
+		languageSelector.setDisable(true);
 		currentSequence.setText("");
 		proposedSolutions.setText("");
 		setThought("");
@@ -163,18 +172,108 @@ public class MainWindow extends Application implements Initializable {
 	}
 
 	/**
-	 * Handler for Button[fx:id="copyButton"] onAction<br>
+	 * Handler for Button[fx:id="applyButton"] onAction<br>
 	 * <br>
-	 * Copies the result of the algorithm to the system clipboard
+	 * Applies the current guess to the letter sequence using the bestWord.
 	 * 
 	 * @param event
 	 *            The event object (automatically injected)
 	 */
 	@FXML
-	void copyResultToClipboard(ActionEvent event) {
-		StringSelection selection = new StringSelection(result.getText());
-		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		clipboard.setContents(selection, selection);
+	void applyResult(ActionEvent event) {
+		String newSequence = "";
+
+		// Split the pattern up in words
+		ArrayList<String> words = new ArrayList<String>(Arrays.asList(currentSequence.getText().split(" ")));
+
+		boolean wordReplaced = false;
+
+		if (currentSolution.result.length() > 1) {
+			// The next guess is a word.
+
+			for (int i = 0; i < words.size(); i++) {
+				if (!words.get(i).contains("_") || wordReplaced) {
+					// Word is already solved or the solution was already
+					// applied
+					if (newSequence.length() != 0) {
+						newSequence = newSequence + " ";
+					}
+					newSequence = newSequence + words.get(i);
+				} else {
+					// Replace word
+					String newWord = "";
+					String oldWord = words.get(i);
+
+					for (int t = 0; t < oldWord.length(); t++) {
+						if (oldWord.charAt(t) == '_') {
+							// replace it
+							newWord = newWord + currentSolution.result.charAt(t);
+						} else {
+							// Don't replace it as there is no _
+							newWord = newWord + oldWord.charAt(t);
+						}
+					}
+
+					if (newSequence.length() != 0) {
+						newSequence = newSequence + " ";
+					}
+					newSequence = newSequence + newWord;
+				}
+			}
+		} else {
+			// The next guess is a letter
+
+			for (int i = 0; i < words.size(); i++) {
+				if (!words.get(i).contains("_") || wordReplaced) {
+					// Word is already solved or the solution was already
+					// applied
+					if (newSequence.length() != 0) {
+						newSequence = newSequence + " ";
+					}
+					newSequence = newSequence + words.get(i);
+				} else {
+					// add letters
+					String newWord = "";
+					String oldWord = words.get(i);
+
+					for (int t = 0; t < oldWord.length(); t++) {
+						if (oldWord.charAt(t) == '_'
+								&& Character.toUpperCase(currentSolution.bestWord.charAt(t)) == Character
+										.toUpperCase(currentSolution.result.charAt(0))) {
+							// replace it
+							newWord = newWord + currentSolution.bestWord.charAt(t);
+						} else {
+							// Don't replace it as there is no _
+							newWord = newWord + oldWord.charAt(t);
+						}
+					}
+
+					if (newSequence.length() != 0) {
+						newSequence = newSequence + " ";
+					}
+					newSequence = newSequence + newWord;
+				}
+			}
+		}
+
+		// Set the new sequence in the gui
+		currentSequence.setText(newSequence);
+
+		// submit solved words
+		for (int i = 0; i < words.size(); i++) {
+			if (!words.get(i).contains("_")) {
+				if (!words.get(i).equals("")) {
+					// Submit the word to the internet db.
+					// Although this method is called quite often, it keeps
+					// track of
+					// the submissions to avoid duplicates.
+					HangmanStats.addWordToDatabase(words.get(i), currentSolution.lang);
+				}
+			}
+		}
+
+		// get the next guess
+		launchAlgorithm();
 	}
 
 	/**
@@ -193,7 +292,9 @@ public class MainWindow extends Application implements Initializable {
 	@FXML
 	/**
 	 * Handler for Hyperlink[fx:id="creditsButton"] onAction
-	 * @param event The event object that contains information about the event.
+	 * 
+	 * @param event
+	 *            The event object that contains information about the event.
 	 */
 	void creditsButtonOnAction(ActionEvent event) {
 		LicenseWindow.show(bundle.getString("licenseWindowTitle"));
@@ -202,7 +303,9 @@ public class MainWindow extends Application implements Initializable {
 	@FXML
 	/**
 	 * Handler for Hyperlink[fx:id="shareThoughtsCheckbox"] onAction
-	 * @param event The event object that contains information about the event.
+	 * 
+	 * @param event
+	 *            The event object that contains information about the event.
 	 */
 	void shareThoughtsCheckboxOnAction(ActionEvent event) {
 		shareThoughtsBool = shareThoughtsCheckbox.isSelected();
@@ -235,17 +338,17 @@ public class MainWindow extends Application implements Initializable {
 			primaryStage.setMinHeight(scene.getRoot().minHeight(0) + 70);
 
 			primaryStage.setScene(scene);
-			
+
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-		          public void handle(WindowEvent we) {
-		        	  // Executed when Mian Window is closed
-		        	  System.out.println("Shutting down....");
-		        	  MongoSetup.close();
-		        	  HangmanStats.uploadThread.interrupt();
-		              System.out.println("Good bye");
-		          }
-		      });        
-			
+				public void handle(WindowEvent we) {
+					// Executed when Mian Window is closed
+					System.out.println("Shutting down....");
+					MongoSetup.close();
+					HangmanStats.uploadThread.interrupt();
+					System.out.println("Good bye");
+				}
+			});
+
 			primaryStage.show();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -253,11 +356,12 @@ public class MainWindow extends Application implements Initializable {
 	}
 
 	/**
-	 * Method is invoked by the FXML Loader after all variables have been injected.
+	 * Method is invoked by the FXML Loader after all variables have been
+	 * injected.
 	 */
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		assert actionLabel != null : "fx:id=\"actionLabel\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert copyButton != null : "fx:id=\"copyButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert applyButton != null : "fx:id=\"applyButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert currentSequence != null : "fx:id=\"currentSequence\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert getNextLetter != null : "fx:id=\"getNextLetter\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert languageSelector != null : "fx:id=\"languageSelector\" was not injected: check your FXML file 'MainWindow.fxml'.";
@@ -269,7 +373,7 @@ public class MainWindow extends Application implements Initializable {
 		shareThoughtsCheckbox.setSelected(true);
 		shareThoughtsBool = true;
 		versionLabel.setText(common.Common.getAppVersion());
-		
+
 		// Initialize the language search field.
 		new AutoCompleteComboBoxListener<String>(languageSelector);
 	}
@@ -279,6 +383,9 @@ public class MainWindow extends Application implements Initializable {
 	 */
 	void launchAlgorithm() {
 		try {
+			// modify GUI
+			languageSelector.setDisable(true);
+			
 			currentSolution = HangmanSolver.solve(currentSequence.getText(),
 					Language.getSupportedLanguages().get(languageSelector.getSelectionModel().getSelectedIndex()));
 			result.setText(currentSolution.result);
@@ -294,16 +401,19 @@ public class MainWindow extends Application implements Initializable {
 
 			String thoughtText = "";
 			if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
+				applyButton.setDisable(false);
 				thoughtText = bundle.getString("thinkOfAWord")
 						.replace("<percent>", Double.toString(Math.round(currentSolution.bestWordScore * 100)))
 						.replace("<word>", currentSolution.bestWord);
 			} else {
-				thoughtText= bundle.getString("dontThinkAWord");
+				applyButton.setDisable(true);
+				thoughtText = bundle.getString("dontThinkAWord");
 			}
-			
+
 			// Add the remeaning wrong guesses
-			thoughtText = thoughtText + " " + bundle.getString("remeaningWrongGuesses").replace("<number>", Integer.toString(Config.maxTurnCountToLoose-HangmanSolver.getWrongGuessCount()));
-			
+			thoughtText = thoughtText + " " + bundle.getString("remeaningWrongGuesses").replace("<number>",
+					Integer.toString(Config.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
+
 			setThought(thoughtText);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			// No language selected
@@ -323,8 +433,11 @@ public class MainWindow extends Application implements Initializable {
 	}
 
 	/**
-	 * Writes the given thought into the thoughts-label. The last thought is remembered and can be recalled with {@code setThought()}. 
-	 * @param thought The thought to be written to the gui.
+	 * Writes the given thought into the thoughts-label. The last thought is
+	 * remembered and can be recalled with {@code setThought()}.
+	 * 
+	 * @param thought
+	 *            The thought to be written to the gui.
 	 */
 	public void setThought(String thought) {
 
