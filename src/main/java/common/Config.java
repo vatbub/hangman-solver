@@ -100,11 +100,11 @@ public class Config {
 	public static MongoClientURI mongoDBServerAddress = new MongoClientURI(
 			"mongodb://user:ljkhfgsd98675@ds019634.mlab.com:19634/hangmanstats");
 	/**
-	 * The name of the MongoDB database where all submitted words are saved.
+	 * The name of the <a href="https://www.mongodb.com/">MongoDB</a> database where all submitted words are saved.
 	 */
 	public static String mongoDBDatabaseName = "hangmanstats";
 	/***
-	 * The name of the MongoDb collection where all submitted words are saved.
+	 * The name of the <a href="https://www.mongodb.com/">MongoDB</a> collection where all submitted words are saved.
 	 */
 	public static String mongoDBWordsUsedCollectionName = "wordsused";
 }

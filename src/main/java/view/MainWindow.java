@@ -34,7 +34,7 @@ import view.noLanguageSelected.NoLanguageSelected;
 import view.noSequenceEntered.NoSequenceEntered;
 
 /**
- * The apps MainWindow controller class.
+ * The MainWindow controller class.
  **/
 public class MainWindow extends Application implements Initializable {
 

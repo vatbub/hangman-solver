@@ -21,7 +21,11 @@ import javafx.stage.Stage;
 
 import view.SendReportQuestion.*;
 
-
+/**
+ * A dialog to ask the user if the computer has won the game. Will probably be removed when the win detector is introduced.
+ * @author frede
+ *
+ */
 public class AskIfIWin {
 	
 	private static Stage stage;

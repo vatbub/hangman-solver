@@ -1,8 +1,3 @@
-/**
- * Sample Skeleton for "AlertDialog.fxml" Controller Class
- * You can copy and paste this code into your favorite IDE
- **/
-
 package view.noLanguageSelected;
 
 import java.io.IOException;
@@ -18,7 +13,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-
+/**
+ * An alert windoow that pops up if no language has been selected by the user.
+ * @author frede
+ *
+ */
 public class NoLanguageSelected {
 	
 	private static ResourceBundle bundle = ResourceBundle.getBundle("view.noLanguageSelected.AlertDialog");

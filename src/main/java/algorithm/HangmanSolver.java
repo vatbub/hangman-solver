@@ -260,9 +260,13 @@ public class HangmanSolver {
 
 	/**
 	 * Checks if the specified array contains the specified char.
-	 * @param array The array to be checked.
-	 * @param value The char to look for.
-	 * @return {@code true} if the char can be found in the array, {@code false} otherwise.
+	 * 
+	 * @param array
+	 *            The array to be checked.
+	 * @param value
+	 *            The char to look for.
+	 * @return {@code true} if the char can be found in the array, {@code false}
+	 *         otherwise.
 	 */
 	private static boolean charArrayContais(char[] array, char value) {
 		for (char c : array) {
@@ -276,7 +280,9 @@ public class HangmanSolver {
 
 	/**
 	 * Counts how often each char appears in the given {@link String}
-	 * @param str The string of which the chars shall be counted.
+	 * 
+	 * @param str
+	 *            The string of which the chars shall be counted.
 	 * @return an array where the 0-position shows
 	 */
 	private static int[] countAllCharsInString(String str) {
@@ -289,6 +295,15 @@ public class HangmanSolver {
 		return res;
 	}
 
+	/**
+	 * Counts, how often the specified char appears in the given string.
+	 * 
+	 * @param str
+	 *            The {@link String} to be looked through
+	 * @param chr
+	 *            The {@code char} to be counted.
+	 * @return The number of appearances of {@code chr} in {@code str}
+	 */
 	private static int countCharInString(String str, char chr) {
 		int res = 0;
 
@@ -301,6 +316,11 @@ public class HangmanSolver {
 		return res;
 	}
 
+	/**
+	 * Checks if the given word contains a char that is proven to be wrong.
+	 * @param word The word to be checked.
+	 * @return {@code true} if the word contains a wrong char, {@code false} otherwise.
+	 */
 	public static boolean wordContainsWrongChar(String word) {
 
 		char[] chars = word.toCharArray();
@@ -315,6 +335,10 @@ public class HangmanSolver {
 		return false;
 	}
 
+	/**
+	 * Returns the number of wrong guesses done so far.
+	 * @return The number of wrong guesses done so far.
+	 */
 	public static int getWrongGuessCount() {
 		List<String> wrongSolutions = new ArrayList<String>();
 		for (String solution : proposedSolutions) {

@@ -12,19 +12,38 @@ import common.Prefs;
 import languages.Language;
 
 /**
- * This class is intended to count the words used in the solver for the social
- * experiment.
+ * This class is intended to count the words used in the solver in a
+ * <a href="https://www.mongodb.com/">MongoDB</a> for the social experiment.
  * 
  * @author Frederik Kammel
  *
  */
 public class HangmanStats {
 
+	/**
+	 * A {@link List} that contains all words that were already submitted. This
+	 * ensures that the word counts in the
+	 * <a href="https://www.mongodb.com/">MongoDB</a> are correct.
+	 */
 	private static List<String> alreadySubmittedWordsInThisSession = new ArrayList<String>();
+	/**
+	 * The current upload queue.
+	 */
 	private static LinkedBlockingQueue<Document> docQueue = new LinkedBlockingQueue<Document>();
+	/**
+	 * This object is used to save a copy of the upload queue on the disc to keep it even if the app is relaunched.
+	 */
 	private static Prefs preferences = new Prefs(HangmanStats.class.getName());
+	/**
+	 * The pref key where the offline copy of the upload queue is saved.
+	 */
 	private static String persistentDocQueueKey = "docQueue";
 
+	/**
+	 * This thread runs in the background and uploads all submitted words. This
+	 * concept ensures that all words are submitted even if the player was
+	 * offline while playing.
+	 */
 	public static Thread uploadThread = new Thread() {
 		private boolean interrupted = false;
 
@@ -96,7 +115,7 @@ public class HangmanStats {
 		System.out.println("Reading docQueue from disk...");
 
 		String persStr = preferences.getPreference(persistentDocQueueKey, "");
-		
+
 		if (!persStr.equals("")) {
 			String[] docs = persStr.split("\n");
 
