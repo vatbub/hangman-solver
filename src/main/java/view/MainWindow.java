@@ -1,9 +1,5 @@
 package view;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +7,8 @@ import java.util.ResourceBundle;
 import algorithm.*;
 import common.Config;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,9 +25,11 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import languages.Language;
+import languages.TabFile;
 import stats.HangmanStats;
 import stats.MongoSetup;
 import view.noLanguageSelected.NoLanguageSelected;
@@ -45,7 +45,8 @@ public class MainWindow extends Application implements Initializable {
 	}
 
 	private ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
-	private Result currentSolution;
+	private static String currentSequenceStr;
+	private static Result currentSolution;
 	private boolean shareThoughtsBool;
 	private String lastThought;
 
@@ -159,6 +160,10 @@ public class MainWindow extends Application implements Initializable {
 	 *            The event object that contains information about the event.
 	 */
 	void newGameButtonOnAction(ActionEvent event) {
+
+		// Maybe Submit the word to the MongoDB database
+		submitWordOnQuit();
+
 		algorithm.HangmanSolver.proposedSolutions.clear();
 		applyButton.setDisable(true);
 		languageSelector.setDisable(false);
@@ -168,7 +173,7 @@ public class MainWindow extends Application implements Initializable {
 		result.setText("");
 
 		// Submit info if game was won
-		AskIfIWin.show(bundle.getString("wellPerformedWindowTitle"));
+		// AskIfIWin.show(bundle.getString("wellPerformedWindowTitle"));
 	}
 
 	/**
@@ -341,11 +346,7 @@ public class MainWindow extends Application implements Initializable {
 
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				public void handle(WindowEvent we) {
-					// Executed when Mian Window is closed
-					System.out.println("Shutting down....");
-					MongoSetup.close();
-					HangmanStats.uploadThread.interrupt();
-					System.out.println("Good bye");
+					shutDown();
 				}
 			});
 
@@ -376,6 +377,15 @@ public class MainWindow extends Application implements Initializable {
 
 		// Initialize the language search field.
 		new AutoCompleteComboBoxListener<String>(languageSelector);
+
+		// Listen for TextField text changes
+		currentSequence.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+
+				currentSequenceStr = currentSequence.getText();
+			}
+		});
 	}
 
 	/**
@@ -408,7 +418,7 @@ public class MainWindow extends Application implements Initializable {
 			case GAME_WON:
 				thoughtText = "Yeah, I won, right?";
 				break;
-				
+
 			case GAME_RUNNING:
 				if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
 					applyButton.setDisable(false);
@@ -479,4 +489,45 @@ public class MainWindow extends Application implements Initializable {
 
 	}
 
+	/**
+	 * This method is executed before the app exits and executes several
+	 * shutdown commands.
+	 */
+	public void shutDown() {
+		try {
+			System.out.println("Shutting down....");
+			// Maybe submit the current word
+			submitWordOnQuit();
+			HangmanStats.uploadThread.interrupt();
+			HangmanStats.uploadThread.join();
+			MongoSetup.close();
+			System.out.println("Good bye");
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Submits the current words when the user closes the app and the current
+	 * sequence and the bestWord have a correlation bigger or equal than
+	 * {@code Config.thresholdToSelectWord}.
+	 */
+	private void submitWordOnQuit() {
+		try {
+			String[] words = currentSequenceStr.split(" ");
+
+			for (String word : words) {
+				if (word.length() == currentSolution.bestWord.length())
+					if (TabFile.stringCorrelation(word, currentSolution.bestWord) >= Config
+							.thresholdToSelectWord(word.length())) {
+						HangmanStats.addWordToDatabase(currentSolution.bestWord, currentSolution.lang);
+					}
+			}
+		} catch (
+		NullPointerException e) {
+			// Do nothing, no word entered
+		}
+	}
 }

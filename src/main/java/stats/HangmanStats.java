@@ -55,6 +55,7 @@ public class HangmanStats {
 			readDocQueueFromPreferences();
 
 			while (!interrupted) {
+				try {
 				if (MongoSetup.isReachable()) {
 					if (!docQueue.isEmpty()) {
 						Document newDoc = docQueue.remove();
@@ -76,6 +77,8 @@ public class HangmanStats {
 									Updates.inc("count", 1));
 						}
 					}
+				}}catch (Exception e){
+					System.err.println("Something went wrong while transferring a document to the MongoDB but don't worry, the document was probably saved on your hard drive and will be transferred after launching the app again.");
 				}
 			}
 		}
