@@ -11,7 +11,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import algorithm.GameState;
-import common.Config;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,9 +20,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import view.SendReportQuestion.*;
+import stats.HangmanStats;
 
 /**
  * A dialog to ask the user if the computer has won the game. Will probably be
@@ -50,6 +52,15 @@ public class GameEndDialog {
 	@FXML // fx:id="quitAppButton"
 	private Button quitAppButton; // Value injected by FXMLLoader
 
+	@FXML // fx:id="solutionLabel"
+	private Label solutionLabel; // Value injected by FXMLLoader
+
+	@FXML // fx:id="solutionTextBox"
+	private TextField solutionTextBox; // Value injected by FXMLLoader
+
+	@FXML // fx:id="submitButton"
+	private Button submitButton; // Value injected by FXMLLoader
+
 	@FXML // fx:id="questionLabel"
 	private Label questionLabel; // Value injected by FXMLLoader
 
@@ -65,8 +76,21 @@ public class GameEndDialog {
 	@FXML
 	void newGameButtonOnAction(ActionEvent event) {
 		// handle the event here
-		mainWindowCopy.startNewGame();
+		mainWindowCopy.startNewGame(false);
 		hide();
+	}
+
+	// Handler for Button[fx:id="submitButton"] onAction
+	@FXML
+	void submitButtonOnActio(ActionEvent event) {
+		// handle the event here
+		if (!solutionTextBox.getText().equals("")) {
+			HangmanStats.addWordToDatabase(solutionTextBox.getText(), MainWindow.currentSolution.lang);
+			solutionLabel.setText(bundle.getString("solutionLabel.thankYouText"));
+			solutionTextBox.setDisable(true);
+			submitButton.setDefaultButton(false);
+			submitButton.setDisable(true);
+		}
 	}
 
 	@FXML // This method is called by the FXMLLoader when initialization is
@@ -75,10 +99,13 @@ public class GameEndDialog {
 		assert newGameButton != null : "fx:id=\"newGameButton\" was not injected: check your FXML file 'GameEndDialog.fxml'.";
 		assert questionLabel != null : "fx:id=\"questionLabel\" was not injected: check your FXML file 'GameEndDialog.fxml'.";
 		assert quitAppButton != null : "fx:id=\"quitAppButton\" was not injected: check your FXML file 'GameEndDialog.fxml'.";
+		assert solutionLabel != null : "fx:id=\"solutionLabel\" was not injected: check your FXML file 'GameEndDialog.fxml'.";
+		assert solutionTextBox != null : "fx:id=\"solutionTextBox\" was not injected: check your FXML file 'GameEndDialog.fxml'.";
+		assert submitButton != null : "fx:id=\"submitButton\" was not injected: check your FXML file 'GameEndDialog.fxml'.";
 
 		// Initialize your logic here: all @FXML variables will have been
 		// injected
-		switch (gameStateCopy){
+		switch (gameStateCopy) {
 		case GAME_LOST:
 			questionLabel.setText(bundle.getString("looseText"));
 			break;
@@ -87,8 +114,22 @@ public class GameEndDialog {
 			break;
 		case GAME_WON:
 			questionLabel.setText(bundle.getString("winText"));
-			break;		
+			break;
 		}
+
+		solutionTextBox.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (newValue.contains("_")) {
+					solutionLabel.setText(bundle.getString("solutionLabel.enterSolutionText"));
+					submitButton.setDisable(true);
+				} else {
+					submitButton.setDisable(false);
+				}
+			}
+		});
+
+		solutionTextBox.setText(mainWindowCopy.currentSequence.getText());
 	}
 
 	public static void show(String windowTitle, GameState gameState, MainWindow mainWindow) {
@@ -96,7 +137,7 @@ public class GameEndDialog {
 		windowTitleCopy = windowTitle;
 		gameStateCopy = gameState;
 		mainWindowCopy = mainWindow;
-		
+
 		Parent root;
 		try {
 			root = FXMLLoader.load(GameEndDialog.class.getResource("GameEndDialog.fxml"), bundle);
@@ -109,6 +150,14 @@ public class GameEndDialog {
 			stage.setMinHeight(scene.getRoot().minHeight(0) + 47);
 
 			stage.setScene(scene);
+			
+			stage.initModality(Modality.WINDOW_MODAL);
+			System.out.println(mainWindowCopy==null);
+			System.out.println(mainWindowCopy.getScene());
+			System.out.println(mainWindowCopy.getScene().getWindow());
+		    stage.initOwner(
+		        (mainWindowCopy.getScene().getWindow()));
+			
 			stage.show();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

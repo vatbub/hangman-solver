@@ -25,7 +25,6 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import languages.Language;
@@ -46,9 +45,14 @@ public class MainWindow extends Application implements Initializable {
 
 	private ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
 	private static String currentSequenceStr;
-	private static Result currentSolution;
+	public static Result currentSolution;
 	private boolean shareThoughtsBool;
 	private String lastThought;
+	private static Scene scene;
+	
+	public Scene getScene(){
+		return scene;
+	}
 
 	@FXML
 	/**
@@ -84,7 +88,7 @@ public class MainWindow extends Application implements Initializable {
 	/**
 	 * fx:id="currentSequence"
 	 */
-	private TextField currentSequence; // Value injected by FXMLLoader
+	public TextField currentSequence; // Value injected by FXMLLoader
 
 	@FXML
 	/**
@@ -162,8 +166,14 @@ public class MainWindow extends Application implements Initializable {
 	}
 
 	public void startNewGame() {
-		// Maybe Submit the word to the MongoDB database
-		submitWordOnQuit();
+		startNewGame(true);
+	}
+
+	public void startNewGame(boolean submitWord) {
+		if (submitWord) {
+			// Maybe Submit the word to the MongoDB database
+			submitWordOnQuit();
+		}
 
 		algorithm.HangmanSolver.proposedSolutions.clear();
 		applyButton.setDisable(true);
@@ -172,6 +182,7 @@ public class MainWindow extends Application implements Initializable {
 		proposedSolutions.setText("");
 		setThought("");
 		result.setText("");
+		currentSequence.requestFocus();
 	}
 
 	/**
@@ -332,7 +343,8 @@ public class MainWindow extends Application implements Initializable {
 				HangmanStats.uploadThread.start();
 			}
 			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"), bundle);
-			Scene scene = new Scene(root);
+			
+			scene = new Scene(root);
 			// scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			primaryStage.setTitle(bundle.getString("windowTitle"));
@@ -409,9 +421,9 @@ public class MainWindow extends Application implements Initializable {
 
 			if (currentSolution.gameState == GameState.GAME_LOST || currentSolution.gameState == GameState.GAME_WON) {
 				GameEndDialog.show(bundle.getString("GameEndDialog.windowTitle"), currentSolution.gameState, this);
-			}else{
+			} else {
 				String thoughtText = "";
-				
+
 				if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
 					applyButton.setDisable(false);
 					thoughtText = bundle.getString("thinkOfAWord")
@@ -425,7 +437,7 @@ public class MainWindow extends Application implements Initializable {
 				// Add the remeaning wrong guesses
 				thoughtText = thoughtText + " " + bundle.getString("remeaningWrongGuesses").replace("<number>",
 						Integer.toString(Config.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
-				
+
 				setThought(thoughtText);
 			}
 
