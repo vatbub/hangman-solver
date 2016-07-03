@@ -14,6 +14,8 @@ branches:
   - release
 notifications:
     email:
+        recipients:
+          - vatbub123+travisbuildnotification@googlemail.com
         on_success: never # default: change
         on_failure: always # default: always
 env:
