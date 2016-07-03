@@ -7,7 +7,7 @@ cache:
   - $HOME/.m2
 
 before_install: "git clone -b travis `git config --get remote.origin.url` target/travis"
-script: "if [ $TRAVIS_PULL_REQUEST == 'false' ] ; then if [ $TRAVIS_BRANCH == release ] ; then mvn clean deploy --settings target/travis/settings.xml; fi ; fi"
+after_success: "if [ $TRAVIS_PULL_REQUEST == 'false' ] ; then if [ $TRAVIS_BRANCH == master ] ; then mvn clean deploy --settings target/travis/settings.xml; fi ; fi"
 branches:
   only:
   - master
