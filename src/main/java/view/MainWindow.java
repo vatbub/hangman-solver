@@ -394,6 +394,7 @@ public class MainWindow extends Application implements Initializable {
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 
 				currentSequenceStr = currentSequence.getText();
+				getNextLetter.setText(bundle.getString("computeNextLetterButtonLabel"));
 			}
 		});
 	}
@@ -439,6 +440,8 @@ public class MainWindow extends Application implements Initializable {
 						Integer.toString(Config.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
 
 				setThought(thoughtText);
+				
+				getNextLetter.setText(bundle.getString("computeNextLetterButton.letterWrongText"));
 			}
 
 		} catch (ArrayIndexOutOfBoundsException e) {
