@@ -156,11 +156,12 @@ public class MainWindow extends Application implements Initializable {
 	/**
 	 * Handler for Hyperlink[fx:id="newGameButton"] onAction
 	 * 
-	 * @param event
-	 *            The event object that contains information about the event.
 	 */
 	void newGameButtonOnAction(ActionEvent event) {
+		startNewGame();
+	}
 
+	public void startNewGame() {
 		// Maybe Submit the word to the MongoDB database
 		submitWordOnQuit();
 
@@ -171,9 +172,6 @@ public class MainWindow extends Application implements Initializable {
 		proposedSolutions.setText("");
 		setThought("");
 		result.setText("");
-
-		// Submit info if game was won
-		// AskIfIWin.show(bundle.getString("wellPerformedWindowTitle"));
 	}
 
 	/**
@@ -409,17 +407,11 @@ public class MainWindow extends Application implements Initializable {
 			proposedSolutionsString = proposedSolutionsString.substring(0, proposedSolutionsString.length() - 2);
 			proposedSolutions.setText(proposedSolutionsString);
 
-			String thoughtText = "";
-			switch (currentSolution.gameState) {
-			case GAME_LOST:
-				thoughtText = "I guess I lost :(";
-				break;
-
-			case GAME_WON:
-				thoughtText = "Yeah, I won, right?";
-				break;
-
-			case GAME_RUNNING:
+			if (currentSolution.gameState == GameState.GAME_LOST || currentSolution.gameState == GameState.GAME_WON) {
+				GameEndDialog.show(bundle.getString("GameEndDialog.windowTitle"), currentSolution.gameState, this);
+			}else{
+				String thoughtText = "";
+				
 				if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
 					applyButton.setDisable(false);
 					thoughtText = bundle.getString("thinkOfAWord")
@@ -433,9 +425,9 @@ public class MainWindow extends Application implements Initializable {
 				// Add the remeaning wrong guesses
 				thoughtText = thoughtText + " " + bundle.getString("remeaningWrongGuesses").replace("<number>",
 						Integer.toString(Config.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
-				break;
+				
+				setThought(thoughtText);
 			}
-			setThought(thoughtText);
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 			// No language selected
@@ -491,9 +483,11 @@ public class MainWindow extends Application implements Initializable {
 
 	/**
 	 * This method is executed before the app exits and executes several
-	 * shutdown commands.
+	 * shutdown commands.<br>
+	 * <b>IMPORTANT: This method does not quit the app, it just prepares the app
+	 * for shutdown!</b>
 	 */
-	public void shutDown() {
+	public static void shutDown() {
 		try {
 			System.out.println("Shutting down....");
 			// Maybe submit the current word
@@ -503,7 +497,6 @@ public class MainWindow extends Application implements Initializable {
 			MongoSetup.close();
 			System.out.println("Good bye");
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -514,7 +507,7 @@ public class MainWindow extends Application implements Initializable {
 	 * sequence and the bestWord have a correlation bigger or equal than
 	 * {@code Config.thresholdToSelectWord}.
 	 */
-	private void submitWordOnQuit() {
+	private static void submitWordOnQuit() {
 		try {
 			String[] words = currentSequenceStr.split(" ");
 
@@ -525,8 +518,7 @@ public class MainWindow extends Application implements Initializable {
 						HangmanStats.addWordToDatabase(currentSolution.bestWord, currentSolution.lang);
 					}
 			}
-		} catch (
-		NullPointerException e) {
+		} catch (NullPointerException e) {
 			// Do nothing, no word entered
 		}
 	}

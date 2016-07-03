@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?scenebuilder-preview-i18n-resource strings/messages.properties?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="134.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.GameEndDialog">
+  <children>
+    <Label fx:id="questionLabel" alignment="CENTER" prefHeight="26.0" prefWidth="572.0" text="Well, I won, right?/Uh that was a difficult word (appropriate question qill be shown)" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+    <Button id="gameWonButton" fx:id="newGameButton" defaultButton="true" mnemonicParsing="false" onAction="#newGameButtonOnAction" prefWidth="572.0" text="%newGameButton.label" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="55.0" />
+    <Button id="gameLostButton" fx:id="quitAppButton" mnemonicParsing="false" onAction="#quitAppButtonOnAction" prefWidth="572.0" text="%quitAppButton.label" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="93.0" />
+  </children>
+</AnchorPane>
