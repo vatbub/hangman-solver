@@ -26,7 +26,7 @@ public class HangmanSolver {
 	 */
 	public static List<String> proposedSolutions = new ArrayList<String>();
 
-	private static String currentSequenceWord;
+	private static String currentSequenceCopy;
 
 	/**
 	 * Solves a Hangman puzzle.
@@ -47,6 +47,8 @@ public class HangmanSolver {
 
 		res.lang = lang;
 		res.gameState = winDetector(currentSequence);
+		
+		currentSequenceCopy = currentSequence;;
 
 		int counter = 0;
 
@@ -83,7 +85,7 @@ public class HangmanSolver {
 			System.out.println("counter = " + counter);
 			System.out.println("word = " + word);
 			counter++;
-			currentSequenceWord = word;
+			
 			// Get all words from the database with equal length
 			List<String> wordsWithEqualLength = wiktDatabase.getValuesWithLength(2, word.length());
 			wordsWithEqualLength.addAll(cldrDatabase.getValuesWithLength(2, word.length()));
@@ -331,9 +333,9 @@ public class HangmanSolver {
 	public static boolean wordContainsWrongChar(String word) {
 
 		char[] chars = word.toCharArray();
-
+		
 		for (char chr : chars) {
-			if (!currentSequenceWord.toUpperCase().contains(Character.toString(Character.toUpperCase(chr)))
+			if (!currentSequenceCopy.toUpperCase().contains(Character.toString(Character.toUpperCase(chr)))
 					&& proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))) {
 				return true;
 			}
@@ -387,7 +389,7 @@ public class HangmanSolver {
 		// If we did not win the game, it can be runnning or we could have lost it.
 		
 		// If the current wrong guess count is bigger than or equal to the permitted wrong guess count, we've lost.
-		if (getWrongGuessCount()>=Config.maxTurnCountToLoose){
+		if (getWrongGuessCount()+1>=Config.maxTurnCountToLoose){
 			return GameState.GAME_LOST;
 		}
 		
