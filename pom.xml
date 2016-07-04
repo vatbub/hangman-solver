@@ -9,16 +9,40 @@
 
 	<repositories>
 		<repository>
-			<id>fokReleaseRepo</id>
-			<name>FOK Release Repository</name>
-			<url>http://vatbub.bplaced.net/mavenRepo/release/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>bintray-vatbub-fokReleases</id>
+			<name>bintray</name>
+			<url>http://dl.bintray.com/vatbub/fokReleases</url>
 		</repository>
 		<repository>
-			<id>fokSnapshotRepo</id>
-			<name>FOK Snapshot Repository</name>
-			<url>http://vatbub.bplaced.net/mavenRepo/snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>bintray-vatbub-fokprojectsSnapshots</id>
+			<name>bintray</name>
+			<url>http://dl.bintray.com/vatbub/fokprojectsSnapshots</url>
 		</repository>
 	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>bintray-vatbub-fokReleases</id>
+			<name>bintray-plugins</name>
+			<url>http://dl.bintray.com/vatbub/fokReleases</url>
+		</pluginRepository>
+		<pluginRepository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>bintray-vatbub-fokprojectsSnapshots</id>
+			<name>bintray-plugins</name>
+			<url>http://dl.bintray.com/vatbub/fokprojectsSnapshots</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<parent>
 		<groupId>fokprojects</groupId>
