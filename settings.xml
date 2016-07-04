@@ -6,14 +6,14 @@
 	<pluginGroups/>
 	<servers>
 		<server>
-			<id>fokSnapshots</id>
-			<username>${env.CI_DEPLOY_USERNAME}</username>
-			<password>${env.CI_DEPLOY_PASSWORD}</password>
+			<id>bintray-vatbub-fokReleases</id>
+			<username>vatbub</username>
+			<password>MRuGeidA.</password>
 		</server>
 		<server>
-			<id>fokRelease</id>
-			<username>${env.CI_DEPLOY_USERNAME}</username>
-			<password>${env.CI_DEPLOY_PASSWORD}</password>
+			<id>bintray-vatbub-fokprojectsSnapshots</id>
+			<username>vatbub</username>
+			<password>MRuGeidA.</password>
 		</server>
 	</servers>
 	<mirrors/>
