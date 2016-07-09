@@ -11,18 +11,16 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-			<id>bintray-vatbub-fokReleases</id>
-			<name>bintray</name>
-			<url>http://dl.bintray.com/vatbub/fokReleases</url>
-		</repository>
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
 			<id>bintray-vatbub-fokprojectsSnapshots</id>
 			<name>bintray</name>
 			<url>http://dl.bintray.com/vatbub/fokprojectsSnapshots</url>
 		</repository>
+		<repository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>libs-snapshot</name>
+          <url>https://oss.jfrog.org/artifactory/libs-snapshot</url>
+        </repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -46,7 +44,7 @@
 	<parent>
 		<groupId>fokprojects</groupId>
 		<artifactId>parentPom</artifactId>
-		<version>0.0.4</version>
+		<version>0.0.7-SNAPSHOT</version>
 	</parent>
 
 	<scm>
