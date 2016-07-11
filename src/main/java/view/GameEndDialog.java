@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import algorithm.GameState;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -68,8 +69,7 @@ public class GameEndDialog {
 	@FXML
 	void quitAppButtonOnAction(ActionEvent event) {
 		// handle the event here
-		MainWindow.shutDown();
-		System.exit(0);
+		Platform.exit();
 	}
 
 	// Handler for Button[fx:id="newGameButton"] onAction
