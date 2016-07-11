@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import algorithm.*;
 import common.Config;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -354,16 +355,15 @@ public class MainWindow extends Application implements Initializable {
 
 			primaryStage.setScene(scene);
 
-			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				public void handle(WindowEvent we) {
-					shutDown();
-				}
-			});
-
 			primaryStage.show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void stop(){
+		shutDown();
 	}
 
 	/**
