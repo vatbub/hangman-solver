@@ -90,6 +90,7 @@ public class GameEndDialog {
 			solutionTextBox.setDisable(true);
 			submitButton.setDefaultButton(false);
 			submitButton.setDisable(true);
+			newGameButton.setDefaultButton(true);
 		}
 	}
 
