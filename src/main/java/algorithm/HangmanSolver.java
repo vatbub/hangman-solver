@@ -70,7 +70,7 @@ public class HangmanSolver {
 					// Although this method is called quite often, it keeps
 					// track of
 					// the submissions to avoid duplicates.
-					HangmanStats.addWordToDatabase(words.get(i - indexCorr), lang);
+					// HangmanStats.addWordToDatabase(words.get(i - indexCorr), lang);
 				}
 				words.remove(i - indexCorr);
 				indexCorr = indexCorr + 1;
