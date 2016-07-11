@@ -152,9 +152,7 @@ public class GameEndDialog {
 			stage.setScene(scene);
 			
 			stage.initModality(Modality.WINDOW_MODAL);
-			System.out.println(mainWindowCopy==null);
-			System.out.println(mainWindowCopy.getScene());
-			System.out.println(mainWindowCopy.getScene().getWindow());
+			
 		    stage.initOwner(
 		        (mainWindowCopy.getScene().getWindow()));
 			
