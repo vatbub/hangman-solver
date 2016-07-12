@@ -383,9 +383,6 @@ public class MainWindow extends Application implements Initializable {
 		shareThoughtsBool = true;
 		versionLabel.setText(common.Common.getAppVersion());
 
-		// Initialize the language search field.
-		new AutoCompleteComboBoxListener<String>(languageSelector);
-
 		// Listen for TextField text changes
 		currentSequence.textProperty().addListener(new ChangeListener<String>() {
 			@Override
@@ -401,11 +398,11 @@ public class MainWindow extends Application implements Initializable {
 	 * This method launches the algorithm and writes its results into the gui.
 	 */
 	void launchAlgorithm() {
-		try {
-			MainWindow window = this;
-			Thread algorithmThread = new Thread() {
-				@Override
-				public void run() {
+		MainWindow window = this;
+		Thread algorithmThread = new Thread() {
+			@Override
+			public void run() {
+				try {
 					// modify GUI
 
 					Platform.runLater(new Runnable() {
@@ -413,6 +410,7 @@ public class MainWindow extends Application implements Initializable {
 						public void run() {
 							languageSelector.setDisable(true);
 							getNextLetter.setDisable(true);
+							applyButton.setDisable(true);
 							getNextLetter.setText(bundle.getString("computeNextLetterButton.waitForAlgorithmText"));
 						}
 					});
@@ -468,22 +466,37 @@ public class MainWindow extends Application implements Initializable {
 												Config.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
 
 								setThought(thoughtText);
-								getNextLetter.setDisable(false);
-								getNextLetter.setText(bundle.getString("computeNextLetterButton.letterWrongText"));
 							}
 						});
 					}
+				} catch (ArrayIndexOutOfBoundsException e) {
+					// No language selected
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							NoLanguageSelected.show();
+						}
+					});
+				} catch (StringIndexOutOfBoundsException e2) {
+					// No sequence entered
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							NoSequenceEntered.show();
+						}
+					});
+				} finally {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							getNextLetter.setDisable(false);
+							getNextLetter.setText(bundle.getString("computeNextLetterButton.letterWrongText"));
+						}
+					});
 				}
-			};
-			algorithmThread.start();
-
-		} catch (ArrayIndexOutOfBoundsException e) {
-			// No language selected
-			NoLanguageSelected.show();
-		} catch (StringIndexOutOfBoundsException e2) {
-			// No sequence entered
-			NoSequenceEntered.show();
-		}
+			}
+		};
+		algorithmThread.start();
 
 	}
 
@@ -514,19 +527,49 @@ public class MainWindow extends Application implements Initializable {
 	 * Loads the available languages into the gui dropdown.
 	 */
 	private void loadLanguageList() {
-		System.out.println("Loading language list...");
+		Thread loadLangThread = new Thread() {
+			@Override
+			public void run() {
+				System.out.println("Loading language list...");
 
-		ObservableList<String> items = FXCollections.observableArrayList();
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						languageSelector.setDisable(true);
+						languageSelector.setPromptText(bundle.getString("languageSelector.waitText"));
+						currentSequence.setDisable(true);
+						getNextLetter.setDisable(true);
+					}
+				});
 
-		// Load the languages
-		for (Language lang : Language.getSupportedLanguages()) {
-			items.add(lang.getHumanReadableName());
-		}
+				ObservableList<String> items = FXCollections.observableArrayList();
 
-		languageSelector.setItems(items);
+				// Load the languages
+				for (Language lang : Language.getSupportedLanguages()) {
+					items.add(lang.getHumanReadableName());
+				}
 
-		System.out.println("Languages loaded");
+				languageSelector.setItems(items);
 
+				System.out.println("Languages loaded");
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						languageSelector.setDisable(false);
+						languageSelector.setPromptText(bundle.getString("languageSelector.PromptText"));
+						currentSequence.setDisable(false);
+						getNextLetter.setDisable(false);
+
+						// Initialize the language search field.
+						new AutoCompleteComboBoxListener<String>(languageSelector);
+
+						languageSelector.requestFocus();
+					}
+				});
+			}
+		};
+
+		loadLangThread.start();
 	}
 
 	/**
