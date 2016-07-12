@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import algorithm.*;
 import common.Config;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -47,8 +48,8 @@ public class MainWindow extends Application implements Initializable {
 	private boolean shareThoughtsBool;
 	private String lastThought;
 	private static Scene scene;
-	
-	public Scene getScene(){
+
+	public Scene getScene() {
 		return scene;
 	}
 
@@ -341,7 +342,7 @@ public class MainWindow extends Application implements Initializable {
 				HangmanStats.uploadThread.start();
 			}
 			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"), bundle);
-			
+
 			scene = new Scene(root);
 			// scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
@@ -357,9 +358,9 @@ public class MainWindow extends Application implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	public void stop(){
+	public void stop() {
 		shutDown();
 	}
 
@@ -401,45 +402,80 @@ public class MainWindow extends Application implements Initializable {
 	 */
 	void launchAlgorithm() {
 		try {
-			// modify GUI
-			languageSelector.setDisable(true);
+			MainWindow window = this;
+			Thread algorithmThread = new Thread() {
+				@Override
+				public void run() {
+					// modify GUI
 
-			currentSolution = HangmanSolver.solve(currentSequence.getText(),
-					Language.getSupportedLanguages().get(languageSelector.getSelectionModel().getSelectedIndex()));
-			result.setText(currentSolution.result);
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							languageSelector.setDisable(true);
+							getNextLetter.setDisable(true);
+							getNextLetter.setText(bundle.getString("computeNextLetterButton.waitForAlgorithmText"));
+						}
+					});
 
-			String proposedSolutionsString = "";
-			for (String solution : HangmanSolver.proposedSolutions) {
-				proposedSolutionsString = proposedSolutionsString + solution + ", ";
-			}
+					currentSolution = HangmanSolver.solve(currentSequence.getText(), Language.getSupportedLanguages()
+							.get(languageSelector.getSelectionModel().getSelectedIndex()));
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							result.setText(currentSolution.result);
+						}
+					});
 
-			// remove last ,
-			proposedSolutionsString = proposedSolutionsString.substring(0, proposedSolutionsString.length() - 2);
-			proposedSolutions.setText(proposedSolutionsString);
+					String proposedSolutionsString = "";
+					for (String solution : HangmanSolver.proposedSolutions) {
+						proposedSolutionsString = proposedSolutionsString + solution + ", ";
+					}
 
-			if (currentSolution.gameState == GameState.GAME_LOST || currentSolution.gameState == GameState.GAME_WON) {
-				GameEndDialog.show(bundle.getString("GameEndDialog.windowTitle"), currentSolution.gameState, this);
-			} else {
-				String thoughtText = "";
+					// remove last ,
+					proposedSolutionsString = proposedSolutionsString.substring(0,
+							proposedSolutionsString.length() - 2);
+					proposedSolutions.setText(proposedSolutionsString);
 
-				if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
-					applyButton.setDisable(false);
-					thoughtText = bundle.getString("thinkOfAWord")
-							.replace("<percent>", Double.toString(Math.round(currentSolution.bestWordScore * 100)))
-							.replace("<word>", currentSolution.bestWord);
-				} else {
-					applyButton.setDisable(true);
-					thoughtText = bundle.getString("dontThinkAWord");
+					if (currentSolution.gameState == GameState.GAME_LOST
+							|| currentSolution.gameState == GameState.GAME_WON) {
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								GameEndDialog.show(bundle.getString("GameEndDialog.windowTitle"),
+										currentSolution.gameState, window);
+							}
+						});
+					} else {
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								String thoughtText = "";
+
+								if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
+									applyButton.setDisable(false);
+									thoughtText = bundle.getString("thinkOfAWord")
+											.replace("<percent>",
+													Double.toString(Math.round(currentSolution.bestWordScore * 100)))
+											.replace("<word>", currentSolution.bestWord);
+								} else {
+									applyButton.setDisable(true);
+									thoughtText = bundle.getString("dontThinkAWord");
+								}
+
+								// Add the remeaning wrong guesses
+								thoughtText = thoughtText + " " + bundle.getString("remeaningWrongGuesses")
+										.replace("<number>", Integer.toString(
+												Config.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
+
+								setThought(thoughtText);
+								getNextLetter.setDisable(false);
+								getNextLetter.setText(bundle.getString("computeNextLetterButton.letterWrongText"));
+							}
+						});
+					}
 				}
-
-				// Add the remeaning wrong guesses
-				thoughtText = thoughtText + " " + bundle.getString("remeaningWrongGuesses").replace("<number>",
-						Integer.toString(Config.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
-
-				setThought(thoughtText);
-				
-				getNextLetter.setText(bundle.getString("computeNextLetterButton.letterWrongText"));
-			}
+			};
+			algorithmThread.start();
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 			// No language selected
