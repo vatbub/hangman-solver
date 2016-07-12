@@ -1,5 +1,8 @@
 package languages;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -7,10 +10,25 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.io.FileUtils;
+
 import algorithm.HangmanSolver;
 import common.*;
 
 public class TabFile {
+
+	public static void main(String[] args) {
+		try {
+			TabFile testFile = new TabFile(new File(
+					"C:\\Users\\frede\\git\\hangman-solver\\src\\main\\resources\\languages\\LanguageCodes.tab").toURI()
+							.toURL());
+			testFile.save("C:\\Users\\frede\\Desktop\\testFile.tab");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 	/**
 	 * The column headers of this *.tab file.
@@ -23,22 +41,43 @@ public class TabFile {
 
 	/**
 	 * Creates a new object representation of the specified *.tab file.
-	 * @param file The {@link URL} pointing to the desired *.tab file.
-	 * @throws IOException if the file cannot be read.
+	 * 
+	 * @param file
+	 *            The {@link URL} pointing to the desired *.tab file.
+	 * @throws IOException
+	 *             if the file cannot be read.
 	 */
 	public TabFile(URL file) throws IOException {
 		readFile(file);
 	}
 
 	/**
+	 * Creates an empty *.tab file.
+	 */
+	public TabFile() {
+		createNewFile();
+	}
+
+	public TabFile(int columnCount) {
+		createNewFile(columnCount);
+	}
+
+	public TabFile(String[] columnHeaders) {
+		createNewFile(columnHeaders);
+	}
+
+	/**
 	 * Reads the content of the specified *.tab file to this objects variables.
-	 * @param file The file to read.
-	 * @throws IOException if the file caannot be read.
+	 * 
+	 * @param file
+	 *            The file to read.
+	 * @throws IOException
+	 *             if the file cannot be read.
 	 */
 	private void readFile(URL file) throws IOException {
 
 		// open the file
-		Scanner scan = new Scanner(file.openStream());
+		Scanner scan = new Scanner(file.openStream(), "UTF-8");
 
 		// get the column headers
 		columnHeaders = scan.nextLine().split("	");
@@ -48,6 +87,21 @@ public class TabFile {
 		}
 
 		scan.close();
+	}
+
+	/**
+	 * Creates an empty *.tab file.
+	 */
+	private void createNewFile() {
+		columnHeaders = new String[0];
+	}
+
+	private void createNewFile(int columnCount) {
+		columnHeaders = new String[columnCount];
+	}
+
+	private void createNewFile(String[] columnHeaders) {
+		columnHeaders = columnHeaders;
 	}
 
 	/**
@@ -99,9 +153,13 @@ public class TabFile {
 
 	/**
 	 * Gets all values with the given length.
-	 * @param column The column to look for values.
-	 * @param length The length of the returned values. 
-	 * @return A {@link List} with all values in the specified column that have the specified length.
+	 * 
+	 * @param column
+	 *            The column to look for values.
+	 * @param length
+	 *            The length of the returned values.
+	 * @return A {@link List} with all values in the specified column that have
+	 *         the specified length.
 	 */
 	public List<String> getValuesWithLength(int column, int length) {
 		List<String> res = new ArrayList<String>();
@@ -116,11 +174,19 @@ public class TabFile {
 	}
 
 	/**
-	 * Returns the value that has the highest {@link #stringCorrelation} with the given {@link String}.
-	 * @param column The column to look for values.
-	 * @param value The {@link String} to be compared. Only values with equal length as {@code value} are returned due to the way {@link #stringCorrelation} works.
-	 * @param ignoredWords Words to be filtered out before doing the comparison.
-	 * @return The value in the specified column that has the highest correlation.
+	 * Returns the value that has the highest {@link #stringCorrelation} with
+	 * the given {@link String}.
+	 * 
+	 * @param column
+	 *            The column to look for values.
+	 * @param value
+	 *            The {@link String} to be compared. Only values with equal
+	 *            length as {@code value} are returned due to the way
+	 *            {@link #stringCorrelation} works.
+	 * @param ignoredWords
+	 *            Words to be filtered out before doing the comparison.
+	 * @return The value in the specified column that has the highest
+	 *         correlation.
 	 */
 	public String getValueWithHighestCorrelation(int column, String value, List<String> ignoredWords) {
 		ArrayList<Thread> threads = new ArrayList<Thread>();
@@ -134,10 +200,10 @@ public class TabFile {
 				public void run() {
 					int index = currentIndex.getAndIncrement();
 					while (index < getRowCount()) {
-						if (value.equals("_a_n___") && getValueAt(index, column).equals("zahnlos")){
+						if (value.equals("_a_n___") && getValueAt(index, column).equals("zahnlos")) {
 							System.out.println("stopping...");
 						}
-						
+
 						if (value.length() == getValueAt(index, column).length()
 								&& !ignoredWords.contains(getValueAt(index, column))
 								&& !HangmanSolver.wordContainsWrongChar(getValueAt(index, column))) {
@@ -196,5 +262,50 @@ public class TabFile {
 		}
 
 		return equalLetters / str1.length();
+	}
+
+	public void save(String fileName) {
+
+		// Generate the file
+		String str = "";
+
+		// Column headers
+		for (String colHead : columnHeaders) {
+			str = str + colHead;
+			if (!colHead.equals(columnHeaders[columnHeaders.length - 1])) {
+				str = str + " ";
+			}
+		}
+
+		str = str + "\n";
+
+		// Values
+		for (String[] line : values) {
+			for (String el : line) {
+				str = str + el;
+
+				if (!el.equals(line[line.length - 1])) {
+					str = str + " ";
+				}
+			}
+
+			str = str + "\n";
+		}
+
+		File f = new File(fileName);
+		try {
+			FileUtils.writeStringToFile(f, str, "UTF-8");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/*try (BufferedWriter file = new BufferedWriter(new FileWriter(fileName))) {
+			file.write(str);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
+
 	}
 }
