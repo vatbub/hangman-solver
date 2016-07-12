@@ -255,6 +255,7 @@ public class HangmanSolver {
 		}
 		
 		System.out.println("(char) maxIndex = " + (char) maxIndex); 
+		System.out.println("maxIndex = " + maxIndex);
 
 		return Character.toUpperCase((char) maxIndex);
 	}
