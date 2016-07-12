@@ -47,10 +47,9 @@ public class HangmanSolver {
 
 		res.lang = lang;
 		res.gameState = winDetector(currentSequence);
-		
-		currentSequenceCopy = currentSequence;;
 
-		int counter = 0;
+		currentSequenceCopy = currentSequence;
+		;
 
 		if (!lang.equals(langOld) || wiktDatabase == null || cldrDatabase == null) {
 			// Load language databases
@@ -70,7 +69,8 @@ public class HangmanSolver {
 					// Although this method is called quite often, it keeps
 					// track of
 					// the submissions to avoid duplicates.
-					// HangmanStats.addWordToDatabase(words.get(i - indexCorr), lang);
+					// HangmanStats.addWordToDatabase(words.get(i - indexCorr),
+					// lang);
 				}
 				words.remove(i - indexCorr);
 				indexCorr = indexCorr + 1;
@@ -79,13 +79,6 @@ public class HangmanSolver {
 
 		// Go through all words
 		for (String word : words) {
-			if (counter == 2) {
-				System.out.println("Stopping...");
-			}
-			System.out.println("counter = " + counter);
-			System.out.println("word = " + word);
-			counter++;
-			
 			// Get all words from the database with equal length
 			List<String> wordsWithEqualLength = wiktDatabase.getValuesWithLength(2, word.length());
 			wordsWithEqualLength.addAll(cldrDatabase.getValuesWithLength(2, word.length()));
@@ -189,7 +182,7 @@ public class HangmanSolver {
 		AtomicInteger currentIndex = new AtomicInteger(0);
 		List<AtomicInteger> charCounts = new ArrayList<AtomicInteger>();
 
-		for (int i = 0; i < 26; i++) {
+		for (int i = 0; i < Character.MAX_VALUE; i++) {
 			AtomicInteger temp = new AtomicInteger(0);
 			charCounts.add(temp);
 		}
@@ -202,10 +195,10 @@ public class HangmanSolver {
 				public void run() {
 					int index = currentIndex.getAndIncrement();
 					while (index < words.size()) {
-						int[] counts = countAllCharsInString(words.get(index));
+						List<Integer> counts = countAllCharsInString(words.get(index));
 
-						for (int i = 0; i < 26; i++) {
-							charCounts.get(i).set(charCounts.get(i).get() + counts[i]);
+						for (int i = 0; i < Character.MAX_VALUE; i++) {
+							charCounts.get(i).set(charCounts.get(i).get() + counts.get(i));
 						}
 
 						// Grab the next index
@@ -239,10 +232,10 @@ public class HangmanSolver {
 				priorityChars[j] = Character.toLowerCase(priorityChars[j]);
 			}
 
-			for (int i = 0; i < 26; i++) {
+			for (int i = 0; i < charCounts.size(); i++) {
 				if (charCounts.get(i).get() > maxCount
-						&& (!proposedSolutions.contains(Character.toString((char) ('A' + i))))
-						&& charArrayContais(priorityChars, (char) ('a' + i))) {
+						&& (!proposedSolutions.contains(Character.toString(Character.toUpperCase((char) i))))
+						&& charArrayContais(priorityChars, Character.toLowerCase((char) i))) {
 					maxIndex = i;
 					maxCount = charCounts.get(i).get();
 				}
@@ -252,16 +245,18 @@ public class HangmanSolver {
 		if (priorityChars.length == 0 || maxCount == -1) {
 			// No priorityChars specified or all priority chars already proposed
 
-			for (int i = 0; i < 26; i++) {
+			for (int i = 0; i < charCounts.size(); i++) {
 				if (charCounts.get(i).get() > maxCount
-						&& !proposedSolutions.contains(Character.toString((char) ('A' + i)))) {
+						&& (!proposedSolutions.contains(Character.toString(Character.toUpperCase((char) i))))); {
 					maxIndex = i;
 					maxCount = charCounts.get(i).get();
 				}
 			}
 		}
+		
+		System.out.println("(char) maxIndex = " + (char) maxIndex); 
 
-		return (char) ('A' + maxIndex);
+		return Character.toUpperCase((char) maxIndex);
 	}
 
 	/**
@@ -289,13 +284,18 @@ public class HangmanSolver {
 	 * 
 	 * @param str
 	 *            The string of which the chars shall be counted.
-	 * @return an array where the 0-position shows
+	 * @return An array where each index represents the number of times this
+	 *         char is contained in the string. E. g. the number at the 97th
+	 *         position represents how often the lower case {@code a} is
+	 *         contained in the string as {@code a} is represented as 97 in a
+	 *         char.
 	 */
-	private static int[] countAllCharsInString(String str) {
-		int[] res = new int[26];
+	private static List<Integer> countAllCharsInString(String str) {
+		List<Integer> res = new ArrayList<Integer>();
 
-		for (int i = 0; i < 26; i++) {
-			res[i] = countCharInString(str, (char) ('A' + i)) + countCharInString(str, (char) ('a' + i));
+		for (int i = 0; i <= Character.MAX_VALUE; i++) {
+			res.add(countCharInString(str, Character.toLowerCase((char) i))
+					+ countCharInString(str, Character.toUpperCase((char) i)));
 		}
 
 		return res;
@@ -333,7 +333,7 @@ public class HangmanSolver {
 	public static boolean wordContainsWrongChar(String word) {
 
 		char[] chars = word.toCharArray();
-		
+
 		for (char chr : chars) {
 			if (!currentSequenceCopy.toUpperCase().contains(Character.toString(Character.toUpperCase(chr)))
 					&& proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))) {
@@ -363,8 +363,11 @@ public class HangmanSolver {
 	}
 
 	/**
-	 * Checks if the computer has won or lost the game or the game is still running
-	 * @param currentSequence The current letter sequence.
+	 * Checks if the computer has won or lost the game or the game is still
+	 * running
+	 * 
+	 * @param currentSequence
+	 *            The current letter sequence.
 	 * @return The current {@link GameState}
 	 */
 	public static GameState winDetector(String currentSequence) {
@@ -380,19 +383,22 @@ public class HangmanSolver {
 				indexCorr = indexCorr + 1;
 			}
 		}
-		
-		// If all words are solved, the list is now empty and the computer hhas won the game.
-		if (words.size()==0){
+
+		// If all words are solved, the list is now empty and the computer hhas
+		// won the game.
+		if (words.size() == 0) {
 			return GameState.GAME_WON;
 		}
-		
-		// If we did not win the game, it can be runnning or we could have lost it.
-		
-		// If the current wrong guess count is bigger than or equal to the permitted wrong guess count, we've lost.
-		if (getWrongGuessCount()+1>=Config.maxTurnCountToLoose){
+
+		// If we did not win the game, it can be runnning or we could have lost
+		// it.
+
+		// If the current wrong guess count is bigger than or equal to the
+		// permitted wrong guess count, we've lost.
+		if (getWrongGuessCount() + 1 >= Config.maxTurnCountToLoose) {
 			return GameState.GAME_LOST;
 		}
-		
+
 		// If we did not win nor loose, the game is still running
 		return GameState.GAME_RUNNING;
 	}
