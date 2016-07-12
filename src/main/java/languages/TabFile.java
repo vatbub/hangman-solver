@@ -1,14 +1,13 @@
 package languages;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 
@@ -18,7 +17,7 @@ import common.*;
 public class TabFile {
 
 	public static void main(String[] args) {
-		try {
+		/*try {
 			TabFile testFile = new TabFile(new File(
 					"C:\\Users\\frede\\git\\hangman-solver\\src\\main\\resources\\languages\\LanguageCodes.tab").toURI()
 							.toURL());
@@ -26,7 +25,11 @@ public class TabFile {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
+		
+		String word = "Test. So geht es weiter, aber nur, wenn es so weitergeht.";
+		word = word.replaceAll("(" + Pattern.quote(".") + "|,)", "");
+		System.out.println(word);
 
 	}
 
@@ -101,7 +104,7 @@ public class TabFile {
 	}
 
 	private void createNewFile(String[] columnHeaders) {
-		columnHeaders = columnHeaders;
+		this.columnHeaders = columnHeaders;
 	}
 
 	/**
@@ -113,6 +116,15 @@ public class TabFile {
 	 */
 	public String getColumnHeader(int index) {
 		return columnHeaders[index];
+	}
+
+	/**
+	 * Returns an array that contains all column headers.
+	 * 
+	 * @return An array that contains all column headers.
+	 */
+	public String[] getColumnHeaders() {
+		return columnHeaders;
 	}
 
 	/**
@@ -149,6 +161,31 @@ public class TabFile {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return "";
 		}
+	}
+
+	/**
+	 * Replaces the old value at the given position in the *.tab-file with the
+	 * new Value. This method cannot add rows to the *.tab-file. To add rows,
+	 * use {@link #addRow}
+	 * 
+	 * @param newValue
+	 *            Thenew value of the given cell
+	 * @param row
+	 *            The row of the cell to be replaced.
+	 * @param column
+	 *            The column of the cell to be replaced.
+	 */
+	public void setValueAt(String newValue, int row, int column) {
+		values.get(row)[column] = newValue;
+	}
+
+	public void addRow(String[] newValues) {
+		if (newValues.length != getColumnCount()) {
+			throw new ArrayIndexOutOfBoundsException(
+					"The given values-array dows not match the column-count of this file.");
+		}
+
+		values.add(newValues);
 	}
 
 	/**
@@ -299,13 +336,68 @@ public class TabFile {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		/*try (BufferedWriter file = new BufferedWriter(new FileWriter(fileName))) {
-			file.write(str);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}*/
+	}
 
+	/**
+	 * Optimizes the dictionary of the app. As The dictionaries are a resource
+	 * of the app, this method is currently only intended to run in a dev
+	 * environment.<br>
+	 * <br>
+	 * Optimization means in this case that words are split up at spaces and
+	 * punctuation is deleted.
+	 * 
+	 * @param origin
+	 *            The original {@code TabFile} that is to be optimized.
+	 * @param originWordColumnIndex
+	 *            The column index with the words to be optimized.
+	 * @param preserveColumnIndex
+	 *            If {@code true}, the words are written to the same column
+	 *            index as in the origin-file and the values of all other
+	 *            columns are preserved, if {@code false}, the optimized word
+	 *            list will be written into the first column (index: 0) and all
+	 *            other columns will be deleted.
+	 * @return A {@code TabFile} with the optimized word list.
+	 */
+	public static TabFile optimizeDictionaries(TabFile origin, int originWordColumnIndex,
+			boolean preserveColumnIndex) {
+		// Create new TabFile with one column
+		String[] colHeads;
+
+		if (preserveColumnIndex) {
+			colHeads = origin.getColumnHeaders();
+		} else {
+			colHeads = new String[] { "words" };
+		}
+		TabFile res = new TabFile(colHeads);
+
+		for (int lineIndex=0; lineIndex<origin.getRowCount(); lineIndex++) {
+			String[] line = origin.values.get(lineIndex);
+			// Split at spaces
+			String[] words = line[originWordColumnIndex].split(" ");
+
+			for (String word : words) {
+				// Remove punctuation
+				word = word.replaceAll("(" + Pattern.quote(".") + "|,)", "");
+				
+				// Add word to result
+				if (preserveColumnIndex){
+					String[] tempValues = new String[origin.getColumnCount()+1];
+					
+					for (int i=0; i<origin.getColumnCount(); i++){
+						if (i!=originWordColumnIndex){
+							tempValues[i] = origin.getValueAt(lineIndex, i);
+						}else {
+							tempValues[i] = word;
+						}
+					}
+					
+					res.addRow(tempValues);
+				}else {
+					res.addRow(new String[]{word});
+				}
+			}
+		}
+
+		return res;
 	}
 }
