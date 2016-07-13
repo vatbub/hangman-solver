@@ -180,12 +180,16 @@ public class HangmanSolver {
 	private static char getMostFrequentChar(List<String> words, char[] priorityChars) {
 		ArrayList<Thread> threads = new ArrayList<Thread>();
 		AtomicInteger currentIndex = new AtomicInteger(0);
-		List<AtomicInteger> charCounts = new ArrayList<AtomicInteger>();
+		List<CustomAtomicInteger> charCounts = new ArrayList<CustomAtomicInteger>();
 
 		for (int i = 0; i < Character.MAX_VALUE; i++) {
-			AtomicInteger temp = new AtomicInteger(0);
+			CustomAtomicInteger temp = new CustomAtomicInteger(0);
 			charCounts.add(temp);
 		}
+
+		// List<AtomicInteger> charCounts = new
+		// ArrayList<AtomicInteger>(Collections.nCopies(Character.MAX_VALUE, new
+		// AtomicInteger(0)));
 
 		System.out.println("Size: " + words.size());
 
@@ -223,6 +227,14 @@ public class HangmanSolver {
 		int maxCount = -1;
 		int maxIndex = 0;
 
+		// copy charCounts
+		List<CustomAtomicInteger> sortedCharCounts = new ArrayList<CustomAtomicInteger>(charCounts);
+		// sort the charCounts
+		Collections.sort(sortedCharCounts);
+		Collections.reverse(sortedCharCounts);
+
+		// Max value is now at the top
+
 		if (priorityChars.length != 0) {
 			// priority chars specified
 
@@ -233,11 +245,12 @@ public class HangmanSolver {
 			}
 
 			for (int i = 0; i < charCounts.size(); i++) {
-				if (charCounts.get(i).get() > maxCount
-						&& (!proposedSolutions.contains(Character.toString(Character.toUpperCase((char) i))))
-						&& charArrayContais(priorityChars, Character.toLowerCase((char) i))) {
-					maxIndex = i;
-					maxCount = charCounts.get(i).get();
+				char chr = (char) charCounts.indexOf(sortedCharCounts.get(i));
+				if ((!proposedSolutions.contains(Character.toString(Character.toUpperCase(chr))))
+						&& charArrayContais(priorityChars, Character.toLowerCase(chr))) {
+					maxIndex = (int) chr;
+					maxCount = charCounts.get((int) chr).get();
+					break;
 				}
 			}
 		}
@@ -246,15 +259,18 @@ public class HangmanSolver {
 			// No priorityChars specified or all priority chars already proposed
 
 			for (int i = 0; i < charCounts.size(); i++) {
+				char chr = (char) charCounts.indexOf(sortedCharCounts.get(i));
+
 				if (charCounts.get(i).get() > maxCount
-						&& (!proposedSolutions.contains(Character.toString(Character.toUpperCase((char) i))))); {
-					maxIndex = i;
-					maxCount = charCounts.get(i).get();
+						&& (!proposedSolutions.contains(Character.toString(Character.toUpperCase(chr))))) {
+					maxIndex = (int) chr;
+					maxCount = charCounts.get((int) chr).get();
+					break;
 				}
 			}
 		}
-		
-		System.out.println("(char) maxIndex = " + (char) maxIndex); 
+
+		System.out.println("(char) maxIndex = " + (char) maxIndex);
 		System.out.println("maxIndex = " + maxIndex);
 
 		return Character.toUpperCase((char) maxIndex);
@@ -292,12 +308,17 @@ public class HangmanSolver {
 	 *         char.
 	 */
 	private static List<Integer> countAllCharsInString(String str) {
-		List<Integer> res = new ArrayList<Integer>();
+		List<Integer> res = new ArrayList<Integer>(Collections.nCopies(Character.MAX_VALUE, 0));
 
-		for (int i = 0; i <= Character.MAX_VALUE; i++) {
-			res.add(countCharInString(str, Character.toLowerCase((char) i))
-					+ countCharInString(str, Character.toUpperCase((char) i)));
+		for (char chr : str.toCharArray()) {
+			res.set((int) chr, res.get((int) chr) + 1);
 		}
+
+		/*
+		 * for (int i = 0; i <= Character.MAX_VALUE; i++) {
+		 * res.add(countCharInString(str, Character.toLowerCase((char) i)) +
+		 * countCharInString(str, Character.toUpperCase((char) i))); }
+		 */
 
 		return res;
 	}
