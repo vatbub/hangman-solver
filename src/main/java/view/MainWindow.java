@@ -420,6 +420,7 @@ public class MainWindow extends Application implements Initializable {
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
+							System.out.println("Setting resultText...");
 							result.setText(currentSolution.result);
 						}
 					});
@@ -432,7 +433,14 @@ public class MainWindow extends Application implements Initializable {
 					// remove last ,
 					proposedSolutionsString = proposedSolutionsString.substring(0,
 							proposedSolutionsString.length() - 2);
-					proposedSolutions.setText(proposedSolutionsString);
+					final String proposedSolutionsStringCopy = proposedSolutionsString;
+
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							proposedSolutions.setText(proposedSolutionsStringCopy);
+						}
+					});
 
 					if (currentSolution.gameState == GameState.GAME_LOST
 							|| currentSolution.gameState == GameState.GAME_WON) {
