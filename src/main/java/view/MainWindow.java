@@ -25,6 +25,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import languages.Language;
 import languages.TabFile;
@@ -352,6 +353,11 @@ public class MainWindow extends Application implements Initializable {
 			primaryStage.setMinHeight(scene.getRoot().minHeight(0) + 70);
 
 			primaryStage.setScene(scene);
+			
+			// Set Icon
+			primaryStage.getIcons().add(
+					   new Image(
+					      MainWindow.class.getResourceAsStream( "icon.png" ))); 
 
 			primaryStage.show();
 		} catch (Exception e) {
