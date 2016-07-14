@@ -37,7 +37,7 @@
     <TextArea fx:id="proposedSolutions" editable="false" prefHeight="55.0" prefWidth="572.0" wrapText="true" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="443.0" />
     <HBox prefHeight="25.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0">
       <children>
-        <Label prefHeight="28.0" text="%version.label" HBox.hgrow="ALWAYS">
+        <Label id="current" fx:id="currentAppVersionTextLabel" onMouseClicked="#currentAppVersionTextLabelOnMouseClicked" prefHeight="28.0" text="%version.label" HBox.hgrow="ALWAYS">
           <HBox.margin>
             <Insets left="14.0" />
           </HBox.margin>

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 import algorithm.*;
 import common.Config;
+import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -26,7 +27,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import languages.Language;
 import languages.TabFile;
 import stats.HangmanStats;
@@ -49,6 +52,7 @@ public class MainWindow extends Application implements Initializable {
 	private boolean shareThoughtsBool;
 	private String lastThought;
 	private static Scene scene;
+	private static int clickCounter = 0;
 
 	public Scene getScene() {
 		return scene;
@@ -83,6 +87,9 @@ public class MainWindow extends Application implements Initializable {
 	 * fx:id="creditsButton"
 	 */
 	private Button creditsButton;
+
+	@FXML // fx:id="currentAppVersionTextLabel"
+	private Label currentAppVersionTextLabel; // Value injected by FXMLLoader
 
 	@FXML
 	/**
@@ -290,6 +297,21 @@ public class MainWindow extends Application implements Initializable {
 		launchAlgorithm();
 	}
 
+	@FXML
+	void currentAppVersionTextLabelOnMouseClicked(MouseEvent event) {
+		clickCounter++;
+		
+		if (clickCounter>=3){
+			// rotate
+			RotateTransition rt = new RotateTransition(Duration.millis(500), currentAppVersionTextLabel);
+	        rt.setByAngle((Math.random()-0.5)*1440);
+	        rt.setAutoReverse(true);
+	    
+	        rt.play();
+	        clickCounter=0;
+		}
+	}
+
 	/**
 	 * Handler for Button[fx:id="getNextLetter"] onAction<br>
 	 * Fires when the user is in the text field and hits the enter key or clicks
@@ -353,11 +375,9 @@ public class MainWindow extends Application implements Initializable {
 			primaryStage.setMinHeight(scene.getRoot().minHeight(0) + 70);
 
 			primaryStage.setScene(scene);
-			
+
 			// Set Icon
-			primaryStage.getIcons().add(
-					   new Image(
-					      MainWindow.class.getResourceAsStream( "icon.png" ))); 
+			primaryStage.getIcons().add(new Image(MainWindow.class.getResourceAsStream("icon.png")));
 
 			primaryStage.show();
 		} catch (Exception e) {
@@ -377,10 +397,18 @@ public class MainWindow extends Application implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		assert actionLabel != null : "fx:id=\"actionLabel\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert applyButton != null : "fx:id=\"applyButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert creditsButton != null : "fx:id=\"creditsButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert currentAppVersionTextLabel != null : "fx:id=\"currentAppVersionTextLabel\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert currentSequence != null : "fx:id=\"currentSequence\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert getNextLetter != null : "fx:id=\"getNextLetter\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert languageSelector != null : "fx:id=\"languageSelector\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert newGameButton != null : "fx:id=\"newGameButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert proposedSolutions != null : "fx:id=\"proposedSolutions\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert result != null : "fx:id=\"result\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert shareThoughtsCheckbox != null : "fx:id=\"shareThoughtsCheckbox\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert thoughts != null : "fx:id=\"thoughts\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert updateLink != null : "fx:id=\"updateLink\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert versionLabel != null : "fx:id=\"versionLabel\" was not injected: check your FXML file 'MainWindow.fxml'.";
 
 		// Initialize your logic here: all @FXML variables will have been
 		// injected
