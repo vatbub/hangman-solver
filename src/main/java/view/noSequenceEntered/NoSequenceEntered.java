@@ -1,8 +1,3 @@
-/**
- * Sample Skeleton for "AlertDialog.fxml" Controller Class
- * You can copy and paste this code into your favorite IDE
- **/
-
 package view.noSequenceEntered;
 
 import java.io.IOException;
@@ -18,7 +13,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-
+/**
+ * An alert box that pops up if the user has entered no letter sequence.
+ * @author frede
+ *
+ */
 public class NoSequenceEntered {
 	
 	private static ResourceBundle bundle = ResourceBundle.getBundle("view.noSequenceEntered.AlertDialog");

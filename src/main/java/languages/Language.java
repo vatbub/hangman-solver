@@ -163,18 +163,44 @@ public class Language {
 		}
 	}
 
+	/**
+	 * Returns the ISO 639-3 language code of this language.
+	 * 
+	 * @return The ISO 639-3 language code of this language.
+	 */
 	public String getLanguageCode() {
 		return languageCode;
 	}
 
+	/***
+	 * Returns the human readable name of this language.
+	 * 
+	 * @return The human readable name of this language.
+	 */
 	public String getHumanReadableName() {
 		return getHumanReadableName(this.languageCode);
 	}
 
+	/**
+	 *
+	 * Returns the URL pointing to the resource file that contains the word list
+	 * provided by the cldr as a *.tab file
+	 *
+	 * @return The URL pointing to the resource file that contains the word list
+	 *         provided by the cldr as a *.tab file
+	 */
 	public URL getCldrName() {
 		return cldrName;
 	}
 
+	/**
+	 *
+	 * Returns the URL pointing to the resource file that contains the word list
+	 * provided by Wiktionary as a *.tab file
+	 *
+	 * @return The URL pointing to the resource file that contains the word list
+	 *         provided by Wiktionary as a *.tab file
+	 */
 	public URL getWiktName() {
 		return wiktName;
 	}

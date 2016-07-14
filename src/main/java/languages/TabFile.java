@@ -1,28 +1,86 @@
 package languages;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
+
+import org.apache.commons.io.FileUtils;
 
 import algorithm.HangmanSolver;
 import common.*;
 
 public class TabFile {
 
+	public static void main(String[] args) {
+		/*try {
+			TabFile testFile = new TabFile(new File(
+					"C:\\Users\\frede\\git\\hangman-solver\\src\\main\\resources\\languages\\LanguageCodes.tab").toURI()
+							.toURL());
+			testFile.save("C:\\Users\\frede\\Desktop\\testFile.tab");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
+		String word = "Test. So geht es weiter, aber nur, wenn es so weitergeht.";
+		word = word.replaceAll("(" + Pattern.quote(".") + "|,)", "");
+		System.out.println(word);
+
+	}
+
+	/**
+	 * The column headers of this *.tab file.
+	 */
 	private String[] columnHeaders;
+	/**
+	 * The values in this *.tab file.
+	 */
 	private ArrayList<String[]> values = new ArrayList<String[]>();
 
+	/**
+	 * Creates a new object representation of the specified *.tab file.
+	 * 
+	 * @param file
+	 *            The {@link URL} pointing to the desired *.tab file.
+	 * @throws IOException
+	 *             if the file cannot be read.
+	 */
 	public TabFile(URL file) throws IOException {
 		readFile(file);
 	}
 
-	public void readFile(URL file) throws IOException {
+	/**
+	 * Creates an empty *.tab file.
+	 */
+	public TabFile() {
+		createNewFile();
+	}
+
+	public TabFile(int columnCount) {
+		createNewFile(columnCount);
+	}
+
+	public TabFile(String[] columnHeaders) {
+		createNewFile(columnHeaders);
+	}
+
+	/**
+	 * Reads the content of the specified *.tab file to this objects variables.
+	 * 
+	 * @param file
+	 *            The file to read.
+	 * @throws IOException
+	 *             if the file cannot be read.
+	 */
+	private void readFile(URL file) throws IOException {
 
 		// open the file
-		Scanner scan = new Scanner(file.openStream());
+		Scanner scan = new Scanner(file.openStream(), "UTF-8");
 
 		// get the column headers
 		columnHeaders = scan.nextLine().split("	");
@@ -35,6 +93,21 @@ public class TabFile {
 	}
 
 	/**
+	 * Creates an empty *.tab file.
+	 */
+	private void createNewFile() {
+		columnHeaders = new String[0];
+	}
+
+	private void createNewFile(int columnCount) {
+		columnHeaders = new String[columnCount];
+	}
+
+	private void createNewFile(String[] columnHeaders) {
+		this.columnHeaders = columnHeaders;
+	}
+
+	/**
 	 * Returns the column header at the given index
 	 * 
 	 * @param index
@@ -43,6 +116,15 @@ public class TabFile {
 	 */
 	public String getColumnHeader(int index) {
 		return columnHeaders[index];
+	}
+
+	/**
+	 * Returns an array that contains all column headers.
+	 * 
+	 * @return An array that contains all column headers.
+	 */
+	public String[] getColumnHeaders() {
+		return columnHeaders;
 	}
 
 	/**
@@ -81,6 +163,41 @@ public class TabFile {
 		}
 	}
 
+	/**
+	 * Replaces the old value at the given position in the *.tab-file with the
+	 * new Value. This method cannot add rows to the *.tab-file. To add rows,
+	 * use {@link #addRow}
+	 * 
+	 * @param newValue
+	 *            Thenew value of the given cell
+	 * @param row
+	 *            The row of the cell to be replaced.
+	 * @param column
+	 *            The column of the cell to be replaced.
+	 */
+	public void setValueAt(String newValue, int row, int column) {
+		values.get(row)[column] = newValue;
+	}
+
+	public void addRow(String[] newValues) {
+		if (newValues.length != getColumnCount()) {
+			throw new ArrayIndexOutOfBoundsException(
+					"The given values-array dows not match the column-count of this file.");
+		}
+
+		values.add(newValues);
+	}
+
+	/**
+	 * Gets all values with the given length.
+	 * 
+	 * @param column
+	 *            The column to look for values.
+	 * @param length
+	 *            The length of the returned values.
+	 * @return A {@link List} with all values in the specified column that have
+	 *         the specified length.
+	 */
 	public List<String> getValuesWithLength(int column, int length) {
 		List<String> res = new ArrayList<String>();
 
@@ -93,6 +210,21 @@ public class TabFile {
 		return res;
 	}
 
+	/**
+	 * Returns the value that has the highest {@link #stringCorrelation} with
+	 * the given {@link String}.
+	 * 
+	 * @param column
+	 *            The column to look for values.
+	 * @param value
+	 *            The {@link String} to be compared. Only values with equal
+	 *            length as {@code value} are returned due to the way
+	 *            {@link #stringCorrelation} works.
+	 * @param ignoredWords
+	 *            Words to be filtered out before doing the comparison.
+	 * @return The value in the specified column that has the highest
+	 *         correlation.
+	 */
 	public String getValueWithHighestCorrelation(int column, String value, List<String> ignoredWords) {
 		ArrayList<Thread> threads = new ArrayList<Thread>();
 		AtomicInteger currentIndex = new AtomicInteger(0);
@@ -105,10 +237,10 @@ public class TabFile {
 				public void run() {
 					int index = currentIndex.getAndIncrement();
 					while (index < getRowCount()) {
-						if (value.equals("_a_n___") && getValueAt(index, column).equals("zahnlos")){
+						if (value.equals("_a_n___") && getValueAt(index, column).equals("zahnlos")) {
 							System.out.println("stopping...");
 						}
-						
+
 						if (value.length() == getValueAt(index, column).length()
 								&& !ignoredWords.contains(getValueAt(index, column))
 								&& !HangmanSolver.wordContainsWrongChar(getValueAt(index, column))) {
@@ -167,5 +299,105 @@ public class TabFile {
 		}
 
 		return equalLetters / str1.length();
+	}
+
+	public void save(String fileName) {
+
+		// Generate the file
+		String str = "";
+
+		// Column headers
+		for (String colHead : columnHeaders) {
+			str = str + colHead;
+			if (!colHead.equals(columnHeaders[columnHeaders.length - 1])) {
+				str = str + " ";
+			}
+		}
+
+		str = str + "\n";
+
+		// Values
+		for (String[] line : values) {
+			for (String el : line) {
+				str = str + el;
+
+				if (!el.equals(line[line.length - 1])) {
+					str = str + " ";
+				}
+			}
+
+			str = str + "\n";
+		}
+
+		File f = new File(fileName);
+		try {
+			FileUtils.writeStringToFile(f, str, "UTF-8");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Optimizes the dictionary of the app. As The dictionaries are a resource
+	 * of the app, this method is currently only intended to run in a dev
+	 * environment.<br>
+	 * <br>
+	 * Optimization means in this case that words are split up at spaces and
+	 * punctuation is deleted.
+	 * 
+	 * @param origin
+	 *            The original {@code TabFile} that is to be optimized.
+	 * @param originWordColumnIndex
+	 *            The column index with the words to be optimized.
+	 * @param preserveColumnIndex
+	 *            If {@code true}, the words are written to the same column
+	 *            index as in the origin-file and the values of all other
+	 *            columns are preserved, if {@code false}, the optimized word
+	 *            list will be written into the first column (index: 0) and all
+	 *            other columns will be deleted.
+	 * @return A {@code TabFile} with the optimized word list.
+	 */
+	public static TabFile optimizeDictionaries(TabFile origin, int originWordColumnIndex,
+			boolean preserveColumnIndex) {
+		// Create new TabFile with one column
+		String[] colHeads;
+
+		if (preserveColumnIndex) {
+			colHeads = origin.getColumnHeaders();
+		} else {
+			colHeads = new String[] { "words" };
+		}
+		TabFile res = new TabFile(colHeads);
+
+		for (int lineIndex=0; lineIndex<origin.getRowCount(); lineIndex++) {
+			String[] line = origin.values.get(lineIndex);
+			// Split at spaces
+			String[] words = line[originWordColumnIndex].split(" ");
+
+			for (String word : words) {
+				// Remove punctuation
+				word = word.replaceAll("(" + Pattern.quote(".") + "|,)", "");
+				
+				// Add word to result
+				if (preserveColumnIndex){
+					String[] tempValues = new String[origin.getColumnCount()+1];
+					
+					for (int i=0; i<origin.getColumnCount(); i++){
+						if (i!=originWordColumnIndex){
+							tempValues[i] = origin.getValueAt(lineIndex, i);
+						}else {
+							tempValues[i] = word;
+						}
+					}
+					
+					res.addRow(tempValues);
+				}else {
+					res.addRow(new String[]{word});
+				}
+			}
+		}
+
+		return res;
 	}
 }
