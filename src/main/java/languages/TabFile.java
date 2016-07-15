@@ -35,28 +35,28 @@ public class TabFile {
 		File[] listOfFiles = folder.listFiles();
 
 		for (File file : listOfFiles) {
+			if (!file.getName().equals("LICENSE")) {
+				TabFile origin;
+				try {
+					String originFileName = file.getAbsolutePath();
+					System.out.print("Reading file '" + originFileName + "'...");
+					origin = new TabFile(originFileName);
+					System.out.println("Done!");
+					System.out.print("Optimizing file...");
+					TabFile res = TabFile.optimizeDictionaries(origin, 2, true);
+					System.out.println("Done!");
 
-			TabFile origin;
-			try {
-				String originFileName = file.getAbsolutePath();
-				System.out.print("Reading file '" + originFileName + "'...");
-				origin = new TabFile(originFileName);
-				System.out.println("Done!");
-				System.out.print("Optimizing file...");
-				TabFile res = TabFile.optimizeDictionaries(origin, 2, true);
-				System.out.println("Done!");
+					String targetFileName = targetPath + File.separator + file.getName();
 
-				String targetFileName = targetPath + File.separator + file.getName();
-				
-				System.out.println("Saving new file as '" + targetFileName + "'...");
-				res.save(targetFileName);
-				System.out.println("Done!");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+					System.out.println("Saving new file as '" + targetFileName + "'...");
+					res.save(targetFileName);
+					System.out.println("Done!");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
-
 	}
 
 	/**
@@ -420,11 +420,11 @@ public class TabFile {
 			String[] line = origin.values.get(lineIndex);
 			// Split at spaces
 			String[] words;
-			
+
 			try {
-				words= line[originWordColumnIndex].split(" ");
-			}catch (ArrayIndexOutOfBoundsException e){
-				words= "".split(" ");
+				words = line[originWordColumnIndex].split(" ");
+			} catch (ArrayIndexOutOfBoundsException e) {
+				words = "".split(" ");
 			}
 
 			for (String word : words) {
