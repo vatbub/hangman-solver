@@ -2,6 +2,7 @@ package languages;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +18,44 @@ import common.*;
 public class TabFile {
 
 	public static void main(String[] args) {
-		/*try {
-			TabFile testFile = new TabFile(new File(
-					"C:\\Users\\frede\\git\\hangman-solver\\src\\main\\resources\\languages\\LanguageCodes.tab").toURI()
-							.toURL());
-			testFile.save("C:\\Users\\frede\\Desktop\\testFile.tab");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
-		String word = "Test. So geht es weiter, aber nur, wenn es so weitergeht.";
-		word = word.replaceAll("(" + Pattern.quote(".") + "|,)", "");
-		System.out.println(word);
+		Scanner sc = new Scanner(System.in);
+		String targetPath = null;
+		String originPath = null;
+
+		System.out.println("Please enter the path of the original *.tab-files:");
+
+		originPath = sc.nextLine();
+
+		System.out.println(
+				"Please enter the path where you wish to save the optimized *.tab-files (Directories will be created, existing files with same filenames will be overwritten):");
+
+		targetPath = sc.nextLine();
+
+		File folder = new File(originPath);
+		File[] listOfFiles = folder.listFiles();
+
+		for (File file : listOfFiles) {
+
+			TabFile origin;
+			try {
+				String originFileName = file.getAbsolutePath();
+				System.out.print("Reading file '" + originFileName + "'...");
+				origin = new TabFile(originFileName);
+				System.out.println("Done!");
+				System.out.print("Optimizing file...");
+				TabFile res = TabFile.optimizeDictionaries(origin, 2, true);
+				System.out.println("Done!");
+
+				String targetFileName = targetPath + File.separator + file.getName();
+				
+				System.out.println("Saving new file as '" + targetFileName + "'...");
+				res.save(targetFileName);
+				System.out.println("Done!");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
 	}
 
@@ -67,6 +93,18 @@ public class TabFile {
 
 	public TabFile(String[] columnHeaders) {
 		createNewFile(columnHeaders);
+	}
+
+	/**
+	 * Creates a new object representation of the specified *.tab file.
+	 * 
+	 * @param originFileName
+	 *            The absolute fileName of the *.tab file.
+	 * @throws IOException
+	 *             if the file cannot be read.
+	 */
+	public TabFile(String originFileName) throws IOException {
+		this(new File(originFileName).toURI().toURL());
 	}
 
 	/**
@@ -303,32 +341,40 @@ public class TabFile {
 
 	public void save(String fileName) {
 
+		System.out.print("Generating empty file in memory...");
 		// Generate the file
 		String str = "";
+		System.out.println("Done!");
 
 		// Column headers
+		System.out.print("Processing column headers...");
 		for (String colHead : columnHeaders) {
 			str = str + colHead;
 			if (!colHead.equals(columnHeaders[columnHeaders.length - 1])) {
-				str = str + " ";
+				str = str + "	";
 			}
 		}
+		System.out.println("Done!");
 
 		str = str + "\n";
 
+		System.out.print("Processing table contents...");
 		// Values
 		for (String[] line : values) {
 			for (String el : line) {
 				str = str + el;
 
 				if (!el.equals(line[line.length - 1])) {
-					str = str + " ";
+					str = str + "	";
 				}
 			}
 
 			str = str + "\n";
 		}
 
+		System.out.println("Done!");
+
+		System.out.print("Writing to disc...");
 		File f = new File(fileName);
 		try {
 			FileUtils.writeStringToFile(f, str, "UTF-8");
@@ -336,6 +382,7 @@ public class TabFile {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("Done!");
 	}
 
 	/**
@@ -358,8 +405,7 @@ public class TabFile {
 	 *            other columns will be deleted.
 	 * @return A {@code TabFile} with the optimized word list.
 	 */
-	public static TabFile optimizeDictionaries(TabFile origin, int originWordColumnIndex,
-			boolean preserveColumnIndex) {
+	public static TabFile optimizeDictionaries(TabFile origin, int originWordColumnIndex, boolean preserveColumnIndex) {
 		// Create new TabFile with one column
 		String[] colHeads;
 
@@ -370,30 +416,36 @@ public class TabFile {
 		}
 		TabFile res = new TabFile(colHeads);
 
-		for (int lineIndex=0; lineIndex<origin.getRowCount(); lineIndex++) {
+		for (int lineIndex = 0; lineIndex < origin.getRowCount(); lineIndex++) {
 			String[] line = origin.values.get(lineIndex);
 			// Split at spaces
-			String[] words = line[originWordColumnIndex].split(" ");
+			String[] words;
+			
+			try {
+				words= line[originWordColumnIndex].split(" ");
+			}catch (ArrayIndexOutOfBoundsException e){
+				words= "".split(" ");
+			}
 
 			for (String word : words) {
 				// Remove punctuation
 				word = word.replaceAll("(" + Pattern.quote(".") + "|,)", "");
-				
+
 				// Add word to result
-				if (preserveColumnIndex){
-					String[] tempValues = new String[origin.getColumnCount()+1];
-					
-					for (int i=0; i<origin.getColumnCount(); i++){
-						if (i!=originWordColumnIndex){
+				if (preserveColumnIndex) {
+					String[] tempValues = new String[origin.getColumnCount()];
+
+					for (int i = 0; i < origin.getColumnCount(); i++) {
+						if (i != originWordColumnIndex) {
 							tempValues[i] = origin.getValueAt(lineIndex, i);
-						}else {
+						} else {
 							tempValues[i] = word;
 						}
 					}
-					
+
 					res.addRow(tempValues);
-				}else {
-					res.addRow(new String[]{word});
+				} else {
+					res.addRow(new String[] { word });
 				}
 			}
 		}
