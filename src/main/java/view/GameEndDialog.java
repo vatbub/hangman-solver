@@ -36,7 +36,6 @@ import stats.HangmanStats;
 public class GameEndDialog {
 
 	private static Stage stage;
-	private static String windowTitleCopy;
 	private static MainWindow mainWindowCopy;
 	private static GameState gameStateCopy;
 	private static ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
@@ -135,7 +134,6 @@ public class GameEndDialog {
 
 	public static void show(String windowTitle, GameState gameState, MainWindow mainWindow) {
 		stage = new Stage();
-		windowTitleCopy = windowTitle;
 		gameStateCopy = gameState;
 		mainWindowCopy = mainWindow;
 
