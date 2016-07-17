@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import common.Config;
 import languages.*;
-import stats.HangmanStats;
 
 /**
  * A class that holds all methods and algorithms to solve a hangman puzzle.
@@ -319,27 +318,6 @@ public class HangmanSolver {
 		 * res.add(countCharInString(str, Character.toLowerCase((char) i)) +
 		 * countCharInString(str, Character.toUpperCase((char) i))); }
 		 */
-
-		return res;
-	}
-
-	/**
-	 * Counts, how often the specified char appears in the given string.
-	 * 
-	 * @param str
-	 *            The {@link String} to be looked through
-	 * @param chr
-	 *            The {@code char} to be counted.
-	 * @return The number of appearances of {@code chr} in {@code str}
-	 */
-	private static int countCharInString(String str, char chr) {
-		int res = 0;
-
-		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) == chr) {
-				res = res + 1;
-			}
-		}
 
 		return res;
 	}
