@@ -17,46 +17,140 @@ import common.*;
 public class TabFile {
 
 	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		String targetPath = null;
-		String originPath = null;
+		if (args[0].equals("optimize")) {
+			Scanner sc = new Scanner(System.in);
+			String targetPath = null;
+			String originPath = null;
 
-		System.out.println("Please enter the path of the original *.tab-files:");
+			System.out.println("Please enter the path of the original *.tab-files:");
 
-		originPath = sc.nextLine();
+			originPath = sc.nextLine();
 
-		System.out.println(
-				"Please enter the path where you wish to save the optimized *.tab-files (Directories will be created, existing files with same filenames will be overwritten):");
+			System.out.println(
+					"Please enter the path where you wish to save the optimized *.tab-files (Directories will be created, existing files with same filenames will be overwritten):");
 
-		targetPath = sc.nextLine();
-		
-		sc.close();
+			targetPath = sc.nextLine();
 
-		File folder = new File(originPath);
-		File[] listOfFiles = folder.listFiles();
+			sc.close();
 
-		for (File file : listOfFiles) {
-			if (!file.getName().equals("LICENSE")) {
-				TabFile origin;
-				try {
-					String originFileName = file.getAbsolutePath();
-					System.out.print("Reading file '" + originFileName + "'...");
-					origin = new TabFile(originFileName);
-					System.out.println("Done!");
-					System.out.print("Optimizing file...");
-					TabFile res = TabFile.optimizeDictionaries(origin, 2, true);
-					System.out.println("Done!");
+			File folder = new File(originPath);
+			File[] listOfFiles = folder.listFiles();
 
-					String targetFileName = targetPath + File.separator + file.getName();
+			for (File file : listOfFiles) {
+				if (!file.getName().equals("LICENSE")) {
+					TabFile origin;
+					try {
+						String originFileName = file.getAbsolutePath();
+						System.out.print("Reading file '" + originFileName + "'...");
+						origin = new TabFile(originFileName);
+						System.out.println("Done!");
+						System.out.print("Optimizing file...");
+						TabFile res = TabFile.optimizeDictionaries(origin, 2, true);
+						System.out.println("Done!");
 
-					System.out.println("Saving new file as '" + targetFileName + "'...");
-					res.save(targetFileName);
-					System.out.println("Done!");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+						String targetFileName = targetPath + File.separator + file.getName();
+
+						System.out.println("Saving new file as '" + targetFileName + "'...");
+						res.save(targetFileName);
+						System.out.println("Done!");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
+		} else if (args[0].equals("merge")) {
+			Scanner sc = new Scanner(System.in);
+			String targetPath = null;
+			String fileNameScheme = null;
+
+			int processedWiktDictionaries = 0;
+			int processedCldrDictionaries = 0;
+			int outputDictionaries = 0;
+			int unsupportedLanguageCount = 0;
+
+			System.out.println(
+					"Please enter the path where you wish to save the optimized *.tab-files (Directories will be created, existing files with same filenames will be overwritten):");
+
+			targetPath = sc.nextLine();
+
+			System.out.println(
+					"Please enter the file name scheme for the new dictionaries (<langCode> is a placeholder for the language code of that dictionary");
+
+			fileNameScheme = sc.nextLine();
+
+			sc.close();
+
+			// Open the LanguageCodes.tab-file
+			TabFile languageCodesFile;
+
+			try {
+				System.out.print("Reading languagecode file...");
+				languageCodesFile = new TabFile(Config.languageCodes);
+				System.out.println("Done!");
+				// Go through all records and read the databases for each
+				// language
+				for (int i = 0; i < languageCodesFile.getRowCount(); i++) {
+					System.out.print(
+							"Reading language meta info for language " + languageCodesFile.getValueAt(i, 0) + "...");
+					Language temp = new Language(languageCodesFile.getValueAt(i, 0));
+					System.out.println("Done!");
+					TabFile res = null;
+
+					if (temp.getCldrName() != null && temp.getWiktName() != null) {
+						// Found two databases that need to be merged
+						System.out.print("Merging dictionaries...");
+						res = mergeDictionaries(temp.getCldrTabFile(), temp.getWiktTabFile(), 2);
+						processedWiktDictionaries = processedWiktDictionaries + 1;
+						processedCldrDictionaries = processedCldrDictionaries + 1;
+
+						System.out.println("Done!");
+					} else if (temp.getCldrName() != null) {
+						// We only have a cldr dictionary
+						System.out.println("Copying cldr dictionary...");
+						res = temp.getCldrTabFile();
+						processedCldrDictionaries = processedCldrDictionaries + 1;
+
+						System.out.println("Done!");
+					} else if (temp.getWiktName() != null) {
+						// We only have a wikt dictionary
+						System.out.println("Copying wikt dictionary...");
+						res = temp.getWiktTabFile();
+						processedWiktDictionaries = processedWiktDictionaries + 1;
+
+						System.out.println("Done!");
+					}
+
+					if (temp.getCldrName() != null || temp.getWiktName() != null) {
+						outputDictionaries = outputDictionaries + 1;
+
+						String targetFileName = targetPath + File.separator
+								+ fileNameScheme.replace("<langCode>", temp.getLanguageCode());
+
+						System.out.println("Saving new file as '" + targetFileName + "'...");
+						res.save(targetFileName);
+						System.out.println("Done!");
+					} else {
+						unsupportedLanguageCount = unsupportedLanguageCount + 1;
+					}
+				}
+				
+				// Print report
+				System.out.println("");
+				System.out.println("=====================================================");
+				System.out.println("");
+				System.out.println("Merge stats:");
+				System.out.println(processedWiktDictionaries + "processed wikt dictionaries");
+				System.out.println(processedCldrDictionaries + "processed cldr dictionaries");
+				System.out.println(outputDictionaries + " languages will be supported");
+				System.out.println(unsupportedLanguageCount + " languages NOT will be supported");
+				System.out.println("");
+				System.out.println("=====================================================");
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
 		}
 	}
 
@@ -201,26 +295,26 @@ public class TabFile {
 			return "";
 		}
 	}
-	
-	public List<List<Integer>> indexOf(String valueToFind){
+
+	public List<List<Integer>> indexOf(String valueToFind) {
 		List<List<Integer>> res = new ArrayList<List<Integer>>();
-		
-		for (int i=0; i<this.getColumnCount(); i++){
+
+		for (int i = 0; i < this.getColumnCount(); i++) {
 			res.add(indexOf(valueToFind, i));
 		}
-		
+
 		return res;
 	}
-	
-	public List<Integer> indexOf(String valueToFind, int columnIndex){
+
+	public List<Integer> indexOf(String valueToFind, int columnIndex) {
 		List<Integer> res = new ArrayList<Integer>();
-		
-		for (int i=0; i<this.getRowCount(); i++){
-			if (this.getValueAt(i, columnIndex).equals(valueToFind)){
+
+		for (int i = 0; i < this.getRowCount(); i++) {
+			if (this.getValueAt(i, columnIndex).equals(valueToFind)) {
 				res.add(i);
 			}
 		}
-		
+
 		return res;
 	}
 
@@ -298,10 +392,6 @@ public class TabFile {
 				public void run() {
 					int index = currentIndex.getAndIncrement();
 					while (index < getRowCount()) {
-						if (value.equals("_a_n___") && getValueAt(index, column).equals("zahnlos")) {
-							System.out.println("stopping...");
-						}
-
 						if (value.length() == getValueAt(index, column).length()
 								&& !ignoredWords.contains(getValueAt(index, column))
 								&& !HangmanSolver.wordContainsWrongChar(getValueAt(index, column))) {
@@ -463,6 +553,78 @@ public class TabFile {
 							tempValues[i] = origin.getValueAt(lineIndex, i);
 						} else {
 							tempValues[i] = word;
+						}
+					}
+
+					res.addRow(tempValues);
+				} else {
+					res.addRow(new String[] { word });
+				}
+			}
+		}
+
+		return res;
+	}
+
+	public static TabFile mergeDictionaries(TabFile cldrFile, TabFile wiktFile, int columnIndex) {
+		return mergeDictionaries(cldrFile, wiktFile, columnIndex, true);
+	}
+
+	public static TabFile mergeDictionaries(TabFile cldrFile, TabFile wiktFile, int columnIndex,
+			boolean preserveColumnIndex) {
+
+		if (cldrFile.getColumnCount() != wiktFile.getColumnCount()) {
+			throw new RuntimeException("cldrFile and wiktFile must have an equal columnCount.");
+		}
+
+		String[] colHeads;
+
+		if (preserveColumnIndex) {
+			colHeads = wiktFile.getColumnHeaders();
+		} else {
+			colHeads = new String[] { "words" };
+		}
+		TabFile res = new TabFile(colHeads);
+
+		// Copy wikt file
+		for (int i = 0; i < wiktFile.getRowCount(); i++) {
+			String word = wiktFile.getValueAt(i, columnIndex);
+
+			// Add word to result
+			if (preserveColumnIndex) {
+				String[] tempValues = new String[cldrFile.getColumnCount()];
+
+				for (int t = 0; t < wiktFile.getColumnCount(); t++) {
+					if (t != columnIndex) {
+						tempValues[t] = wiktFile.getValueAt(i, t);
+					} else {
+						tempValues[t] = word;
+					}
+				}
+
+				res.addRow(tempValues);
+			} else {
+				res.addRow(new String[] { word });
+			}
+		}
+
+		// Copy cldr file
+		for (int i = 0; i < cldrFile.getRowCount(); i++) {
+			String word = cldrFile.getValueAt(i, columnIndex);
+
+			// Only add word if word cannot be found in wikt file
+			List<Integer> index = wiktFile.indexOf(word, columnIndex);
+
+			if (index.size() == 0) {
+				// Add word to result
+				if (preserveColumnIndex) {
+					String[] tempValues = new String[cldrFile.getColumnCount()];
+
+					for (int t = 0; t < cldrFile.getColumnCount(); t++) {
+						if (i != columnIndex) {
+							tempValues[t] = cldrFile.getValueAt(i, t);
+						} else {
+							tempValues[t] = word;
 						}
 					}
 
