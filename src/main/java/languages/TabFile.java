@@ -135,7 +135,7 @@ public class TabFile {
 						unsupportedLanguageCount = unsupportedLanguageCount + 1;
 					}
 				}
-				
+
 				// Print report
 				System.out.println("");
 				System.out.println("=====================================================");
@@ -151,7 +151,7 @@ public class TabFile {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
+			}
 		}
 	}
 
@@ -250,6 +250,18 @@ public class TabFile {
 	 */
 	public String getColumnHeader(int index) {
 		return columnHeaders[index];
+	}
+
+	/**
+	 * Sets the column header at the given index.
+	 * 
+	 * @param newHeader
+	 *            The new header
+	 * @param index
+	 *            The index of the header to replace.
+	 */
+	public void setColumnHeader(String newHeader, int index) {
+		columnHeaders[index] = newHeader;
 	}
 
 	/**
