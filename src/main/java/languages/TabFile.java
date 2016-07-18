@@ -647,6 +647,8 @@ public class TabFile {
 				}
 			}
 		}
+		
+		res.setColumnHeader("wiktionary-cldr-merge", 0);
 
 		return res;
 	}
