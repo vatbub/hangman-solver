@@ -2,7 +2,6 @@ package languages;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +29,8 @@ public class TabFile {
 				"Please enter the path where you wish to save the optimized *.tab-files (Directories will be created, existing files with same filenames will be overwritten):");
 
 		targetPath = sc.nextLine();
+		
+		sc.close();
 
 		File folder = new File(originPath);
 		File[] listOfFiles = folder.listFiles();
@@ -199,6 +200,28 @@ public class TabFile {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return "";
 		}
+	}
+	
+	public List<List<Integer>> indexOf(String valueToFind){
+		List<List<Integer>> res = new ArrayList<List<Integer>>();
+		
+		for (int i=0; i<this.getColumnCount(); i++){
+			res.add(indexOf(valueToFind, i));
+		}
+		
+		return res;
+	}
+	
+	public List<Integer> indexOf(String valueToFind, int columnIndex){
+		List<Integer> res = new ArrayList<Integer>();
+		
+		for (int i=0; i<this.getRowCount(); i++){
+			if (this.getValueAt(i, columnIndex).equals(valueToFind)){
+				res.add(i);
+			}
+		}
+		
+		return res;
 	}
 
 	/**
