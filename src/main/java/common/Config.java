@@ -53,12 +53,12 @@ public class Config {
 	 * The path pattern to find the cldr word dictionary. {langCode} will be
 	 * replaced by the language code
 	 */
-	public static String cldrNamePattern = "/languages/cldr/wn-cldr-{langCode}.tab";
+	public static String cldrNamePattern = "/optimizedLanguages/cldr/wn-cldr-{langCode}.tab";
 	/**
 	 * The path pattern to find the wiktionary word dictionary. {langCode} will
 	 * be replaced by the language code
 	 */
-	public static String wiktNamePattern = "/languages/wikt/wn-wikt-{langCode}.tab";
+	public static String wiktNamePattern = "/optimizedLanguages/wikt/wn-wikt-{langCode}.tab";
 	/**
 	 * The path pattern to find the language code database.
 	 */
