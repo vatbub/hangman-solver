@@ -131,6 +131,7 @@ public class TabFile {
 						res.save(targetFileName);
 						System.out.println("Done!");
 					} else {
+						System.out.println("No dictionaries found for language, language is not supported!");
 						unsupportedLanguageCount = unsupportedLanguageCount + 1;
 					}
 				}
@@ -140,8 +141,8 @@ public class TabFile {
 				System.out.println("=====================================================");
 				System.out.println("");
 				System.out.println("Merge stats:");
-				System.out.println(processedWiktDictionaries + "processed wikt dictionaries");
-				System.out.println(processedCldrDictionaries + "processed cldr dictionaries");
+				System.out.println(processedWiktDictionaries + " processed wikt dictionaries");
+				System.out.println(processedCldrDictionaries + " processed cldr dictionaries");
 				System.out.println(outputDictionaries + " languages will be supported");
 				System.out.println(unsupportedLanguageCount + " languages NOT will be supported");
 				System.out.println("");
