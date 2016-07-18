@@ -77,7 +77,9 @@ public class Language {
 	}
 
 	/**
-	 * Returns a {@link List} of supported languages.
+	 * Returns a {@link List} of supported languages. The method result is
+	 * cached, which is why the first function call will take longer that the
+	 * following ones.
 	 * 
 	 * @return A {@link List} of supported languages or {@code null} if an
 	 *         exception occurs.
