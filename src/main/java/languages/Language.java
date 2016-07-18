@@ -206,4 +206,12 @@ public class Language {
 	public URL getWiktName() {
 		return wiktName;
 	}
+	
+	public TabFile getWiktTabFile() throws IOException{
+		return new TabFile(getWiktName());
+	}
+	
+	public TabFile getCldrTabFile() throws IOException{
+		return new TabFile(getCldrName());
+	}
 }
