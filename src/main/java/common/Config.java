@@ -17,7 +17,7 @@ public class Config {
 	 * The maximum number of parallel threads that are used to compute the next
 	 * guess in the {@link algorithm.HangmanSolver} class.
 	 */
-	public static int parallelThreadCount = 4;
+	public static int parallelThreadCount = 8;
 
 	/**
 	 * The {@link algorithm.HangmanSolver}-algorithm will find the word in in
