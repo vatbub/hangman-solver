@@ -57,7 +57,7 @@ public class Config {
 	/**
 	 * The path pattern to find the language code database.
 	 */
-	public static URL languageCodes = Language.class.getResource("/languages/LanguageCodes.tab");
+	public static URL languageCodes = Language.class.getResource("/mergedLanguages/LanguageCodes.tab");
 
 	// View
 	/**
