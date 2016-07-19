@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import common.Config;
 import languages.*;
-import stats.HangmanStats;
 
 /**
  * A class that holds all methods and algorithms to solve a hangman puzzle.
@@ -17,8 +16,7 @@ import stats.HangmanStats;
 public class HangmanSolver {
 
 	private static Language langOld;
-	private static TabFile wiktDatabase;
-	private static TabFile cldrDatabase;
+	private static TabFile database;
 
 	/**
 	 * A {@link List} that contains all characters and words that the computer
@@ -51,7 +49,7 @@ public class HangmanSolver {
 		currentSequenceCopy = currentSequence;
 		;
 
-		if (!lang.equals(langOld) || wiktDatabase == null || cldrDatabase == null) {
+		if (!lang.equals(langOld) || database == null) {
 			// Load language databases
 			loadLanguageDatabases(lang);
 		}
@@ -80,29 +78,23 @@ public class HangmanSolver {
 		// Go through all words
 		for (String word : words) {
 			// Get all words from the database with equal length
-			List<String> wordsWithEqualLength = wiktDatabase.getValuesWithLength(2, word.length());
-			wordsWithEqualLength.addAll(cldrDatabase.getValuesWithLength(2, word.length()));
+			List<String> wordsWithEqualLength = database.getValuesWithLength(2, word.length());
 
 			// Check if there are words that match 90%
-			String bestWordWikt = wiktDatabase.getValueWithHighestCorrelation(2, word, proposedSolutions);
-			String bestWordCldr = cldrDatabase.getValueWithHighestCorrelation(2, word, proposedSolutions);
+			String bestWord = database.getValueWithHighestCorrelation(2, word, proposedSolutions);
 			boolean foundBestWord = true;
 
-			System.out.println(bestWordWikt);
-			System.out.println(bestWordCldr);
+			System.out.println("Best match in dictionary:");
+			System.out.println(bestWord);
 
-			if (bestWordWikt.length() == 0 && bestWordCldr.length() == 0) {
+			if (bestWord.length() == 0) {
 				// dictionaries are both used up
-				System.out.println("dictionaries used up");
+				System.out.println("dictionary used up");
 				foundBestWord = false;
-			} else if (bestWordWikt.equals("")) {
-				res.bestWord = bestWordCldr;
-			} else if (bestWordCldr.equals("")) {
-				res.bestWord = bestWordWikt;
-			} else if (TabFile.stringCorrelation(word, bestWordWikt) >= TabFile.stringCorrelation(word, bestWordCldr)) {
-				res.bestWord = bestWordWikt;
+			} else if (bestWord.equals("")) {
+				foundBestWord = false;
 			} else {
-				res.bestWord = bestWordCldr;
+				res.bestWord = bestWord;
 			}
 
 			if (foundBestWord) {
@@ -146,8 +138,7 @@ public class HangmanSolver {
 	private static void loadLanguageDatabases(Language lang) {
 		try {
 			System.out.println("Loading language databases for " + lang.getHumanReadableName());
-			wiktDatabase = new TabFile(lang.getWiktName());
-			cldrDatabase = new TabFile(lang.getCldrName());
+			database = lang.getTabFile();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -319,27 +310,6 @@ public class HangmanSolver {
 		 * res.add(countCharInString(str, Character.toLowerCase((char) i)) +
 		 * countCharInString(str, Character.toUpperCase((char) i))); }
 		 */
-
-		return res;
-	}
-
-	/**
-	 * Counts, how often the specified char appears in the given string.
-	 * 
-	 * @param str
-	 *            The {@link String} to be looked through
-	 * @param chr
-	 *            The {@code char} to be counted.
-	 * @return The number of appearances of {@code chr} in {@code str}
-	 */
-	private static int countCharInString(String str, char chr) {
-		int res = 0;
-
-		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) == chr) {
-				res = res + 1;
-			}
-		}
 
 		return res;
 	}
