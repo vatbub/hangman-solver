@@ -50,15 +50,10 @@ public class Config {
 
 	// Language class
 	/**
-	 * The path pattern to find the cldr word dictionary. {langCode} will be
-	 * replaced by the language code
-	 */
-	public static String cldrNamePattern = "/optimizedLanguages/cldr/wn-cldr-{langCode}.tab";
-	/**
-	 * The path pattern to find the wiktionary word dictionary. {langCode} will
+	 * The path pattern to find the merged word dictionary. {langCode} will
 	 * be replaced by the language code
 	 */
-	public static String wiktNamePattern = "/optimizedLanguages/wikt/wn-wikt-{langCode}.tab";
+	public static String languageDictPattern = "/mergedLanguages/wn-merged-{langCode}.tab";
 	/**
 	 * The path pattern to find the language code database.
 	 */

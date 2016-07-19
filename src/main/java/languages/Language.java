@@ -19,15 +19,10 @@ public class Language {
 	 */
 	private String languageCode;
 	/**
-	 * The URL pointing to the resource file that contains the word list
-	 * provided by the cldr as a *.tab file
+	 * The URL pointing to the resource file that contains the word list as a
+	 * *.tab file
 	 */
-	private URL cldrName;
-	/**
-	 * The URL pointing to the resource file that contains the word list
-	 * provided by Wiktionary as a *.tab file
-	 */
-	private URL wiktName;
+	private URL tabfileName;
 
 	/**
 	 * Creates a new {@link Language}-Object that contains all information about
@@ -38,42 +33,23 @@ public class Language {
 	 */
 	public Language(String languageCode) {
 		this.languageCode = languageCode;
-		cldrName = getCldrName(languageCode);
-		wiktName = getWiktName(languageCode);
+		tabfileName = getCldrName(languageCode);
 	}
 
 	/**
 	 * Looks up the {@link URL} to the resource file for the specified language
-	 * coming from cldr
 	 * 
 	 * @param languageCode
 	 *            The ISO 639-3 language code
 	 * @return The {@link URL} to the resource file that contains the word list
 	 *         for the specified language or {@code null} if the language is not
-	 *         supported by the cldr.
+	 *         supported.
 	 */
 	private URL getCldrName(String languageCode) {
 
 		// Try to get the resource file, if it fails, the language is not
 		// supported
-		return Language.class.getResource(Config.cldrNamePattern.replace("{langCode}", languageCode));
-	}
-
-	/**
-	 * Looks up the {@link URL} to the resource file for the specified language
-	 * coming from wiktionary
-	 * 
-	 * @param languageCode
-	 *            The ISO 639-3 language code
-	 * @return The {@link URL} to the resource file that contains the word list
-	 *         for the specified language or {@code null} if the language is not
-	 *         supported by the wiktionary.
-	 */
-	private URL getWiktName(String languageCode) {
-
-		// Try to get the resource file, if it fails, the language is not
-		// supported
-		return Language.class.getResource(Config.wiktNamePattern.replace("{langCode}", languageCode));
+		return Language.class.getResource(Config.languageDictPattern.replace("{langCode}", languageCode));
 	}
 
 	/**
@@ -103,7 +79,7 @@ public class Language {
 				for (int i = 0; i < languageCodesFile.getRowCount(); i++) {
 					Language temp = new Language(languageCodesFile.getValueAt(i, 0));
 
-					if (temp.getCldrName() != null && temp.getWiktName() != null) {
+					if (temp.getTabFileName() != null) {
 						// Found all databases, so the language is supported
 						res.add(temp);
 					}
@@ -153,8 +129,7 @@ public class Language {
 	@Override
 	public boolean equals(Object anObject) {
 		if (anObject instanceof Language) {
-			if (this.getCldrName().equals(((Language) anObject).getCldrName())
-					&& this.getWiktName().equals(((Language) anObject).getWiktName())
+			if (this.getTabFileName().equals(((Language) anObject).getTabFileName())
 					&& this.getLanguageCode().equals(((Language) anObject).getLanguageCode())) {
 				return true;
 			} else {
@@ -186,32 +161,16 @@ public class Language {
 	/**
 	 *
 	 * Returns the URL pointing to the resource file that contains the word list
-	 * provided by the cldr as a *.tab file
+	 * as a *.tab file
 	 *
 	 * @return The URL pointing to the resource file that contains the word list
 	 *         provided by the cldr as a *.tab file
 	 */
-	public URL getCldrName() {
-		return cldrName;
+	public URL getTabFileName() {
+		return tabfileName;
 	}
 
-	/**
-	 *
-	 * Returns the URL pointing to the resource file that contains the word list
-	 * provided by Wiktionary as a *.tab file
-	 *
-	 * @return The URL pointing to the resource file that contains the word list
-	 *         provided by Wiktionary as a *.tab file
-	 */
-	public URL getWiktName() {
-		return wiktName;
-	}
-	
-	public TabFile getWiktTabFile() throws IOException{
-		return new TabFile(getWiktName());
-	}
-	
-	public TabFile getCldrTabFile() throws IOException{
-		return new TabFile(getCldrName());
+	public TabFile getTabFile() throws IOException {
+		return new TabFile(getTabFileName());
 	}
 }
