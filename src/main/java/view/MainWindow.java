@@ -581,6 +581,7 @@ public class MainWindow extends Application implements Initializable {
 						languageSelector.setPromptText(bundle.getString("languageSelector.waitText"));
 						currentSequence.setDisable(true);
 						getNextLetter.setDisable(true);
+						result.setDisable(true);
 					}
 				});
 
@@ -601,6 +602,7 @@ public class MainWindow extends Application implements Initializable {
 						languageSelector.setPromptText(bundle.getString("languageSelector.PromptText"));
 						currentSequence.setDisable(false);
 						getNextLetter.setDisable(false);
+						result.setDisable(false);
 
 						// Initialize the language search field.
 						new AutoCompleteComboBoxListener<String>(languageSelector);
