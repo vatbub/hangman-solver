@@ -369,7 +369,8 @@ public class HangmanSolver {
 		// Remove all words that don't contain an underscore as they are fully
 		// solved
 		int indexCorr = 0;
-		for (int i = 0; i < words.size(); i++) {
+		int wordsSize = words.size();
+		for (int i = 0; i < wordsSize; i++) {
 			if (!words.get(i - indexCorr).contains("_")) {
 				words.remove(i - indexCorr);
 				indexCorr = indexCorr + 1;
