@@ -280,7 +280,7 @@ public class MainWindow extends Application implements Initializable {
 		// Set the new sequence in the gui
 		currentSequence.setText(newSequence);
 
-		// submit solved words
+		/*// submit solved words
 		for (int i = 0; i < words.size(); i++) {
 			if (!words.get(i).contains("_")) {
 				if (!words.get(i).equals("")) {
@@ -291,7 +291,7 @@ public class MainWindow extends Application implements Initializable {
 					HangmanStats.addWordToDatabase(words.get(i), currentSolution.lang);
 				}
 			}
-		}
+		}*/
 
 		// get the next guess
 		launchAlgorithm();

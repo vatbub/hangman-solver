@@ -31,7 +31,8 @@ public class HangmanStats {
 	 */
 	private static LinkedBlockingQueue<Document> docQueue = new LinkedBlockingQueue<Document>();
 	/**
-	 * This object is used to save a copy of the upload queue on the disc to keep it even if the app is relaunched.
+	 * This object is used to save a copy of the upload queue on the disc to
+	 * keep it even if the app is relaunched.
 	 */
 	private static Prefs preferences = new Prefs(HangmanStats.class.getName());
 	/**
@@ -56,29 +57,31 @@ public class HangmanStats {
 
 			while (!interrupted) {
 				try {
-				if (MongoSetup.isReachable()) {
-					if (!docQueue.isEmpty()) {
-						Document newDoc = docQueue.remove();
-						String word = newDoc.getString("word");
-						String langCode = newDoc.getString("lang");
-						MongoCollection<Document> coll = MongoSetup.getWordsUsedCollection();
-						Document doc = coll.find(Filters.and(Filters.eq("word", word), Filters.eq("lang", langCode)))
-								.first();
+					if (MongoSetup.isReachable()) {
+						if (!docQueue.isEmpty()) {
+							Document newDoc = docQueue.remove();
+							String word = newDoc.getString("word");
+							String langCode = newDoc.getString("lang");
+							MongoCollection<Document> coll = MongoSetup.getWordsUsedCollection();
+							Document doc = coll
+									.find(Filters.and(Filters.eq("word", word), Filters.eq("lang", langCode))).first();
 
-						System.out.println("Transferring word " + word + "...");
+							System.out.println("Transferring word " + word + "...");
 
-						if (doc == null) {
-							// word never added prior to this
-							doc = new Document("word", word).append("lang", langCode).append("count", 1);
-							coll.insertOne(doc);
-						} else {
-							// word already known in the database
-							coll.updateOne(Filters.and(Filters.eq("word", word), Filters.eq("lang", langCode)),
-									Updates.inc("count", 1));
+							if (doc == null) {
+								// word never added prior to this
+								doc = new Document("word", word).append("lang", langCode).append("count", 1);
+								coll.insertOne(doc);
+							} else {
+								// word already known in the database
+								coll.updateOne(Filters.and(Filters.eq("word", word), Filters.eq("lang", langCode)),
+										Updates.inc("count", 1));
+							}
 						}
 					}
-				}}catch (Exception e){
-					System.err.println("Something went wrong while transferring a document to the MongoDB but don't worry, the document was probably saved on your hard drive and will be transferred after launching the app again.");
+				} catch (Exception e) {
+					System.err.println(
+							"Something went wrong while transferring a document to the MongoDB but don't worry, the document was probably saved on your hard drive and will be transferred after launching the app again.");
 				}
 			}
 		}
@@ -151,18 +154,22 @@ public class HangmanStats {
 			uploadThread.start();
 		}
 
-		if (!alreadySubmittedWordsInThisSession.contains(word)) {
-			// word not submitted yet
-			alreadySubmittedWordsInThisSession.add(word);
-			System.out.println("Submitting word '" + word + "' to MongoDB...");
-			Document doc = new Document("word", word).append("lang", lang.getLanguageCode()).append("count", 1);
-			try {
-				docQueue.put(doc);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		String[] words = word.split(" ");
+
+		for (String w : words) {
+			if (!alreadySubmittedWordsInThisSession.contains(w)) {
+				// word not submitted yet
+				alreadySubmittedWordsInThisSession.add(w);
+				System.out.println("Submitting word '" + w + "' to MongoDB...");
+				Document doc = new Document("word", w).append("lang", lang.getLanguageCode()).append("count", 1);
+				try {
+					docQueue.put(doc);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println("Submission done.");
 			}
-			System.out.println("Submission done.");
 		}
 
 	}
