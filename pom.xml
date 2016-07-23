@@ -4,7 +4,7 @@
 	<artifactId>hangmanSolver</artifactId>
 	<version>0.0.7-SNAPSHOT</version>
 	<name>Hangman Solver</name>
-	<description>An application that sloves Hangman</description>
+	<description>An application that solves Hangman</description>
 
 	<repositories>
 		<repository>
