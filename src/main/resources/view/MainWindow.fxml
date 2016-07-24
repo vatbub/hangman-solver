@@ -47,7 +47,7 @@
             <Insets left="5.0" />
           </HBox.margin>
         </Label>
-        <Hyperlink fx:id="updateLink" disable="true" minHeight="-1.0" onAction="#updateLinkOnAction" prefHeight="-1.0" text="%updateLink" textFill="#0066ff" HBox.hgrow="ALWAYS">
+        <Hyperlink fx:id="updateLink" disable="false" minHeight="-1.0" onAction="#updateLinkOnAction" prefHeight="-1.0" text="%updateLink" textFill="#0066ff" HBox.hgrow="ALWAYS">
           <HBox.margin>
             <Insets right="14.0" />
           </HBox.margin>
