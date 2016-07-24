@@ -27,14 +27,6 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-			<id>bintray-vatbub-fokReleases</id>
-			<name>bintray-plugins</name>
-			<url>http://dl.bintray.com/vatbub/fokReleases</url>
-		</pluginRepository>
-		<pluginRepository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
 			<id>bintray-vatbub-fokprojectsSnapshots</id>
 			<name>bintray-plugins</name>
 			<url>http://dl.bintray.com/vatbub/fokprojectsSnapshots</url>
