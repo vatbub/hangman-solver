@@ -163,7 +163,18 @@ public class MainWindow extends Application implements Initializable {
 	 *            The event object that contains information about the event.
 	 */
 	void updateLinkOnAction(ActionEvent event) {
-		// TODO: handle the event here
+		// Check for new version ignoring ignored updates
+		Thread updateThread = new Thread(){
+			@Override
+			public void run(){
+				UpdateInfo update = UpdateChecker.isUpdateAvailableCompareAppVersion(Config.getUpdateRepoBaseURL(), Config.groupID, Config.artifactID, Config.updateFileClassifier);
+				if (update.showAlert){
+					UpdateAvailableDialog.show(update);
+				}
+			}
+		};
+		updateThread.setName("manualUpdateThread");
+		updateThread.start();
 	}
 
 	@FXML
