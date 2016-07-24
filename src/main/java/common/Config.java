@@ -1,5 +1,6 @@
 package common;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.mongodb.MongoClientURI;
@@ -12,6 +13,23 @@ import languages.Language;
  *
  */
 public class Config {
+	// Project setup
+	public static URL getUpdateRepoBaseURL() {
+		URL res = null;
+		try {
+			res = new URL("http://dl.bintray.com/vatbub/fokprojectsSnapshots");
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return res;
+	}
+	
+	public static String artifactID = "hangmanSolver";
+	public static String groupID = "fokprojects";
+	public static String updateFileClassifier = "jar-with-dependencies";
+
 	// algorithm
 	/**
 	 * The maximum number of parallel threads that are used to compute the next
@@ -50,8 +68,8 @@ public class Config {
 
 	// Language class
 	/**
-	 * The path pattern to find the merged word dictionary. {langCode} will
-	 * be replaced by the language code
+	 * The path pattern to find the merged word dictionary. {langCode} will be
+	 * replaced by the language code
 	 */
 	public static String languageDictPattern = "/mergedLanguages/wn-merged-{langCode}.tab";
 	/**
@@ -95,11 +113,13 @@ public class Config {
 	public static MongoClientURI mongoDBServerAddress = new MongoClientURI(
 			"mongodb://user:ljkhfgsd98675@ds019634.mlab.com:19634/hangmanstats");
 	/**
-	 * The name of the <a href="https://www.mongodb.com/">MongoDB</a> database where all submitted words are saved.
+	 * The name of the <a href="https://www.mongodb.com/">MongoDB</a> database
+	 * where all submitted words are saved.
 	 */
 	public static String mongoDBDatabaseName = "hangmanstats";
 	/***
-	 * The name of the <a href="https://www.mongodb.com/">MongoDB</a> collection where all submitted words are saved.
+	 * The name of the <a href="https://www.mongodb.com/">MongoDB</a> collection
+	 * where all submitted words are saved.
 	 */
 	public static String mongoDBWordsUsedCollectionName = "wordsused";
 }

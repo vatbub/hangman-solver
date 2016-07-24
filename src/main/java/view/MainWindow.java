@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 import algorithm.*;
 import common.Config;
+import common.UpdateChecker;
+import common.UpdateInfo;
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -364,6 +366,17 @@ public class MainWindow extends Application implements Initializable {
 			if (HangmanStats.uploadThread.isAlive() == false) {
 				HangmanStats.uploadThread.start();
 			}
+			
+			Thread updateThread = new Thread(){
+				@SuppressWarnings("unused")
+				@Override
+				public void run(){
+					UpdateInfo update = UpdateChecker.isUpdateAvailable(Config.getUpdateRepoBaseURL(), Config.groupID, Config.artifactID, Config.updateFileClassifier);
+				}
+			};
+			updateThread.setName("updateThread");
+			updateThread.start();
+			
 			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"), bundle);
 
 			scene = new Scene(root);
