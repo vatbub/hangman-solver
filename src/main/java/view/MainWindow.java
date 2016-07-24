@@ -38,6 +38,7 @@ import stats.HangmanStats;
 import stats.MongoSetup;
 import view.noLanguageSelected.NoLanguageSelected;
 import view.noSequenceEntered.NoSequenceEntered;
+import view.updateAvailableDialog.UpdateAvailableDialog;
 
 /**
  * The MainWindow controller class.
@@ -368,10 +369,12 @@ public class MainWindow extends Application implements Initializable {
 			}
 			
 			Thread updateThread = new Thread(){
-				@SuppressWarnings("unused")
 				@Override
 				public void run(){
 					UpdateInfo update = UpdateChecker.isUpdateAvailable(Config.getUpdateRepoBaseURL(), Config.groupID, Config.artifactID, Config.updateFileClassifier);
+					if (update.showAlert){
+						UpdateAvailableDialog.show(update);
+					}
 				}
 			};
 			updateThread.setName("updateThread");
