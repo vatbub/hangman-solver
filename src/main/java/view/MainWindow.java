@@ -173,7 +173,7 @@ public class MainWindow extends Application implements Initializable {
 
 						@Override
 						public void run() {
-							UpdateAvailableDialog.show(update);
+							new UpdateAvailableDialog(update);
 						}
 						
 					});
@@ -395,7 +395,7 @@ public class MainWindow extends Application implements Initializable {
 
 							@Override
 							public void run() {
-								UpdateAvailableDialog.show(update);
+								new UpdateAvailableDialog(update);
 							}
 							
 						});
