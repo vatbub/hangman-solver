@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import algorithm.*;
+import common.Common;
 import common.Config;
 import common.UpdateChecker;
 import common.UpdateInfo;
@@ -46,6 +47,14 @@ import view.updateAvailableDialog.UpdateAvailableDialog;
 public class MainWindow extends Application implements Initializable {
 
 	public static void main(String[] args) {
+		for (String arg:args){
+			if (arg.toLowerCase().matches("mockappversion=.*")){
+				// Set the mock version
+				String version = arg.toLowerCase().substring(arg.toLowerCase().indexOf('=')+1);
+				Common.setMockAppVersion(version);
+			}
+		}
+		
 		launch(args);
 	}
 
