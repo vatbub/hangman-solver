@@ -169,7 +169,14 @@ public class MainWindow extends Application implements Initializable {
 			public void run(){
 				UpdateInfo update = UpdateChecker.isUpdateAvailableCompareAppVersion(Config.getUpdateRepoBaseURL(), Config.groupID, Config.artifactID, Config.updateFileClassifier);
 				if (update.showAlert){
-					UpdateAvailableDialog.show(update);
+					Platform.runLater(new Runnable(){
+
+						@Override
+						public void run() {
+							UpdateAvailableDialog.show(update);
+						}
+						
+					});
 				}
 			}
 		};
@@ -384,7 +391,14 @@ public class MainWindow extends Application implements Initializable {
 				public void run(){
 					UpdateInfo update = UpdateChecker.isUpdateAvailable(Config.getUpdateRepoBaseURL(), Config.groupID, Config.artifactID, Config.updateFileClassifier);
 					if (update.showAlert){
-						UpdateAvailableDialog.show(update);
+						Platform.runLater(new Runnable(){
+
+							@Override
+							public void run() {
+								UpdateAvailableDialog.show(update);
+							}
+							
+						});
 					}
 				}
 			};

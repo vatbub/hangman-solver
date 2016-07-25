@@ -68,7 +68,7 @@ public class UpdateAvailableDialog {
         assert okButton != null : "fx:id=\"okButton\" was not injected: check your FXML file 'AlertDialog.fxml'.";
 
         // Initialize your logic here: all @FXML variables will have been injected
-        messageLabel.setText(messageText);
+        detailsLabel.setText(messageText);
 
     }
 
