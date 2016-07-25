@@ -10,7 +10,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
+/**
+ * A window diaplying a dialog with some licensing info.
+ * @author frede
+ *
+ */
 public class LicenseWindow {
 
     @FXML
@@ -24,6 +28,10 @@ public class LicenseWindow {
     void initialize() {
     }
     
+    /**
+     * Shows the dialog.
+     * @param windowTitle
+     */
     public static void show(String windowTitle){
     	Stage stage = new Stage();
     	Parent root;

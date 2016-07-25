@@ -22,7 +22,7 @@
     <TextField fx:id="currentSequence" maxWidth="1.7976931348623157E308" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="120.0" />
     <Button fx:id="getNextLetter" defaultButton="true" mnemonicParsing="false" onAction="#getNextLetterAction" prefWidth="571.9998779296875" text="%computeNextLetterButtonLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="162.0" />
     <TextField fx:id="result" disable="false" editable="false" prefHeight="26.0" prefWidth="572.0" promptText="%clickGenerateButtonText" text="" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="228.0" />
-    <Button fx:id="copyButton" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#copyResultToClipboard" prefHeight="-1.0" text="%copyButtontext" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="229.0">
+    <Button id="copyButton" fx:id="applyButton" disable="true" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#applyResult" prefHeight="-1.0" text="%applyButtontext" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="229.0">
       <font>
         <Font size="13.0" />
       </font>
@@ -37,7 +37,7 @@
     <TextArea fx:id="proposedSolutions" editable="false" prefHeight="55.0" prefWidth="572.0" wrapText="true" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="443.0" />
     <HBox prefHeight="25.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0">
       <children>
-        <Label prefHeight="28.0" text="%version.label" HBox.hgrow="ALWAYS">
+        <Label id="current" fx:id="currentAppVersionTextLabel" onMouseClicked="#currentAppVersionTextLabelOnMouseClicked" prefHeight="28.0" text="%version.label" HBox.hgrow="ALWAYS">
           <HBox.margin>
             <Insets left="14.0" />
           </HBox.margin>
@@ -47,7 +47,7 @@
             <Insets left="5.0" />
           </HBox.margin>
         </Label>
-        <Hyperlink fx:id="updateLink" disable="true" minHeight="-1.0" onAction="#updateLinkOnAction" prefHeight="-1.0" text="%updateLink" textFill="#0066ff" HBox.hgrow="ALWAYS">
+        <Hyperlink fx:id="updateLink" disable="false" minHeight="-1.0" onAction="#updateLinkOnAction" prefHeight="-1.0" text="%updateLink" textFill="#0066ff" HBox.hgrow="ALWAYS">
           <HBox.margin>
             <Insets right="14.0" />
           </HBox.margin>

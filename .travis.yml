@@ -1,28 +1,22 @@
 language: java
 jdk:
 - oraclejdk8
-before_install: "git clone -b travis `git config --get remote.origin.url` target/travis"
-script: "if [ $TRAVIS_PULL_REQUEST == 'false' ] ; then if [ $TRAVIS_BRANCH == release ] ; then mvn clean deploy --settings target/travis/settings.xml; else mvn test -B; fi ; else mvn clean verify --settings target/travis/settings.xml; fi"
+cache:
+  directories:
+  - "$HOME/.m2"
+before_install: git clone -b travis `git config --get remote.origin.url` target/travis
+after_success: mvn clean deploy --settings target/travis/settings.xml
 branches:
   only:
   - master
   - release
-#after_success:
-#- mvn javadoc:jar
-#deploy:
-#  provider: releases
-#  api_key:
-#    secure: poIATHjuDA3PbkwMeRfXETu1YU0TjHtUaunXC5Vj5z7V5vk85IAaMv3MeWAr7GIs5y+eE8ldWstPBUuup7Meh+Fb94v9JZDp1Pgf5+MQJr5GuTdSbJo2Ip01RieJv6dw/LpLv0OoParYwwQA8Ffg2WkZwg4qcPuGfNPvAk2Fnu9Esm5/kQkAM3y1DpTX6TzT3PfOpY098YnzduyzhoNbkzdDxO3gewMQ24IY6wgYZvc4qI0T0zi9RR9xLesG+GfH6f1aWu3IsQolYSu4fViN3mICKtiDV/KU7ykthuIMbM5mxv3yHV/6h/ibP+Klznkzg/71tm+lS8FCItobp+e2xSJvyyFy0lsqu0iHbBWdr/7BJ/kY4NK9PI2tCo+NxxFBfG9c69igFEwa/SBbN281uqL8wOz4dO7tXOt2ZYkYDk5KoUHrLopf8vGEdZNtW8ykYoZPBQpD3dKXP47hdHXuiqxYoXAAC1Q9L/PZ+5e1wm46Ab7U3XNK/bag7+tPy3PvCL0ms+t+PszTZ5supm23KW7h2wVic5AqaRHutlaEl94k4aLijmiqqEl0MF5fjoRPN7RVgKcsVKUzZjQJnrKOmgm6brmUQfRlhl5dzzW3pIa8M0iA+AFOpSpPVAeqW9b9xYF1Ges+elVNhSrFYyGOlY3hdpvbtYGD7O8vygthKh0=
-#  file_glob: true
-#  file:
-#  - target/hangmanSolver-*-SNAPSHOT-jar-with-dependencies.jar
-#  - target/hangmanSolver-*-SNAPSHOT-javadoc.jar
-#  skip_cleanup: true
-#  on:
-#    repo: vatbub/hangman-solver
-#    branch: release
-#    tag: true
+notifications:
+  email:
+    recipients:
+    - vatbub123+travisbuildnotification@googlemail.com
+    on_success: never
+    on_failure: always
 env:
   global:
-  - secure: JixSWEh3WG6azS1xO1K22NzmYvrTy+4o5OkwlyBZSjrbGbx6tlT31JzaFxFCyPP5qewT9q9uIPkcBuC3j2heIB2gQDvMX/8OE6RJbWMmbXiWX697naUEJYu94X+5ncHbFHEXBUnwRizAxootYD+EKfFB0opAbUVcFxaHU+HspQrIAp3ntZsWjBii5pkgqlnoE92yicyudx+ZBRwa67mjDfLEMRnFhc19Fo2DiFv5lNp4DssCfocF46BKaKu1+2qpqSZgt5oAXzEkbkU8/BcO+Bd3FMVAg85sZoAi2XdR6OEPNQzi1VwrgfVcYl4yv3nR6sIk2uxIrRvxPaVs0SI4jd90VyVEGPjXbezZ/zvPlHirNesYCu/Mz1GVCBGajJDWELo3ElMRIH6R+hHjQ2V3PxxaPFqqGXlEmIuBKPL0nk61gr/3OzyFKyMyL3Rnj67pcsQ+NWTJzLSA4JLfC2TkRcx0DmZNIjnAsUEZnybXCaOEhpFksrJz7d0PwBX1RRT/RSqYR0YLbgLBfiezus4QlISVAFu929ema0I6hSj/Lf60R027hoWhqQ8GZs+W9qxMvugBIDf+hHBPP6IPVJPPQosdxvRO7anmL9onhlUQKne6Jkd8uzrZr1q9CM7mk2tcKW34sBvSdIz8gEWdrRzsDQovaWq14ew/ROuovuJpjmQ=
-  - secure: UZklSPCoy2NflSIrgXGfWo8UIqytUCRFLHQxX1jMloEj/paXyyxSI0X43gZ5howIVh0MS+p+m5+LQJHu8ew+50pyUMoOby0+3fllweW8H0RofxgWIq+13MbJYBOqduhAqv+1N2CtYgoUnkUxPCiu03Cl7NfqeH4OcRb+802u2u06Fi1le5qmLzhPT7p8SgsgWV8GA5VDOJ1gyOv54NmnYkxPTKn0VYmV/jaPso6kZwD4iDl+sAqiDfr1b4NbndpPTvnkcyIP9iBXXmnS4J2NT5sGDh7yp0QRccvfnArazUrGyyI7ZQcEJflZbb01rQjgbkl8nHltKplzwsfTnSfvFSTDG6vVVJwMyYuQLJwqv3XDo9hyd66OG5NpRTSiz6q7mwAIMIvqLhPEIUh504+7d7odFa5qQ4u6O6KDCZg+zjsYgN1/ZKTLzwXlMBMUuI0aeFRJj6Nod97DUxbFkcH/JQ1qR+m8WozonXkKyVzlK5IueZ1+7LhA+aG0yLj/JAYyu1Ue21E7E2o9nUyQLMLsaD33cfjPhr9gWSnURetMBgF9V4Lqn5TFGno8TzWDKVS5XOG7BPwzAy6Uxw/MNRlHJw4JL0JJxPT+mW8yzDUsMwWNkdAmFRV2fZWs9XUdD+d4UJngmSt8SO9OwEJjD39LNPMZ0jRteaySl5cw0/RUmlQ=
+  - secure: XvH15v94SO0Js+GyOYKvHKmZ3+z69upabtmf+wFd/lGjm9gSe7/cMAWWPIZc8mzxd0K9+Nd3Ds+OsyDEdn5Z/F8v9kqQfY5loK/2sLaIoWW0zOpMdygPE6JSCWsH58uTGCgeVLAG1Ucf1QEVWZSYZFNvqfP3Fr4aCv3wKPc9Rb/eWl+7TEObWAbA0D8LiTQ7XrfnnkH8nhRlyxWTJ8xWdfSegFCcG5TCSmFVDgYD5NDXcY5vWp+jUYmrCqL/oKHQJFqfFIWG7uU0YliF7qxzNPDasjHY5l0r0vfzSSrqwBpdici/ZyPpVfN4ygTfBC5FnY7qTVi4Xm+oAYi7nvmFL8JO+JI0RhfxpoxRLySFLWecB3qZzbmJO608W6vsBFc1p9UrcP3K7HPWTEijvYcgmltGQpzL4uMk8AYkRBfHQ9nE9/jKH2OedJFe5Ewf2gQSI4uJVaUK6OfelNVoI+MnCi4Bv8CJaOIaOEEOkVOVzAUu9ds3mjZKrloicjYeALn47GkEOfe+wS6ugUMs2brS94nrup+YriT2rxegyPHGWRgg3VWOGUHBxBKswJR7VBdQpAs0zgZE6w4s4h3Du7PHNExiU5v9rs3wisJzyNL7K0A4yNtdtfTJGFSYCv8zTip17n4quwOX5J0E9uAT9WK7DTGk0AJkJyjOibx53m/mfZE=
+  - secure: WRZA7jxS8o1AsXks4mY8NRb0P5XXvp2FWQ7NmyvwP1VF9KjbGX9EuKvgbJB1aEzpaSVpZhtQpVv2wXIAwnc7yCBsg6PhF42VYeBa2jxKTJ76z6lR5Bapba4EBjRPatqRIjFygt4MmPeYwcSKjMGv7G+mVtq2aSW86L3XCK92WAXn3B8XVED5+lLaTx4YT8p+9qe4VNrLyKXvMuOZDktRmzHXzk8i6DPbdqjxmzU2g+/f+kV+ZwNPD6TQ6qUyltpRiTRHHRCih9k61jp60fmjTrTfRI034alumMUjeF+tSiw8veGeV2p3qC7UB9Qg79TS5rzUHJ8D2/DQ39JZFrNcmvYUfONtrwfhTdd3GuWC8ma9LJ09Nl7Tb+D26GtqmoQT2KvopQyySmFw6Dha23PsJTkeZomyVVwO2PYBOq8VJCVyV5Pf/LvKaxr51aRXIS+/o3IsI+Dm02R2CLPROUPnTNpQGHzxKBiAp+u4+WR3rBoH5M1NnPUSMmIAzhIPPTGlNpdGKV+VH4Nv5dt5qDXjtm96CV/6YJKnVkouKXlDJgUA5VLYs/fz8JiA0fkfGZm9zP6m53mdV1BVrv5X32shkOdiO2hvUbOMmgu+TMvJHUnb27Atss+Ffwiqk2i3LR0UlawtEf6UYMJpAq51ybLg6EDAgWce2gwogbjoY+Vhy+0=

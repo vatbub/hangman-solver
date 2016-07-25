@@ -21,9 +21,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import view.LicenseWindow;
 
-
+/**
+ * A question box that asks the user if the app can send the game result to the devs when a game ends.
+ * @author frede
+ *
+ */
 public class SendReportQuestion {
 	
 	private static String eventName;

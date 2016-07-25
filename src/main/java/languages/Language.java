@@ -19,15 +19,10 @@ public class Language {
 	 */
 	private String languageCode;
 	/**
-	 * The URL pointing to the resource file that contains the word list
-	 * provided by the cldr as a *.tab file
+	 * The URL pointing to the resource file that contains the word list as a
+	 * *.tab file
 	 */
-	private URL cldrName;
-	/**
-	 * The URL pointing to the resource file that contains the word list
-	 * provided by Wiktionary as a *.tab file
-	 */
-	private URL wiktName;
+	private URL tabfileName;
 
 	/**
 	 * Creates a new {@link Language}-Object that contains all information about
@@ -38,46 +33,29 @@ public class Language {
 	 */
 	public Language(String languageCode) {
 		this.languageCode = languageCode;
-		cldrName = getCldrName(languageCode);
-		wiktName = getWiktName(languageCode);
+		tabfileName = getCldrName(languageCode);
 	}
 
 	/**
 	 * Looks up the {@link URL} to the resource file for the specified language
-	 * coming from cldr
 	 * 
 	 * @param languageCode
 	 *            The ISO 639-3 language code
 	 * @return The {@link URL} to the resource file that contains the word list
 	 *         for the specified language or {@code null} if the language is not
-	 *         supported by the cldr.
+	 *         supported.
 	 */
 	private URL getCldrName(String languageCode) {
 
 		// Try to get the resource file, if it fails, the language is not
 		// supported
-		return Language.class.getResource(Config.cldrNamePattern.replace("{langCode}", languageCode));
+		return Language.class.getResource(Config.languageDictPattern.replace("{langCode}", languageCode));
 	}
 
 	/**
-	 * Looks up the {@link URL} to the resource file for the specified language
-	 * coming from wiktionary
-	 * 
-	 * @param languageCode
-	 *            The ISO 639-3 language code
-	 * @return The {@link URL} to the resource file that contains the word list
-	 *         for the specified language or {@code null} if the language is not
-	 *         supported by the wiktionary.
-	 */
-	private URL getWiktName(String languageCode) {
-
-		// Try to get the resource file, if it fails, the language is not
-		// supported
-		return Language.class.getResource(Config.wiktNamePattern.replace("{langCode}", languageCode));
-	}
-
-	/**
-	 * Returns a {@link List} of supported languages.
+	 * Returns a {@link List} of supported languages. The method result is
+	 * cached, which is why the first function call will take longer that the
+	 * following ones.
 	 * 
 	 * @return A {@link List} of supported languages or {@code null} if an
 	 *         exception occurs.
@@ -101,7 +79,7 @@ public class Language {
 				for (int i = 0; i < languageCodesFile.getRowCount(); i++) {
 					Language temp = new Language(languageCodesFile.getValueAt(i, 0));
 
-					if (temp.getCldrName() != null && temp.getWiktName() != null) {
+					if (temp.getTabFileName() != null) {
 						// Found all databases, so the language is supported
 						res.add(temp);
 					}
@@ -151,8 +129,7 @@ public class Language {
 	@Override
 	public boolean equals(Object anObject) {
 		if (anObject instanceof Language) {
-			if (this.getCldrName().equals(((Language) anObject).getCldrName())
-					&& this.getWiktName().equals(((Language) anObject).getWiktName())
+			if (this.getTabFileName().equals(((Language) anObject).getTabFileName())
 					&& this.getLanguageCode().equals(((Language) anObject).getLanguageCode())) {
 				return true;
 			} else {
@@ -163,19 +140,37 @@ public class Language {
 		}
 	}
 
+	/**
+	 * Returns the ISO 639-3 language code of this language.
+	 * 
+	 * @return The ISO 639-3 language code of this language.
+	 */
 	public String getLanguageCode() {
 		return languageCode;
 	}
 
+	/***
+	 * Returns the human readable name of this language.
+	 * 
+	 * @return The human readable name of this language.
+	 */
 	public String getHumanReadableName() {
 		return getHumanReadableName(this.languageCode);
 	}
 
-	public URL getCldrName() {
-		return cldrName;
+	/**
+	 *
+	 * Returns the URL pointing to the resource file that contains the word list
+	 * as a *.tab file
+	 *
+	 * @return The URL pointing to the resource file that contains the word list
+	 *         provided by the cldr as a *.tab file
+	 */
+	public URL getTabFileName() {
+		return tabfileName;
 	}
 
-	public URL getWiktName() {
-		return wiktName;
+	public TabFile getTabFile() throws IOException {
+		return new TabFile(getTabFileName());
 	}
 }
