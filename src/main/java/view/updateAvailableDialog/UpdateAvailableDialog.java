@@ -116,7 +116,17 @@ public class UpdateAvailableDialog implements UpdateProgressDialog {
 
 		// Initialize your logic here: all @FXML variables will have been
 		// injected
-		detailsLabel.setText(messageText);
+		if (updateInfo.showAlert) {
+			// an update is available, show its info
+			detailsLabel.setText(messageText);
+		} else {
+			// No update is available, show a corresponding message
+			detailsLabel.setText("");
+			messageLabel.setText(bundle.getString("label.noUpdate"));
+			okButton.setDisable(true);
+			cancelButton.setDisable(true);
+			
+		}
 		updateProgressAnimation.setVisible(false);
 		updateProgressText.setVisible(false);
 	}
@@ -125,13 +135,18 @@ public class UpdateAvailableDialog implements UpdateProgressDialog {
 		stage = new Stage();
 		Parent root;
 		try {
-			
+
 			if (update != null) {
-				messageText = "Filesize: " + update.fileSizeInMB + " MB, Version to download: "
-						+ update.toVersion.toString();
+				if (update.fileSizeInMB != -1) {
+					messageText = "Filesize: " + (Math.round(update.fileSizeInMB * 100)) / 100.0
+							+ " MB, Version to download: " + update.toVersion.toString();
+				} else {
+					// File sie unknown, see Javadoc of UpdateInfo
+					messageText = "Filesize: unknown, Version to download: " + update.toVersion.toString();
+				}
 			}
 			updateInfo = update;
-			
+
 			root = FXMLLoader.load(UpdateAvailableDialog.class.getResource("AlertDialog.fxml"), bundle);
 			Scene scene = new Scene(root);
 			// scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -210,9 +225,9 @@ public class UpdateAvailableDialog implements UpdateProgressDialog {
 
 		});
 	}
-	
-	public void showErrorMessage(String message){
-		Platform.runLater(new Runnable(){
+
+	public void showErrorMessage(String message) {
+		Platform.runLater(new Runnable() {
 
 			@Override
 			public void run() {
@@ -222,7 +237,7 @@ public class UpdateAvailableDialog implements UpdateProgressDialog {
 				okButton.setDisable(false);
 				okButton.setText(bundle.getString("button.ok.retry"));
 			}
-			
+
 		});
 	}
 }

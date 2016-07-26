@@ -47,14 +47,14 @@ import view.updateAvailableDialog.UpdateAvailableDialog;
 public class MainWindow extends Application implements Initializable {
 
 	public static void main(String[] args) {
-		for (String arg:args){
-			if (arg.toLowerCase().matches("mockappversion=.*")){
+		for (String arg : args) {
+			if (arg.toLowerCase().matches("mockappversion=.*")) {
 				// Set the mock version
-				String version = arg.toLowerCase().substring(arg.toLowerCase().indexOf('=')+1);
+				String version = arg.toLowerCase().substring(arg.toLowerCase().indexOf('=') + 1);
 				Common.setMockAppVersion(version);
 			}
 		}
-		
+
 		launch(args);
 	}
 
@@ -173,20 +173,17 @@ public class MainWindow extends Application implements Initializable {
 	 */
 	void updateLinkOnAction(ActionEvent event) {
 		// Check for new version ignoring ignored updates
-		Thread updateThread = new Thread(){
+		Thread updateThread = new Thread() {
 			@Override
-			public void run(){
-				UpdateInfo update = UpdateChecker.isUpdateAvailableCompareAppVersion(Config.getUpdateRepoBaseURL(), Config.groupID, Config.artifactID, Config.updateFileClassifier);
-				if (update.showAlert){
-					Platform.runLater(new Runnable(){
-
-						@Override
-						public void run() {
-							new UpdateAvailableDialog(update);
-						}
-						
-					});
-				}
+			public void run() {
+				UpdateInfo update = UpdateChecker.isUpdateAvailableCompareAppVersion(Config.getUpdateRepoBaseURL(),
+						Config.groupID, Config.artifactID, Config.updateFileClassifier);
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						new UpdateAvailableDialog(update);
+					}
+				});
 			}
 		};
 		updateThread.setName("manualUpdateThread");
@@ -310,18 +307,14 @@ public class MainWindow extends Application implements Initializable {
 		// Set the new sequence in the gui
 		currentSequence.setText(newSequence);
 
-		/*// submit solved words
-		for (int i = 0; i < words.size(); i++) {
-			if (!words.get(i).contains("_")) {
-				if (!words.get(i).equals("")) {
-					// Submit the word to the internet db.
-					// Although this method is called quite often, it keeps
-					// track of
-					// the submissions to avoid duplicates.
-					HangmanStats.addWordToDatabase(words.get(i), currentSolution.lang);
-				}
-			}
-		}*/
+		/*
+		 * // submit solved words for (int i = 0; i < words.size(); i++) { if
+		 * (!words.get(i).contains("_")) { if (!words.get(i).equals("")) { //
+		 * Submit the word to the internet db. // Although this method is called
+		 * quite often, it keeps // track of // the submissions to avoid
+		 * duplicates. HangmanStats.addWordToDatabase(words.get(i),
+		 * currentSolution.lang); } } }
+		 */
 
 		// get the next guess
 		launchAlgorithm();
@@ -330,15 +323,15 @@ public class MainWindow extends Application implements Initializable {
 	@FXML
 	void currentAppVersionTextLabelOnMouseClicked(MouseEvent event) {
 		clickCounter++;
-		
-		if (clickCounter>=3){
+
+		if (clickCounter >= 3) {
 			// rotate
 			RotateTransition rt = new RotateTransition(Duration.millis(500), currentAppVersionTextLabel);
-	        rt.setByAngle((Math.random()-0.5)*1440);
-	        rt.setAutoReverse(true);
-	    
-	        rt.play();
-	        clickCounter=0;
+			rt.setByAngle((Math.random() - 0.5) * 1440);
+			rt.setAutoReverse(true);
+
+			rt.play();
+			clickCounter = 0;
 		}
 	}
 
@@ -394,26 +387,27 @@ public class MainWindow extends Application implements Initializable {
 			if (HangmanStats.uploadThread.isAlive() == false) {
 				HangmanStats.uploadThread.start();
 			}
-			
-			Thread updateThread = new Thread(){
+
+			Thread updateThread = new Thread() {
 				@Override
-				public void run(){
-					UpdateInfo update = UpdateChecker.isUpdateAvailable(Config.getUpdateRepoBaseURL(), Config.groupID, Config.artifactID, Config.updateFileClassifier);
-					if (update.showAlert){
-						Platform.runLater(new Runnable(){
+				public void run() {
+					UpdateInfo update = UpdateChecker.isUpdateAvailable(Config.getUpdateRepoBaseURL(), Config.groupID,
+							Config.artifactID, Config.updateFileClassifier);
+					if (update.showAlert) {
+						Platform.runLater(new Runnable() {
 
 							@Override
 							public void run() {
 								new UpdateAvailableDialog(update);
 							}
-							
+
 						});
 					}
 				}
 			};
 			updateThread.setName("updateThread");
 			updateThread.start();
-			
+
 			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"), bundle);
 
 			scene = new Scene(root);
