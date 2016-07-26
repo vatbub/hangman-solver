@@ -50,7 +50,7 @@ public class MainWindow extends Application implements Initializable {
 		for (String arg : args) {
 			if (arg.toLowerCase().matches("mockappversion=.*")) {
 				// Set the mock version
-				String version = arg.toLowerCase().substring(arg.toLowerCase().indexOf('=') + 1);
+				String version = arg.substring(arg.toLowerCase().indexOf('=') + 1);
 				Common.setMockAppVersion(version);
 			}
 		}
