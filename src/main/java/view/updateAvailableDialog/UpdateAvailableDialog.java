@@ -92,8 +92,13 @@ public class UpdateAvailableDialog implements UpdateProgressDialog {
 		Thread downloadThread = new Thread() {
 			@Override
 			public void run() {
-				UpdateChecker.downloadAndInstallUpdate(updateInfo, t);
-				t.hide();
+				try {
+					UpdateChecker.downloadAndInstallUpdate(updateInfo, t);
+					t.hide();
+				} catch (IllegalStateException | IOException e) {
+					showErrorMessage(e.getLocalizedMessage());
+					e.printStackTrace();
+				}
 			}
 		};
 		downloadThread.start();
@@ -203,6 +208,21 @@ public class UpdateAvailableDialog implements UpdateProgressDialog {
 				updateProgressText.setText(bundle.getString("progress.launching"));
 			}
 
+		});
+	}
+	
+	public void showErrorMessage(String message){
+		Platform.runLater(new Runnable(){
+
+			@Override
+			public void run() {
+				detailsLabel.setText("An error occurred:\n" + message);
+				updateProgressAnimation.setVisible(false);
+				updateProgressText.setVisible(false);
+				okButton.setDisable(false);
+				okButton.setText(bundle.getString("button.ok.retry"));
+			}
+			
 		});
 	}
 }
