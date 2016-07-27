@@ -81,7 +81,7 @@
 		<dependency>
 			<groupId>fokprojects</groupId>
 			<artifactId>common</artifactId>
-			<version>0.0.10-SNAPSHOT</version>
+			<version>0.0.10</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
