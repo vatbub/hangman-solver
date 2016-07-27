@@ -27,7 +27,7 @@
         </Label>
       </children>
     </VBox>
-    <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+    <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
       <children>
         <Button fx:id="okButton" defaultButton="true" minWidth="80.0" mnemonicParsing="false" onAction="#okButtonOnAction" text="%button.ok" HBox.hgrow="NEVER">
           <HBox.margin>
@@ -41,6 +41,12 @@
         </Button>
       </children>
     </HBox>
+    <HBox id="HBox" alignment="CENTER" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <children>
+        <ProgressIndicator fx:id="updateProgressAnimation" progress="-1.0" />
+        <Label fx:id="updateProgressText" text="%progress.NoActionRunning" visible="true" />
+      </children>
+    </HBox>
   </children>
   <columnConstraints>
     <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
@@ -51,6 +57,7 @@
   </padding>
   <rowConstraints>
     <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="57.0" valignment="CENTER" vgrow="ALWAYS" />
+    <RowConstraints maxHeight="27.0" minHeight="-Infinity" prefHeight="27.0" vgrow="NEVER" />
     <RowConstraints maxHeight="27.0" minHeight="-Infinity" prefHeight="27.0" vgrow="NEVER" />
   </rowConstraints>
 </GridPane>
