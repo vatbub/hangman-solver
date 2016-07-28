@@ -52,6 +52,10 @@ public class MainWindow extends Application implements Initializable {
 				// Set the mock version
 				String version = arg.substring(arg.toLowerCase().indexOf('=') + 1);
 				Common.setMockAppVersion(version);
+			}else if (arg.toLowerCase().matches("mockbuildnumber=.*")) {
+				// Set the mock version
+				String buildnumber = arg.substring(arg.toLowerCase().indexOf('=') + 1);
+				Common.setMockBuildNumber(buildnumber);;
 			}
 		}
 
@@ -459,7 +463,7 @@ public class MainWindow extends Application implements Initializable {
 		loadLanguageList();
 		shareThoughtsCheckbox.setSelected(true);
 		shareThoughtsBool = true;
-		versionLabel.setText(common.Common.getAppVersion());
+		versionLabel.setText(Common.getAppVersion() + "-" + Common.getBuildNumber());
 
 		// Listen for TextField text changes
 		currentSequence.textProperty().addListener(new ChangeListener<String>() {
