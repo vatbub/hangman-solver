@@ -30,7 +30,9 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -47,16 +49,19 @@ import view.updateAvailableDialog.UpdateAvailableDialog;
  **/
 public class MainWindow extends Application implements Initializable {
 
+	private static double curVersionEasterEggTurnDegrees = 0;
+
 	public static void main(String[] args) {
 		for (String arg : args) {
 			if (arg.toLowerCase().matches("mockappversion=.*")) {
 				// Set the mock version
 				String version = arg.substring(arg.toLowerCase().indexOf('=') + 1);
 				Common.setMockAppVersion(version);
-			}else if (arg.toLowerCase().matches("mockbuildnumber=.*")) {
+			} else if (arg.toLowerCase().matches("mockbuildnumber=.*")) {
 				// Set the mock version
 				String buildnumber = arg.substring(arg.toLowerCase().indexOf('=') + 1);
-				Common.setMockBuildNumber(buildnumber);;
+				Common.setMockBuildNumber(buildnumber);
+				;
 			}
 		}
 
@@ -327,16 +332,43 @@ public class MainWindow extends Application implements Initializable {
 
 	@FXML
 	void currentAppVersionTextLabelOnMouseClicked(MouseEvent event) {
-		clickCounter++;
+		if (event.getButton().equals(MouseButton.PRIMARY)) {
+			// Do the easter egg when clicking with the left mouse button
+			clickCounter++;
 
-		if (clickCounter >= 3) {
-			// rotate
+			if (clickCounter >= 3) {
+				// rotate
+				double angle = (Math.random() - 0.5) * 1440;
+				curVersionEasterEggTurnDegrees = curVersionEasterEggTurnDegrees+angle;
+				
+				RotateTransition rt = new RotateTransition(Duration.millis(500), currentAppVersionTextLabel);
+				rt.setByAngle(angle);
+				rt.setAutoReverse(true);
+
+				rt.play();
+				clickCounter = 0;
+				
+				currentAppVersionTextLabel.setTooltip(new Tooltip(bundle.getString("resetEasterEgg")));
+				
+				// remove whole turns
+				while (curVersionEasterEggTurnDegrees>360.0){
+					curVersionEasterEggTurnDegrees=curVersionEasterEggTurnDegrees-360.0;
+				}
+				while (curVersionEasterEggTurnDegrees<-360.0){
+					curVersionEasterEggTurnDegrees=curVersionEasterEggTurnDegrees+360.0;
+				}
+			}
+		}else {
+			// Reset the easter egg
+			double angle = -curVersionEasterEggTurnDegrees;
+			curVersionEasterEggTurnDegrees = curVersionEasterEggTurnDegrees+angle;
+			
 			RotateTransition rt = new RotateTransition(Duration.millis(500), currentAppVersionTextLabel);
-			rt.setByAngle((Math.random() - 0.5) * 1440);
+			rt.setByAngle(angle);
 			rt.setAutoReverse(true);
 
 			rt.play();
-			clickCounter = 0;
+			currentAppVersionTextLabel.setTooltip(null);
 		}
 	}
 
