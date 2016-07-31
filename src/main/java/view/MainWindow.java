@@ -9,6 +9,7 @@ import common.Common;
 import common.Config;
 import common.UpdateChecker;
 import common.UpdateInfo;
+import common.Version;
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -463,7 +464,7 @@ public class MainWindow extends Application implements Initializable {
 		loadLanguageList();
 		shareThoughtsCheckbox.setSelected(true);
 		shareThoughtsBool = true;
-		versionLabel.setText(Common.getAppVersion() + "-" + Common.getBuildNumber());
+		versionLabel.setText(new Version(Common.getAppVersion(), Common.getBuildNumber()).toString());
 
 		// Listen for TextField text changes
 		currentSequence.textProperty().addListener(new ChangeListener<String>() {
