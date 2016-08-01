@@ -496,7 +496,11 @@ public class MainWindow extends Application implements Initializable {
 		loadLanguageList();
 		shareThoughtsCheckbox.setSelected(true);
 		shareThoughtsBool = true;
-		versionLabel.setText(new Version(Common.getAppVersion(), Common.getBuildNumber()).toString());
+		try {
+			versionLabel.setText(new Version(Common.getAppVersion(), Common.getBuildNumber()).toString());
+		} catch (IllegalArgumentException e) {
+			versionLabel.setText(Common.UNKNOWN_APP_VERSION);
+		}
 
 		// Listen for TextField text changes
 		currentSequence.textProperty().addListener(new ChangeListener<String>() {
