@@ -63,7 +63,7 @@ public class MainWindow extends Application implements Initializable {
 				String buildnumber = arg.substring(arg.toLowerCase().indexOf('=') + 1);
 				Common.setMockBuildNumber(buildnumber);
 				;
-			} else if (arg.toLowerCase().matches("disableUpdateChecks")) {
+			} else if (arg.toLowerCase().matches("disableupdatechecks")) {
 				System.out.println("Update checks are disabled as app was launched from launcher.");
 				disableUpdateChecks = true;
 			}
