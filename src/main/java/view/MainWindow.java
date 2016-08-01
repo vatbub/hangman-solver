@@ -50,6 +50,7 @@ import view.updateAvailableDialog.UpdateAvailableDialog;
 public class MainWindow extends Application implements Initializable {
 
 	private static double curVersionEasterEggTurnDegrees = 0;
+	private static boolean disableUpdateChecks = false;
 
 	public static void main(String[] args) {
 		for (String arg : args) {
@@ -62,6 +63,9 @@ public class MainWindow extends Application implements Initializable {
 				String buildnumber = arg.substring(arg.toLowerCase().indexOf('=') + 1);
 				Common.setMockBuildNumber(buildnumber);
 				;
+			} else if (arg.toLowerCase().matches("disableUpdateChecks")) {
+				System.out.println("Update checks are disabled as app was launched from launcher.");
+				disableUpdateChecks = true;
 			}
 		}
 
@@ -339,30 +343,30 @@ public class MainWindow extends Application implements Initializable {
 			if (clickCounter >= 3) {
 				// rotate
 				double angle = (Math.random() - 0.5) * 1440;
-				curVersionEasterEggTurnDegrees = curVersionEasterEggTurnDegrees+angle;
-				
+				curVersionEasterEggTurnDegrees = curVersionEasterEggTurnDegrees + angle;
+
 				RotateTransition rt = new RotateTransition(Duration.millis(500), currentAppVersionTextLabel);
 				rt.setByAngle(angle);
 				rt.setAutoReverse(true);
 
 				rt.play();
 				clickCounter = 0;
-				
+
 				currentAppVersionTextLabel.setTooltip(new Tooltip(bundle.getString("resetEasterEgg")));
-				
+
 				// remove whole turns
-				while (curVersionEasterEggTurnDegrees>360.0){
-					curVersionEasterEggTurnDegrees=curVersionEasterEggTurnDegrees-360.0;
+				while (curVersionEasterEggTurnDegrees > 360.0) {
+					curVersionEasterEggTurnDegrees = curVersionEasterEggTurnDegrees - 360.0;
 				}
-				while (curVersionEasterEggTurnDegrees<-360.0){
-					curVersionEasterEggTurnDegrees=curVersionEasterEggTurnDegrees+360.0;
+				while (curVersionEasterEggTurnDegrees < -360.0) {
+					curVersionEasterEggTurnDegrees = curVersionEasterEggTurnDegrees + 360.0;
 				}
 			}
-		}else {
+		} else {
 			// Reset the easter egg
 			double angle = -curVersionEasterEggTurnDegrees;
-			curVersionEasterEggTurnDegrees = curVersionEasterEggTurnDegrees+angle;
-			
+			curVersionEasterEggTurnDegrees = curVersionEasterEggTurnDegrees + angle;
+
 			RotateTransition rt = new RotateTransition(Duration.millis(500), currentAppVersionTextLabel);
 			rt.setByAngle(angle);
 			rt.setAutoReverse(true);
@@ -424,26 +428,29 @@ public class MainWindow extends Application implements Initializable {
 			if (HangmanStats.uploadThread.isAlive() == false) {
 				HangmanStats.uploadThread.start();
 			}
+			
+			// Dont check for updates if launched from launcher
+			if (!disableUpdateChecks) {
+				Thread updateThread = new Thread() {
+					@Override
+					public void run() {
+						UpdateInfo update = UpdateChecker.isUpdateAvailable(Config.getUpdateRepoBaseURL(),
+								Config.groupID, Config.artifactID, Config.updateFileClassifier);
+						if (update.showAlert) {
+							Platform.runLater(new Runnable() {
 
-			Thread updateThread = new Thread() {
-				@Override
-				public void run() {
-					UpdateInfo update = UpdateChecker.isUpdateAvailable(Config.getUpdateRepoBaseURL(), Config.groupID,
-							Config.artifactID, Config.updateFileClassifier);
-					if (update.showAlert) {
-						Platform.runLater(new Runnable() {
+								@Override
+								public void run() {
+									new UpdateAvailableDialog(update);
+								}
 
-							@Override
-							public void run() {
-								new UpdateAvailableDialog(update);
-							}
-
-						});
+							});
+						}
 					}
-				}
-			};
-			updateThread.setName("updateThread");
-			updateThread.start();
+				};
+				updateThread.setName("updateThread");
+				updateThread.start();
+			}
 
 			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"), bundle);
 
@@ -500,6 +507,12 @@ public class MainWindow extends Application implements Initializable {
 			versionLabel.setText(new Version(Common.getAppVersion(), Common.getBuildNumber()).toString());
 		} catch (IllegalArgumentException e) {
 			versionLabel.setText(Common.UNKNOWN_APP_VERSION);
+		}
+		
+		// Make update link unvisible if launched from launcher
+		if (disableUpdateChecks){
+			updateLink.setDisable(true);
+			updateLink.setVisible(false);
 		}
 
 		// Listen for TextField text changes
