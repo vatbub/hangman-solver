@@ -364,8 +364,11 @@ public class MainWindow extends Application implements Initializable {
 			}
 		} else {
 			// Reset the easter egg
+			if (Math.abs(360.0-curVersionEasterEggTurnDegrees)<Math.abs(curVersionEasterEggTurnDegrees)){
+				curVersionEasterEggTurnDegrees = -(360.0-curVersionEasterEggTurnDegrees);
+			}
 			double angle = -curVersionEasterEggTurnDegrees;
-			curVersionEasterEggTurnDegrees = curVersionEasterEggTurnDegrees + angle;
+			curVersionEasterEggTurnDegrees = 0;
 
 			RotateTransition rt = new RotateTransition(Duration.millis(500), currentAppVersionTextLabel);
 			rt.setByAngle(angle);
