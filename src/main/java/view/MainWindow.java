@@ -504,7 +504,7 @@ public class MainWindow extends Application implements Initializable {
 		shareThoughtsCheckbox.setSelected(true);
 		shareThoughtsBool = true;
 		try {
-			versionLabel.setText(new Version(Common.getAppVersion(), Common.getBuildNumber()).toString());
+			versionLabel.setText(new Version(Common.getAppVersion(), Common.getBuildNumber()).toString(false));
 		} catch (IllegalArgumentException e) {
 			versionLabel.setText(Common.UNKNOWN_APP_VERSION);
 		}
