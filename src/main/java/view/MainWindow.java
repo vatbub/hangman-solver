@@ -53,6 +53,7 @@ public class MainWindow extends Application implements Initializable {
 	private static boolean disableUpdateChecks = false;
 
 	public static void main(String[] args) {
+		System.out.println("You've got the fancy new version, grats!");
 		for (String arg : args) {
 			if (arg.toLowerCase().matches("mockappversion=.*")) {
 				// Set the mock version
