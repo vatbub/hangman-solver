@@ -9,6 +9,7 @@ import common.Common;
 import common.Config;
 import common.UpdateChecker;
 import common.UpdateInfo;
+import common.Version;
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -22,6 +23,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -29,7 +31,9 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -46,12 +50,23 @@ import view.updateAvailableDialog.UpdateAvailableDialog;
  **/
 public class MainWindow extends Application implements Initializable {
 
+	private static double curVersionEasterEggTurnDegrees = 0;
+	private static boolean disableUpdateChecks = false;
+
 	public static void main(String[] args) {
 		for (String arg : args) {
 			if (arg.toLowerCase().matches("mockappversion=.*")) {
 				// Set the mock version
 				String version = arg.substring(arg.toLowerCase().indexOf('=') + 1);
 				Common.setMockAppVersion(version);
+			} else if (arg.toLowerCase().matches("mockbuildnumber=.*")) {
+				// Set the mock version
+				String buildnumber = arg.substring(arg.toLowerCase().indexOf('=') + 1);
+				Common.setMockBuildNumber(buildnumber);
+				;
+			} else if (arg.toLowerCase().matches("disableupdatechecks")) {
+				System.out.println("Update checks are disabled as app was launched from launcher.");
+				disableUpdateChecks = true;
 			}
 		}
 
@@ -59,6 +74,7 @@ public class MainWindow extends Application implements Initializable {
 	}
 
 	private ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
+	private ResourceBundle errorMessageBundle = ResourceBundle.getBundle("view.strings.errormessages");
 	private static String currentSequenceStr;
 	public static Result currentSolution;
 	private boolean shareThoughtsBool;
@@ -322,16 +338,46 @@ public class MainWindow extends Application implements Initializable {
 
 	@FXML
 	void currentAppVersionTextLabelOnMouseClicked(MouseEvent event) {
-		clickCounter++;
+		if (event.getButton().equals(MouseButton.PRIMARY)) {
+			// Do the easter egg when clicking with the left mouse button
+			clickCounter++;
 
-		if (clickCounter >= 3) {
-			// rotate
+			if (clickCounter >= 3) {
+				// rotate
+				double angle = (Math.random() - 0.5) * 1440;
+				curVersionEasterEggTurnDegrees = curVersionEasterEggTurnDegrees + angle;
+
+				RotateTransition rt = new RotateTransition(Duration.millis(500), currentAppVersionTextLabel);
+				rt.setByAngle(angle);
+				rt.setAutoReverse(true);
+
+				rt.play();
+				clickCounter = 0;
+
+				currentAppVersionTextLabel.setTooltip(new Tooltip(bundle.getString("resetEasterEgg")));
+
+				// remove whole turns
+				while (curVersionEasterEggTurnDegrees > 360.0) {
+					curVersionEasterEggTurnDegrees = curVersionEasterEggTurnDegrees - 360.0;
+				}
+				while (curVersionEasterEggTurnDegrees < -360.0) {
+					curVersionEasterEggTurnDegrees = curVersionEasterEggTurnDegrees + 360.0;
+				}
+			}
+		} else {
+			// Reset the easter egg
+			if (Math.abs(360.0 - curVersionEasterEggTurnDegrees) < Math.abs(curVersionEasterEggTurnDegrees)) {
+				curVersionEasterEggTurnDegrees = -(360.0 - curVersionEasterEggTurnDegrees);
+			}
+			double angle = -curVersionEasterEggTurnDegrees;
+			curVersionEasterEggTurnDegrees = 0;
+
 			RotateTransition rt = new RotateTransition(Duration.millis(500), currentAppVersionTextLabel);
-			rt.setByAngle((Math.random() - 0.5) * 1440);
+			rt.setByAngle(angle);
 			rt.setAutoReverse(true);
 
 			rt.play();
-			clickCounter = 0;
+			currentAppVersionTextLabel.setTooltip(null);
 		}
 	}
 
@@ -388,25 +434,28 @@ public class MainWindow extends Application implements Initializable {
 				HangmanStats.uploadThread.start();
 			}
 
-			Thread updateThread = new Thread() {
-				@Override
-				public void run() {
-					UpdateInfo update = UpdateChecker.isUpdateAvailable(Config.getUpdateRepoBaseURL(), Config.groupID,
-							Config.artifactID, Config.updateFileClassifier);
-					if (update.showAlert) {
-						Platform.runLater(new Runnable() {
+			// Dont check for updates if launched from launcher
+			if (!disableUpdateChecks) {
+				Thread updateThread = new Thread() {
+					@Override
+					public void run() {
+						UpdateInfo update = UpdateChecker.isUpdateAvailable(Config.getUpdateRepoBaseURL(),
+								Config.groupID, Config.artifactID, Config.updateFileClassifier);
+						if (update.showAlert) {
+							Platform.runLater(new Runnable() {
 
-							@Override
-							public void run() {
-								new UpdateAvailableDialog(update);
-							}
+								@Override
+								public void run() {
+									new UpdateAvailableDialog(update);
+								}
 
-						});
+							});
+						}
 					}
-				}
-			};
-			updateThread.setName("updateThread");
-			updateThread.start();
+				};
+				updateThread.setName("updateThread");
+				updateThread.start();
+			}
 
 			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"), bundle);
 
@@ -459,7 +508,17 @@ public class MainWindow extends Application implements Initializable {
 		loadLanguageList();
 		shareThoughtsCheckbox.setSelected(true);
 		shareThoughtsBool = true;
-		versionLabel.setText(common.Common.getAppVersion());
+		try {
+			versionLabel.setText(new Version(Common.getAppVersion(), Common.getBuildNumber()).toString(false));
+		} catch (IllegalArgumentException e) {
+			versionLabel.setText(Common.UNKNOWN_APP_VERSION);
+		}
+
+		// Make update link unvisible if launched from launcher
+		if (disableUpdateChecks) {
+			updateLink.setDisable(true);
+			updateLink.setVisible(false);
+		}
 
 		// Listen for TextField text changes
 		currentSequence.textProperty().addListener(new ChangeListener<String>() {
@@ -481,7 +540,6 @@ public class MainWindow extends Application implements Initializable {
 			@Override
 			public void run() {
 				try {
-					// modify GUI
 
 					Platform.runLater(new Runnable() {
 						@Override
@@ -489,19 +547,21 @@ public class MainWindow extends Application implements Initializable {
 							languageSelector.setDisable(true);
 							getNextLetter.setDisable(true);
 							applyButton.setDisable(true);
+							newGameButton.setDisable(true);
+							currentSequence.setDisable(true);
 							getNextLetter.setText(bundle.getString("computeNextLetterButton.waitForAlgorithmText"));
 						}
 					});
 
 					currentSolution = HangmanSolver.solve(currentSequence.getText(), Language.getSupportedLanguages()
 							.get(languageSelector.getSelectionModel().getSelectedIndex()));
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							System.out.println("Setting resultText...");
-							result.setText(currentSolution.result);
-						}
-					});
+					/*
+					 * Platform.runLater(new Runnable() {
+					 * 
+					 * @Override public void run() {
+					 * System.out.println("Setting resultText...");
+					 * result.setText(currentSolution.result); } });
+					 */
 
 					String proposedSolutionsString = "";
 					for (String solution : HangmanSolver.proposedSolutions) {
@@ -513,12 +573,13 @@ public class MainWindow extends Application implements Initializable {
 							proposedSolutionsString.length() - 2);
 					final String proposedSolutionsStringCopy = proposedSolutionsString;
 
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							proposedSolutions.setText(proposedSolutionsStringCopy);
-						}
-					});
+					/*
+					 * Platform.runLater(new Runnable() {
+					 * 
+					 * @Override public void run() {
+					 * proposedSolutions.setText(proposedSolutionsStringCopy); }
+					 * });
+					 */
 
 					if (currentSolution.gameState == GameState.GAME_LOST
 							|| currentSolution.gameState == GameState.GAME_WON) {
@@ -533,6 +594,15 @@ public class MainWindow extends Application implements Initializable {
 						Platform.runLater(new Runnable() {
 							@Override
 							public void run() {
+								// Update gui
+
+								// next guess
+								result.setText(currentSolution.result);
+
+								// already proposed solutions
+								proposedSolutions.setText(proposedSolutionsStringCopy);
+
+								// thought
 								String thoughtText = "";
 
 								if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
@@ -552,6 +622,19 @@ public class MainWindow extends Application implements Initializable {
 												Config.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
 
 								setThought(thoughtText);
+
+								// Update buttons etc only if everything else
+								// succeeded
+								getNextLetter.setText(bundle.getString("computeNextLetterButton.letterWrongText"));
+								currentSequence.setDisable(false);
+
+								// If the apply button is enabled, give it the
+								// focus, else focus the current sequence
+								if (!applyButton.isDisable()) {
+									applyButton.requestFocus();
+								} else {
+									currentSequence.requestFocus();
+								}
 							}
 						});
 					}
@@ -560,7 +643,15 @@ public class MainWindow extends Application implements Initializable {
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
-							NoLanguageSelected.show();
+							// NoLanguageSelected.show();
+							Alert alert = new Alert(Alert.AlertType.ERROR,
+									errorMessageBundle.getString("selectLanguage"));
+							alert.show();
+							// Replace button text with original string
+							getNextLetter.setText(bundle.getString("computeNextLetterButtonLabel"));
+							languageSelector.setDisable(false);
+							currentSequence.setDisable(false);
+							languageSelector.requestFocus();
 						}
 					});
 				} catch (StringIndexOutOfBoundsException e2) {
@@ -568,7 +659,14 @@ public class MainWindow extends Application implements Initializable {
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
-							NoSequenceEntered.show();
+							// NoSequenceEntered.show();
+							Alert alert = new Alert(Alert.AlertType.ERROR,
+									errorMessageBundle.getString("enterWordSequence"));
+							alert.show();
+							// Replace button text with original string
+							getNextLetter.setText(bundle.getString("computeNextLetterButtonLabel"));
+							currentSequence.setDisable(false);
+							currentSequence.requestFocus();
 						}
 					});
 				} finally {
@@ -576,7 +674,7 @@ public class MainWindow extends Application implements Initializable {
 						@Override
 						public void run() {
 							getNextLetter.setDisable(false);
-							getNextLetter.setText(bundle.getString("computeNextLetterButton.letterWrongText"));
+							newGameButton.setDisable(false);
 						}
 					});
 				}
@@ -626,6 +724,7 @@ public class MainWindow extends Application implements Initializable {
 						currentSequence.setDisable(true);
 						getNextLetter.setDisable(true);
 						result.setDisable(true);
+						newGameButton.setDisable(true);
 					}
 				});
 
@@ -647,6 +746,7 @@ public class MainWindow extends Application implements Initializable {
 						currentSequence.setDisable(false);
 						getNextLetter.setDisable(false);
 						result.setDisable(false);
+						newGameButton.setDisable(false);
 
 						// Initialize the language search field.
 						new AutoCompleteComboBoxListener<String>(languageSelector);

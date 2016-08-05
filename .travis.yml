@@ -1,11 +1,18 @@
 language: java
 jdk:
 - oraclejdk8
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 cache:
   directories:
   - "$HOME/.m2"
-before_install: git clone -b travis `git config --get remote.origin.url` target/travis
-after_success: mvn clean deploy --settings target/travis/settings.xml
+before_install: 
+  - git clone -b travis `git config --get remote.origin.url` target/travis
+install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -U --settings target/travis/settings.xml
+script: mvn test -B --settings target/travis/settings.xml
+after_success: mvn clean deploy --settings target/travis/settings.xml -DskipTests=true
 branches:
   only:
   - master
