@@ -12,29 +12,31 @@ import javafx.stage.Stage;
 
 /**
  * A window diaplying a dialog with some licensing info.
+ * 
  * @author frede
  *
  */
 public class LicenseWindow {
 
-    @FXML
-    private ResourceBundle resources;
+	@FXML
+	private ResourceBundle resources;
 
-    @FXML
-    private URL location;
+	@FXML
+	private URL location;
 
+	@FXML
+	void initialize() {
+	}
 
-    @FXML
-    void initialize() {
-    }
-    
-    /**
-     * Shows the dialog.
-     * @param windowTitle
-     */
-    public static void show(String windowTitle){
-    	Stage stage = new Stage();
-    	Parent root;
+	/**
+	 * Shows the dialog.
+	 * 
+	 * @param windowTitle
+	 *            The window title to set
+	 */
+	public static void show(String windowTitle) {
+		Stage stage = new Stage();
+		Parent root;
 		try {
 			root = FXMLLoader.load(LicenseWindow.class.getResource("LicenseWindow.fxml"));
 			Scene scene = new Scene(root);
@@ -51,6 +53,6 @@ public class LicenseWindow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
+	}
 
 }
