@@ -41,8 +41,6 @@ import languages.Language;
 import languages.TabFile;
 import stats.HangmanStats;
 import stats.MongoSetup;
-import view.noLanguageSelected.NoLanguageSelected;
-import view.noSequenceEntered.NoSequenceEntered;
 import view.updateAvailableDialog.UpdateAvailableDialog;
 
 /**
