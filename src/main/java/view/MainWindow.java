@@ -230,6 +230,7 @@ public class MainWindow extends Application implements Initializable {
 		proposedSolutions.setText("");
 		setThought("");
 		result.setText("");
+		currentSequence.setDisable(false);
 		currentSequence.requestFocus();
 	}
 
