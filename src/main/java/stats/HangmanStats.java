@@ -34,7 +34,7 @@ public class HangmanStats {
 	 * This object is used to save a copy of the upload queue on the disc to
 	 * keep it even if the app is relaunched.
 	 */
-	private static Prefs preferences = new Prefs(HangmanStats.class.getName());
+	private static Prefs preferences = initPrefs();
 	/**
 	 * The pref key where the offline copy of the upload queue is saved.
 	 */
@@ -99,18 +99,22 @@ public class HangmanStats {
 	 * class from the common project
 	 */
 	private static void saveDocQueueToPreferences() {
-		System.out.println("Saving docQueue to disk...");
-		String res = "";
-		while (!docQueue.isEmpty()) {
-			Document doc = docQueue.remove();
-			res = res + doc.toJson();
-			if (!docQueue.isEmpty()) {
-				// Still other objects left so add a line break
-				res = res + "\n";
+		if (preferences != null) {
+			System.out.println("Saving docQueue to disk...");
+			String res = "";
+			while (!docQueue.isEmpty()) {
+				Document doc = docQueue.remove();
+				res = res + doc.toJson();
+				if (!docQueue.isEmpty()) {
+					// Still other objects left so add a line break
+					res = res + "\n";
+				}
 			}
-		}
 
-		preferences.setPreference(persistentDocQueueKey, res);
+			preferences.setPreference(persistentDocQueueKey, res);
+		} else {
+			System.out.println("Cannot save docQueue to disk as preferences could not be initialized.");
+		}
 	}
 
 	/**
@@ -118,25 +122,42 @@ public class HangmanStats {
 	 * with the docQueue in memory.
 	 */
 	private static void readDocQueueFromPreferences() {
-		System.out.println("Reading docQueue from disk...");
+		if (preferences != null) {
+			System.out.println("Reading docQueue from disk...");
 
-		String persStr = preferences.getPreference(persistentDocQueueKey, "");
+			String persStr = preferences.getPreference(persistentDocQueueKey, "");
 
-		if (!persStr.equals("")) {
-			String[] docs = persStr.split("\n");
+			if (!persStr.equals("")) {
+				String[] docs = persStr.split("\n");
 
-			for (String newDoc : docs) {
-				Document doc = Document.parse(newDoc);
-				if (!docQueue.contains(doc)) {
-					try {
-						docQueue.put(doc);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+				for (String newDoc : docs) {
+					Document doc = Document.parse(newDoc);
+					if (!docQueue.contains(doc)) {
+						try {
+							docQueue.put(doc);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 			}
+		} else {
+			System.out.println("Cannot read docQueue to disk as preferences could not be initialized.");
 		}
+
+	}
+
+	private static Prefs initPrefs() {
+		Prefs res = null;
+
+		try {
+			res = new Prefs(HangmanStats.class.getName());
+		} catch (Exception e) {
+			// Disable offline cache of stats
+		}
+
+		return res;
 
 	}
 
