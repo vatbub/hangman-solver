@@ -11,8 +11,8 @@ The algorithm is based on a dictionary taken from [Wiktionary](https://www.wikti
   6. The next guess is the letter at the highest position in the filtered ranking.
   7. Letters or words that have been proven to be wrong are temporarily removed from the dictionary.
   
-##How the heck can your algorithm play hangman in esperanto?
-As the algorithms knowledge only depends on dictionaries, it is able to play hangman in almost any language that exists, including esperanto (we currently support 121 different languages). The only problem that we are still struggeling with are special characters in many languages. This is also the reason why we do offer Hindi in our language list, but it is not usable as it requires a completely different alphabet.
+##How the heck can your algorithm play hangman in esperanto (and in 900 other languages)?
+As the algorithms knowledge only depends on dictionaries, it is able to play hangman in almost any language that exists, including esperanto. Although we support 901 different languages, there are some languages that have better results than others. This mostly depends on the number of words in the corresponding dictionary. The more words the dictionary contains the better.
 
 ##The social experiment
 One evening when we were testing the algorithm, we had the idea to launch a social experiment using this algorithm. Here is the Plan:
