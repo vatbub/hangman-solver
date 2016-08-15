@@ -56,6 +56,8 @@ public class MainWindow extends Application implements Initializable {
 	private static FOKLogger log;
 
 	public static void main(String[] args) {
+		common.Common.setAppName("hangmanSolver");
+		log = new FOKLogger(MainWindow.class.getName());
 		for (String arg : args) {
 			if (arg.toLowerCase().matches("mockappversion=.*")) {
 				// Set the mock version
@@ -432,8 +434,6 @@ public class MainWindow extends Application implements Initializable {
 	 */
 	public void start(Stage primaryStage) {
 		try {
-			common.Common.setAppName("hangmanSolver");
-			log = new FOKLogger(MainWindow.class.getName());
 			if (HangmanStats.uploadThread.isAlive() == false) {
 				HangmanStats.uploadThread.start();
 			}
