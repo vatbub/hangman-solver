@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 import algorithm.GameState;
 import javafx.application.Platform;
@@ -24,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import logging.FOKLogger;
 import stats.HangmanStats;
 
 /**
@@ -39,6 +41,7 @@ public class GameEndDialog {
 	private static MainWindow mainWindowCopy;
 	private static GameState gameStateCopy;
 	private static ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
+	private static FOKLogger log = new FOKLogger(GameEndDialog.class.getName());
 
 	@FXML // ResourceBundle that was given to the FXMLLoader
 	private ResourceBundle resources;
@@ -157,8 +160,7 @@ public class GameEndDialog {
 			
 			stage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.getLogger().log(Level.SEVERE, "An error occurred", e);
 		}
 	}
 

@@ -3,9 +3,11 @@ package algorithm;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 
 import common.Config;
 import languages.*;
+import logging.FOKLogger;
 
 /**
  * A class that holds all methods and algorithms to solve a hangman puzzle.
@@ -17,6 +19,7 @@ public class HangmanSolver {
 
 	private static Language langOld;
 	private static TabFile database;
+	private static FOKLogger log = new FOKLogger(HangmanSolver.class.getName());
 
 	/**
 	 * A {@link List} that contains all characters and words that the computer
@@ -84,12 +87,11 @@ public class HangmanSolver {
 			String bestWord = database.getValueWithHighestCorrelation(2, word, proposedSolutions);
 			boolean foundBestWord = true;
 
-			System.out.println("Best match in dictionary:");
-			System.out.println(bestWord);
+			log.getLogger().info("Best match in dictionary: " + bestWord);
 
 			if (bestWord.length() == 0) {
 				// dictionaries are both used up
-				System.out.println("dictionary used up");
+				log.getLogger().severe("dictionary used up");
 				foundBestWord = false;
 			} else if (bestWord.equals("")) {
 				foundBestWord = false;
@@ -117,7 +119,7 @@ public class HangmanSolver {
 				res.result = Character.toString(getMostFrequentChar(wordsWithEqualLength, priorityChars));
 			} else {
 				// No bestWord found
-				System.out.println("No best word found, using most common chars only");
+				log.getLogger().info("No best word found, using most common chars only");
 				res.result = Character.toString(getMostFrequentChar(wordsWithEqualLength));
 			}
 			proposedSolutions.add(res.result);
@@ -137,11 +139,10 @@ public class HangmanSolver {
 	 */
 	private static void loadLanguageDatabases(Language lang) {
 		try {
-			System.out.println("Loading language databases for " + lang.getHumanReadableName());
+			log.getLogger().info("Loading language databases for " + lang.getHumanReadableName());
 			database = lang.getTabFile();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.getLogger().log(Level.SEVERE, "An error occurred", e);
 		}
 	}
 
@@ -182,7 +183,7 @@ public class HangmanSolver {
 		// ArrayList<AtomicInteger>(Collections.nCopies(Character.MAX_VALUE, new
 		// AtomicInteger(0)));
 
-		System.out.println("Size: " + words.size());
+		log.getLogger().info("Dictionary size: " + words.size());
 
 		for (int i = 0; i < Config.parallelThreadCount; i++) {
 			threads.add(new Thread() {
@@ -209,8 +210,7 @@ public class HangmanSolver {
 			try {
 				threads.get(i).join();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.getLogger().log(Level.SEVERE, "An error occurred", e);
 			}
 		}
 

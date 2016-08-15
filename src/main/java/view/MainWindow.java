@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+
 import algorithm.*;
 import common.Common;
 import common.Config;
@@ -39,6 +41,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import languages.Language;
 import languages.TabFile;
+import logging.FOKLogger;
 import stats.HangmanStats;
 import stats.MongoSetup;
 import view.updateAvailableDialog.UpdateAvailableDialog;
@@ -50,6 +53,7 @@ public class MainWindow extends Application implements Initializable {
 
 	private static double curVersionEasterEggTurnDegrees = 0;
 	private static boolean disableUpdateChecks = false;
+	private static FOKLogger log;
 
 	public static void main(String[] args) {
 		for (String arg : args) {
@@ -63,7 +67,7 @@ public class MainWindow extends Application implements Initializable {
 				Common.setMockBuildNumber(buildnumber);
 				;
 			} else if (arg.toLowerCase().matches("disableupdatechecks")) {
-				System.out.println("Update checks are disabled as app was launched from launcher.");
+				log.getLogger().info("Update checks are disabled as app was launched from launcher.");
 				disableUpdateChecks = true;
 			}
 		}
@@ -429,6 +433,7 @@ public class MainWindow extends Application implements Initializable {
 	public void start(Stage primaryStage) {
 		try {
 			common.Common.setAppName("hangmanSolver");
+			log = new FOKLogger(MainWindow.class.getName());
 			if (HangmanStats.uploadThread.isAlive() == false) {
 				HangmanStats.uploadThread.start();
 			}
@@ -473,7 +478,7 @@ public class MainWindow extends Application implements Initializable {
 
 			primaryStage.show();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.getLogger().log(Level.SEVERE, "An error occurred", e);
 		}
 	}
 
@@ -713,7 +718,7 @@ public class MainWindow extends Application implements Initializable {
 		Thread loadLangThread = new Thread() {
 			@Override
 			public void run() {
-				System.out.println("Loading language list...");
+				log.getLogger().info("Loading language list...");
 
 				Platform.runLater(new Runnable() {
 					@Override
@@ -736,7 +741,7 @@ public class MainWindow extends Application implements Initializable {
 
 				languageSelector.setItems(items);
 
-				System.out.println("Languages loaded");
+				log.getLogger().info("Languages loaded");
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
@@ -767,15 +772,15 @@ public class MainWindow extends Application implements Initializable {
 	 */
 	public static void shutDown() {
 		try {
-			System.out.println("Shutting down....");
+			log.getLogger().info("Shutting down....");
 			// Maybe submit the current word
 			submitWordOnQuit();
 			HangmanStats.uploadThread.interrupt();
 			HangmanStats.uploadThread.join();
 			MongoSetup.close();
-			System.out.println("Good bye");
+			log.getLogger().info("Good bye");
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			log.getLogger().log(Level.SEVERE, "An error occurred", e);
 		}
 
 	}
