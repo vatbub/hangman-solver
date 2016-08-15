@@ -2,6 +2,8 @@ package stats;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
+
 import org.bson.Document;
 
 import com.mongodb.client.*;
@@ -10,6 +12,7 @@ import com.mongodb.client.model.Updates;
 
 import common.Prefs;
 import languages.Language;
+import logging.FOKLogger;
 
 /**
  * This class is intended to count the words used in the solver in a
@@ -19,6 +22,8 @@ import languages.Language;
  *
  */
 public class HangmanStats {
+	
+	private static FOKLogger log = new FOKLogger(HangmanStats.class.getName());
 
 	/**
 	 * A {@link List} that contains all words that were already submitted. This
@@ -51,7 +56,7 @@ public class HangmanStats {
 		@Override
 		public void run() {
 			this.setName("uploadThread");
-			System.out.println("Starting " + this.getName() + "...");
+			log.getLogger().info("Starting " + this.getName() + "...");
 
 			readDocQueueFromPreferences();
 
@@ -66,7 +71,7 @@ public class HangmanStats {
 							Document doc = coll
 									.find(Filters.and(Filters.eq("word", word), Filters.eq("lang", langCode))).first();
 
-							System.out.println("Transferring word " + word + "...");
+							log.getLogger().info("Transferring word " + word + "...");
 
 							if (doc == null) {
 								// word never added prior to this
@@ -90,7 +95,7 @@ public class HangmanStats {
 		public void interrupt() {
 			interrupted = true;
 			saveDocQueueToPreferences();
-			System.out.println("Shutting " + this.getName() + " down...");
+			log.getLogger().info("Shutting " + this.getName() + " down...");
 		}
 	};
 
@@ -100,7 +105,7 @@ public class HangmanStats {
 	 */
 	private static void saveDocQueueToPreferences() {
 		if (preferences != null) {
-			System.out.println("Saving docQueue to disk...");
+			log.getLogger().info("Saving docQueue to disk...");
 			String res = "";
 			while (!docQueue.isEmpty()) {
 				Document doc = docQueue.remove();
@@ -113,7 +118,7 @@ public class HangmanStats {
 
 			preferences.setPreference(persistentDocQueueKey, res);
 		} else {
-			System.out.println("Cannot save docQueue to disk as preferences could not be initialized.");
+			log.getLogger().info("Cannot save docQueue to disk as preferences could not be initialized.");
 		}
 	}
 
@@ -123,7 +128,7 @@ public class HangmanStats {
 	 */
 	private static void readDocQueueFromPreferences() {
 		if (preferences != null) {
-			System.out.println("Reading docQueue from disk...");
+			log.getLogger().info("Reading docQueue from disk...");
 
 			String persStr = preferences.getPreference(persistentDocQueueKey, "");
 
@@ -136,14 +141,13 @@ public class HangmanStats {
 						try {
 							docQueue.put(doc);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							log.getLogger().log(Level.SEVERE, "An error occurred", e);
 						}
 					}
 				}
 			}
 		} else {
-			System.out.println("Cannot read docQueue to disk as preferences could not be initialized.");
+			log.getLogger().info("Cannot read docQueue to disk as preferences could not be initialized.");
 		}
 
 	}
@@ -181,15 +185,14 @@ public class HangmanStats {
 			if (!alreadySubmittedWordsInThisSession.contains(w)) {
 				// word not submitted yet
 				alreadySubmittedWordsInThisSession.add(w);
-				System.out.println("Submitting word '" + w + "' to MongoDB...");
+				log.getLogger().info("Submitting word '" + w + "' to MongoDB...");
 				Document doc = new Document("word", w).append("lang", lang.getLanguageCode()).append("count", 1);
 				try {
 					docQueue.put(doc);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.getLogger().log(Level.SEVERE, "An error occurred", e);
 				}
-				System.out.println("Submission done.");
+				log.getLogger().info("Submission done.");
 			}
 		}
 
