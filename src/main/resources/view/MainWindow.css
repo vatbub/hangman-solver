@@ -1,0 +1,8 @@
+.combo-box:disabled, .combo-box:disabled > * {
+  -fx-opacity: 1.0 ;
+}
+
+.progress-bar > .track {
+  
+  -fx-control-inner-background: transparent;
+}

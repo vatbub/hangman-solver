@@ -3,6 +3,7 @@ package view;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
@@ -31,6 +32,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -85,10 +87,15 @@ public class MainWindow extends Application implements Initializable {
 	private String lastThought;
 	private static Scene scene;
 	private static int clickCounter = 0;
+	private static int loadedLanguagesCount = 0;
 
 	public Scene getScene() {
 		return scene;
 	}
+	
+
+    @FXML // fx:id="loadLanguagesProgressBar"
+    private ProgressBar loadLanguagesProgressBar; // Value injected by FXMLLoader
 
 	@FXML
 	/**
@@ -464,7 +471,7 @@ public class MainWindow extends Application implements Initializable {
 			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"), bundle);
 
 			scene = new Scene(root);
-			// scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			scene.getStylesheets().add(getClass().getResource("MainWindow.css").toExternalForm());
 
 			primaryStage.setTitle(bundle.getString("windowTitle"));
 
@@ -493,20 +500,21 @@ public class MainWindow extends Application implements Initializable {
 	 */
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		assert actionLabel != null : "fx:id=\"actionLabel\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert applyButton != null : "fx:id=\"applyButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert creditsButton != null : "fx:id=\"creditsButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert currentAppVersionTextLabel != null : "fx:id=\"currentAppVersionTextLabel\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert currentSequence != null : "fx:id=\"currentSequence\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert getNextLetter != null : "fx:id=\"getNextLetter\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert languageSelector != null : "fx:id=\"languageSelector\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert newGameButton != null : "fx:id=\"newGameButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert proposedSolutions != null : "fx:id=\"proposedSolutions\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert result != null : "fx:id=\"result\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert shareThoughtsCheckbox != null : "fx:id=\"shareThoughtsCheckbox\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert thoughts != null : "fx:id=\"thoughts\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert updateLink != null : "fx:id=\"updateLink\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert versionLabel != null : "fx:id=\"versionLabel\" was not injected: check your FXML file 'MainWindow.fxml'.";
-
+        assert applyButton != null : "fx:id=\"applyButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert creditsButton != null : "fx:id=\"creditsButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert currentAppVersionTextLabel != null : "fx:id=\"currentAppVersionTextLabel\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert currentSequence != null : "fx:id=\"currentSequence\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert getNextLetter != null : "fx:id=\"getNextLetter\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert languageSelector != null : "fx:id=\"languageSelector\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert loadLanguagesProgressBar != null : "fx:id=\"loadLanguagesProgressBar\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert newGameButton != null : "fx:id=\"newGameButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert proposedSolutions != null : "fx:id=\"proposedSolutions\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert result != null : "fx:id=\"result\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert shareThoughtsCheckbox != null : "fx:id=\"shareThoughtsCheckbox\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert thoughts != null : "fx:id=\"thoughts\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert updateLink != null : "fx:id=\"updateLink\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert versionLabel != null : "fx:id=\"versionLabel\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        
 		// Initialize your logic here: all @FXML variables will have been
 		// injected
 		loadLanguageList();
@@ -733,10 +741,28 @@ public class MainWindow extends Application implements Initializable {
 				});
 
 				ObservableList<String> items = FXCollections.observableArrayList();
+				
+				Platform.runLater(new Runnable(){
+					@Override
+					public void run(){
+						loadLanguagesProgressBar.setPrefHeight(languageSelector.getHeight());;
+						loadLanguagesProgressBar.setVisible(true);
+					}
+				});
 
 				// Load the languages
-				for (Language lang : Language.getSupportedLanguages()) {
-					items.add(lang.getHumanReadableName());
+				List<Language> langList = Language.getSupportedLanguages();
+				System.out.println("Got list");
+				for (int i=0; i<langList.size(); i++) {
+					items.add(langList.get(i).getHumanReadableName());
+					loadedLanguagesCount = i;
+					
+					Platform.runLater(new Runnable(){
+						@Override
+						public void run(){
+							loadLanguagesProgressBar.setProgress((double)loadedLanguagesCount/(double)langList.size());
+						}
+					});
 				}
 
 				languageSelector.setItems(items);
@@ -751,6 +777,7 @@ public class MainWindow extends Application implements Initializable {
 						getNextLetter.setDisable(false);
 						result.setDisable(false);
 						newGameButton.setDisable(false);
+						loadLanguagesProgressBar.setVisible(false);
 
 						// Initialize the language search field.
 						new AutoCompleteComboBoxListener<String>(languageSelector);
