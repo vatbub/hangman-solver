@@ -1,8 +1,6 @@
 package view;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,16 +58,6 @@ public class MainWindow extends Application implements Initializable {
 	private static FOKLogger log;
 
 	public static void main(String[] args) {
-		String path = MainWindow.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-		String decodedPath;
-		try {
-			decodedPath = URLDecoder.decode(path, "UTF-8");
-			System.out.println(decodedPath);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		common.Common.setAppName("hangmanSolver");
 		log = new FOKLogger(MainWindow.class.getName());
 		for (String arg : args) {
