@@ -72,6 +72,10 @@ public class MainWindow extends Application implements Initializable {
 			} else if (arg.toLowerCase().matches("disableupdatechecks")) {
 				log.getLogger().info("Update checks are disabled as app was launched from launcher.");
 				disableUpdateChecks = true;
+			} else if (arg.toLowerCase().matches("mockpackaging=.*")) {
+				// Set the mock packaging
+				String packaging = arg.substring(arg.toLowerCase().indexOf('=') + 1);
+				Common.setMockPackaging(packaging);
 			}
 		}
 
