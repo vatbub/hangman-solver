@@ -69,7 +69,6 @@ public class MainWindow extends Application implements Initializable {
 				// Set the mock build number
 				String buildnumber = arg.substring(arg.toLowerCase().indexOf('=') + 1);
 				Common.setMockBuildNumber(buildnumber);
-				;
 			} else if (arg.toLowerCase().matches("disableupdatechecks")) {
 				log.getLogger().info("Update checks are disabled as app was launched from launcher.");
 				disableUpdateChecks = true;
