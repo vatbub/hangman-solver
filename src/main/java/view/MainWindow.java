@@ -66,7 +66,7 @@ public class MainWindow extends Application implements Initializable {
 				String version = arg.substring(arg.toLowerCase().indexOf('=') + 1);
 				Common.setMockAppVersion(version);
 			} else if (arg.toLowerCase().matches("mockbuildnumber=.*")) {
-				// Set the mock version
+				// Set the mock build number
 				String buildnumber = arg.substring(arg.toLowerCase().indexOf('=') + 1);
 				Common.setMockBuildNumber(buildnumber);
 				;
