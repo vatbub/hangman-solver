@@ -7,14 +7,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+
 import common.Config;
+import logging.FOKLogger;
 
 public class Language {
+	
+	private static FOKLogger log = new FOKLogger(Language.class.getName());
 
 	/**
 	 * Cached list of supported languages
 	 */
-	private static List<Language> supportedLanguages;
+	private static LanguageList supportedLanguages;
 
 	/**
 	 * Map that maps every ISO-2 language code to a iso-1 language code
@@ -78,14 +83,14 @@ public class Language {
 	 * @return A {@link List} of supported languages or {@code null} if an
 	 *         exception occurs.
 	 */
-	public static List<Language> getSupportedLanguages() {
+	public static LanguageList getSupportedLanguages() {
 
 		if (supportedLanguages != null) {
 			// we've got a cached version so return that one
 			return supportedLanguages;
 		} else {
 			// No cached version available so generate a new one
-			List<Language> res = new ArrayList<Language>();
+			LanguageList res = new LanguageList();
 
 			// Open the LanguageCodes.tab-file
 			TabFile languageCodesFile;
@@ -106,8 +111,7 @@ public class Language {
 				supportedLanguages = res;
 				return res;
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.getLogger().log(Level.SEVERE, "An error occurred", e);
 				return null;
 			}
 		}
