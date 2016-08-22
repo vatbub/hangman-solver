@@ -757,7 +757,7 @@ public class MainWindow extends Application implements Initializable {
 				// Load the languages
 				List<Language> langList = Language.getSupportedLanguages();
 				for (int i=0; i<langList.size(); i++) {
-					items.add(langList.get(i).getHumanReadableName());
+					items.add(langList.get(i).getHumanReadableTranslatedName());
 					loadedLanguagesCount = i;
 					
 					Platform.runLater(new Runnable(){

@@ -3,8 +3,10 @@ package languages;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Locale;
+import java.util.Map;
 import common.Config;
 
 public class Language {
@@ -13,6 +15,11 @@ public class Language {
 	 * Cached list of supported languages
 	 */
 	private static List<Language> supportedLanguages;
+
+	/**
+	 * Map that maps every ISO-2 language code to a iso-1 language code
+	 */
+	private static Map<String, Locale> languageCodeMap = initLanguageCodeMap();
 
 	/**
 	 * The ISO 639-3 language code
@@ -34,6 +41,17 @@ public class Language {
 	public Language(String languageCode) {
 		this.languageCode = languageCode;
 		tabfileName = getCldrName(languageCode);
+	}
+
+	private static Map<String, Locale> initLanguageCodeMap() {
+		String[] languages = Locale.getISOLanguages();
+		Map<String, Locale> localeMap = new HashMap<String, Locale>(languages.length);
+		for (String language : languages) {
+			Locale locale = new Locale(language);
+			localeMap.put(locale.getISO3Language(), locale);
+		}
+
+		return localeMap;
 	}
 
 	/**
@@ -155,7 +173,37 @@ public class Language {
 	 * @return The human readable name of this language.
 	 */
 	public String getHumanReadableName() {
-		return getHumanReadableName(this.languageCode);
+		Locale locale = languageCodeMap.get(this.getLanguageCode());
+		String name;
+
+		try {
+			name = locale.getDisplayLanguage(Locale.ENGLISH);
+		} catch (NullPointerException e) {
+			name = getHumanReadableName(this.languageCode);
+		}
+
+		return name;
+	}
+
+	/***
+	 * Returns the human readable name of this language translated into the
+	 * current display language. If no translation can be found, this returns
+	 * the same as {@link #getHumanReadableName()}
+	 * 
+	 * @return The human readable name of this language translated into the
+	 *         current display language.
+	 */
+	public String getHumanReadableTranslatedName() {
+		Locale locale = languageCodeMap.get(this.getLanguageCode());
+		String name;
+
+		try {
+			name = locale.getDisplayLanguage();
+		} catch (NullPointerException e) {
+			name = getHumanReadableName(this.languageCode);
+		}
+
+		return name;
 	}
 
 	/**
