@@ -2,6 +2,7 @@ package languages;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -34,6 +35,8 @@ public class Language {
 	 * *.tab file
 	 */
 	private URL tabfileName;
+	
+	private static TabFile languageCodesFile;
 
 	/**
 	 * Creates a new {@link Language}-Object that contains all information about
@@ -126,12 +129,18 @@ public class Language {
 	 *         if the {@code languageCode} could not be found in the
 	 *         language-code-list.
 	 */
-	private String getHumanReadableName(String languageCode) {
+	private static String getHumanReadableName(String languageCode) {
 		try {
-			// Open the LanguageCodes.tab-file
-			TabFile languageCodesFile = new TabFile(Config.languageCodes);
+			if (languageCodesFile==null){
+				// Open the LanguageCodes.tab-file
+				languageCodesFile = new TabFile(Config.languageCodes);
+			}
+			
+			// find the record using binary search
+			int langIndex = Arrays.binarySearch(languageCodesFile.getColumn(3), languageCode);
+			return languageCodesFile.getValueAt(langIndex, 3);
 
-			// Go through all records to find the language
+			/*// Go through all records to find the language
 			for (int i = 0; i < languageCodesFile.getRowCount(); i++) {
 				if (languageCodesFile.getValueAt(i, 0).equals(languageCode)) {
 					return languageCodesFile.getValueAt(i, 3);
@@ -139,7 +148,7 @@ public class Language {
 			}
 
 			// We only arrive here if the language was not found
-			return null;
+			return null;*/
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

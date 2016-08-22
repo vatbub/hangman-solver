@@ -16,6 +16,12 @@ import common.*;
 
 public class TabFile {
 
+	/**
+	 * The {@link String} that represents the space between two columns. This is
+	 * actually not a regular space but a tabulator.
+	 */
+	public static final String columnDeleimiter = "	";
+
 	public static void main(String[] args) {
 		if (args[0].equals("optimize")) {
 			Scanner sc = new Scanner(System.in);
@@ -60,7 +66,8 @@ public class TabFile {
 				}
 			}
 		} else if (args[0].equals("merge")) {
-			System.err.println("Merging dictionaries is not supported anymore. Please checkout commit 1a6fa16 to merge dictionaries.");
+			System.err.println(
+					"Merging dictionaries is not supported anymore. Please checkout commit 1a6fa16 to merge dictionaries.");
 		}
 	}
 
@@ -71,7 +78,13 @@ public class TabFile {
 	/**
 	 * The values in this *.tab file.
 	 */
-	private ArrayList<String[]> values = new ArrayList<String[]>();
+	private ArrayList<String[]> rowList = new ArrayList<String[]>();
+
+	/**
+	 * Values can be either accessed using the {@link #rowList} or this
+	 * {@link #columnList}, which ever is more convenient.
+	 */
+	private ArrayList<ArrayList<String>> columnList = new ArrayList<ArrayList<String>>();
 
 	/**
 	 * Creates a new object representation of the specified *.tab file.
@@ -126,10 +139,19 @@ public class TabFile {
 		Scanner scan = new Scanner(file.openStream(), "UTF-8");
 
 		// get the column headers
-		columnHeaders = scan.nextLine().split("	");
+		columnHeaders = scan.nextLine().split(TabFile.columnDeleimiter);
+		
+		// Generate the column lists
+		for (int i=0;i<this.getColumnCount(); i++){
+			columnList.add(new ArrayList<String>());
+		}
 
 		while (scan.hasNextLine()) {
-			values.add(scan.nextLine().split("	"));
+			String[] valuesTemp = scan.nextLine().split(TabFile.columnDeleimiter);
+			rowList.add(valuesTemp);
+			for (int i=0;i<this.getColumnCount(); i++){
+				columnList.get(i).add(valuesTemp[i]);
+			}
 		}
 
 		scan.close();
@@ -197,7 +219,7 @@ public class TabFile {
 	 * @return The row count of this file
 	 */
 	public int getRowCount() {
-		return values.size();
+		return rowList.size();
 	}
 
 	/**
@@ -212,10 +234,32 @@ public class TabFile {
 	 */
 	public String getValueAt(int row, int column) {
 		try {
-			return values.get(row)[column];
+			return getRow(row)[column];
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return "";
 		}
+	}
+
+	/**
+	 * Returns all values from the specified row as a {@link String}-Array.
+	 * 
+	 * @param rowIndex
+	 *            The row to get.
+	 * @return The values from the specified row.
+	 */
+	public String[] getRow(int rowIndex) {
+		return rowList.get(rowIndex);
+	}
+
+	/**
+	 * Returns all values from the specified column as a {@link String}-Array.
+	 * 
+	 * @param columnIndex
+	 *            The column to get.
+	 * @return The values from the specified column.
+	 */
+	public String[] getColumn(int columnIndex) {
+		return columnList.get(columnIndex).toArray(new String[0]);
 	}
 
 	public List<List<Integer>> indexOf(String valueToFind) {
@@ -253,7 +297,8 @@ public class TabFile {
 	 *            The column of the cell to be replaced.
 	 */
 	public void setValueAt(String newValue, int row, int column) {
-		values.get(row)[column] = newValue;
+		getRow(row)[column] = newValue;
+		columnList.get(column).set(row, newValue);
 	}
 
 	public void addRow(String[] newValues) {
@@ -262,7 +307,7 @@ public class TabFile {
 					"The given values-array dows not match the column-count of this file.");
 		}
 
-		values.add(newValues);
+		rowList.add(newValues);
 	}
 
 	/**
@@ -395,7 +440,7 @@ public class TabFile {
 
 		System.out.print("Processing table contents...");
 		// Values
-		for (String[] line : values) {
+		for (String[] line : rowList) {
 			for (String el : line) {
 				str = str + el;
 
@@ -452,7 +497,7 @@ public class TabFile {
 		TabFile res = new TabFile(colHeads);
 
 		for (int lineIndex = 0; lineIndex < origin.getRowCount(); lineIndex++) {
-			String[] line = origin.values.get(lineIndex);
+			String[] line = origin.getRow(lineIndex);
 			// Split at spaces
 			String[] words;
 
@@ -556,7 +601,7 @@ public class TabFile {
 				}
 			}
 		}
-		
+
 		res.setColumnHeader("wiktionary-cldr-merge", 0);
 
 		return res;
