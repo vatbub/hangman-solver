@@ -5,9 +5,13 @@ import java.util.Collection;
 import java.util.List;
 
 import common.ProgressDialog;
-import javafx.application.Platform;
 
 public class LanguageList extends ArrayList<Language> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4080640769912336564L;
 
 	public LanguageList() {
 		super();

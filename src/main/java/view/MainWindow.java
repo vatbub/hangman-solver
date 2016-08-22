@@ -3,7 +3,6 @@ package view;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
@@ -43,7 +42,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import languages.Language;
-import languages.LanguageList;
 import languages.TabFile;
 import logging.FOKLogger;
 import stats.HangmanStats;
