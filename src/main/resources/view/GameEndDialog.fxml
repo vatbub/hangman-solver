@@ -2,6 +2,7 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
@@ -19,8 +20,16 @@
         <Label fx:id="solutionLabel" text="%solutionLabel.text" HBox.hgrow="NEVER" />
       </children>
     </HBox>
-    <TextField fx:id="solutionTextBox" prefWidth="485.0" promptText="%solutionTextBox.promptText" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="101.0" AnchorPane.topAnchor="81.0" />
-    <Button fx:id="submitButton" defaultButton="true" mnemonicParsing="false" onAction="#submitButtonOnActio" prefWidth="87.0" text="%submitButton.text" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="81.0" />
+    <HBox id="HBox" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefWidth="572.0" spacing="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="81.0">
+      <children>
+        <TextField fx:id="solutionTextBox" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="-1.0" promptText="%solutionTextBox.promptText" HBox.hgrow="ALWAYS">
+          <HBox.margin>
+            <Insets />
+          </HBox.margin>
+        </TextField>
+        <Button fx:id="submitButton" defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#submitButtonOnActio" prefWidth="-1.0" text="%submitButton.text" HBox.hgrow="NEVER" />
+      </children>
+    </HBox>
     <Button id="gameWonButton" fx:id="newGameButton" defaultButton="false" mnemonicParsing="false" onAction="#newGameButtonOnAction" prefWidth="572.0" text="%newGameButton.label" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="124.0" />
     <Button id="gameLostButton" fx:id="quitAppButton" mnemonicParsing="false" onAction="#quitAppButtonOnAction" prefWidth="572.0" text="%quitAppButton.label" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="162.0" />
   </children>
