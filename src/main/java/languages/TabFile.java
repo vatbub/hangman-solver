@@ -308,7 +308,7 @@ public class TabFile {
 		AtomicInteger maxIndex = new AtomicInteger(-1);
 		AtomicDouble maxCorr = new AtomicDouble(-1);
 
-		for (int i = 0; i < Config.parallelThreadCount; i++) {
+		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
 			threads.add(new Thread() {
 				@Override
 				public void run() {
@@ -334,7 +334,7 @@ public class TabFile {
 		}
 
 		// Wait for threads
-		for (int i = 0; i < Config.parallelThreadCount; i++) {
+		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
 			try {
 				threads.get(i).join();
 			} catch (InterruptedException e) {
