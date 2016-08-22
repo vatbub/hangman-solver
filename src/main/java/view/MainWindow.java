@@ -37,6 +37,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -247,6 +249,29 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		result.setText("");
 		currentSequence.setDisable(false);
 		currentSequence.requestFocus();
+	}
+
+	/**
+	 * Handler for Button[fx:id="applyButton"] onKeyPressed
+	 * 
+	 * @param event
+	 *            The event object (automatically injected)
+	 */
+	@FXML
+	void applyButtonOnKeyPressed(KeyEvent event) {
+		System.out.println(event.getCode());
+		if (!event.getCode().equals(KeyCode.ENTER) && !event.getCode().equals(KeyCode.SPACE)) {
+			// If any other Key than ENTER or SPACE is pressed (they have
+			// special meanings already handled by JavaFX
+			// focus the currentSequence
+
+			if (event.getCode().equals(KeyCode.LEFT) || event.getCode().equals(KeyCode.RIGHT)
+					|| event.getCode().equals(KeyCode.UP) || event.getCode().equals(KeyCode.DOWN)) {
+				// Consume the event to disable the default focus system
+				event.consume();
+			}
+			currentSequence.requestFocus();
+		}
 	}
 
 	/**
@@ -768,7 +793,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				loadLanguagesProgressBar.setProgress(operationsDone/totalOperationsToDo);
+				loadLanguagesProgressBar.setProgress(operationsDone / totalOperationsToDo);
 			}
 		});
 	}
