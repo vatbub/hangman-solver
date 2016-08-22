@@ -135,12 +135,8 @@ public class Language {
 				// Open the LanguageCodes.tab-file
 				languageCodesFile = new TabFile(Config.languageCodes);
 			}
-			
-			// find the record using binary search
-			int langIndex = Arrays.binarySearch(languageCodesFile.getColumn(3), languageCode);
-			return languageCodesFile.getValueAt(langIndex, 3);
 
-			/*// Go through all records to find the language
+			// Go through all records to find the language
 			for (int i = 0; i < languageCodesFile.getRowCount(); i++) {
 				if (languageCodesFile.getValueAt(i, 0).equals(languageCode)) {
 					return languageCodesFile.getValueAt(i, 3);
@@ -148,10 +144,9 @@ public class Language {
 			}
 
 			// We only arrive here if the language was not found
-			return null;*/
+			return null;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.getLogger().log(Level.SEVERE, "An error occurred", e);
 			return null;
 		}
 	}
