@@ -50,7 +50,6 @@ public class HangmanSolver {
 		res.gameState = winDetector(currentSequence);
 
 		currentSequenceCopy = currentSequence;
-		;
 
 		if (!lang.equals(langOld) || database == null) {
 			// Load language databases
@@ -140,6 +139,7 @@ public class HangmanSolver {
 	private static void loadLanguageDatabases(Language lang) {
 		try {
 			log.getLogger().info("Loading language databases for " + lang.getHumanReadableName());
+			langOld = lang;
 			database = lang.getTabFile();
 		} catch (IOException e) {
 			log.getLogger().log(Level.SEVERE, "An error occurred", e);
