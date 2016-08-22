@@ -521,9 +521,6 @@ public class MainWindow extends Application implements Initializable {
 		// Initialize your logic here: all @FXML variables will have been
 		// injected
         
-        // Set the height of the apply button to the height of the result text field
-        applyButton.setPrefHeight(result.getPrefHeight()+4);
-        
 		loadLanguageList();
 		shareThoughtsCheckbox.setSelected(true);
 		shareThoughtsBool = true;
