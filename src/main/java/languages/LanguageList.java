@@ -30,7 +30,7 @@ public class LanguageList extends ArrayList<Language> {
 	}
 
 	public List<String> getHumanReadableNames(ProgressDialog gui) {
-		List<String> res = new ArrayList<String>();
+		List<String> res = new ArrayList<String>(this.size());
 
 		if (gui != null) {
 			gui.operationsStarted();
@@ -56,7 +56,7 @@ public class LanguageList extends ArrayList<Language> {
 	}
 
 	public List<String> getHumanReadableTranslatedNames(ProgressDialog gui) {
-		List<String> res = new ArrayList<String>();
+		List<String> res = new ArrayList<String>(this.size());
 
 		if (gui != null) {
 			gui.operationsStarted();
