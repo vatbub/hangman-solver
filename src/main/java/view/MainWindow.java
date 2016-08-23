@@ -545,6 +545,9 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		// Initialize your logic here: all @FXML variables will have been
 		// injected
 
+		// Initialize the language search field.
+		new AutoCompleteComboBoxListener<String>(languageSelector);
+
 		loadLanguageList();
 		shareThoughtsCheckbox.setSelected(true);
 		shareThoughtsBool = true;
@@ -812,9 +815,6 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 				result.setDisable(false);
 				newGameButton.setDisable(false);
 				loadLanguagesProgressBar.setVisible(false);
-
-				// Initialize the language search field.
-				new AutoCompleteComboBoxListener<String>(languageSelector);
 
 				languageSelector.requestFocus();
 			}
