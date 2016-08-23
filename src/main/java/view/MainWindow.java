@@ -557,7 +557,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 			versionLabel.setText(Common.UNKNOWN_APP_VERSION);
 		}
 
-		// Make update link unvisible if launched from launcher
+		// Make update link invisible if launched from launcher
 		if (disableUpdateChecks) {
 			updateLink.setDisable(true);
 			updateLink.setVisible(false);
