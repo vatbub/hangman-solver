@@ -70,7 +70,11 @@ public class GameEndDialog {
 	// Handler for Button[fx:id="quitAppButton"] onAction
 	@FXML
 	void quitAppButtonOnAction(ActionEvent event) {
-		// handle the event here
+		// hide all guis so that the user does not see a freezing app
+		mainWindowCopy.getStage().hide();
+		GameEndDialog.hide();
+		
+		// Exit the app
 		Platform.exit();
 	}
 

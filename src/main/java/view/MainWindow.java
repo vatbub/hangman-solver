@@ -91,10 +91,15 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	private boolean shareThoughtsBool;
 	private String lastThought;
 	private static Scene scene;
+	private static Stage stage;
 	private static int clickCounter = 0;
 
 	public Scene getScene() {
 		return scene;
+	}
+	
+	public Stage getStage(){
+		return stage;
 	}
 
 	@FXML // fx:id="loadLanguagesProgressBar"
@@ -467,6 +472,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	 * Method is invoked by JavaFX after the application launch
 	 */
 	public void start(Stage primaryStage) {
+		stage = primaryStage;
 		try {
 			if (HangmanStats.uploadThread.isAlive() == false) {
 				HangmanStats.uploadThread.start();
