@@ -36,7 +36,7 @@
 	<parent>
 		<groupId>fokprojects</groupId>
 		<artifactId>parentPom</artifactId>
-		<version>0.0.11-SNAPSHOT</version>
+		<version>0.0.11</version>
 	</parent>
 
 	<scm>
@@ -120,7 +120,7 @@ http://www.ethnologue.com/terms-use#CodeTables</comments>
 		<dependency>
 			<groupId>fokprojects</groupId>
 			<artifactId>common</artifactId>
-			<version>0.0.12-SNAPSHOT</version>
+			<version>0.0.12</version>
 		</dependency>
 	</dependencies>
 </project>
