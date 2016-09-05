@@ -16,7 +16,6 @@ after_success: mvn clean deploy --settings target/travis/settings.xml -DskipTest
 branches:
   only:
   - master
-  - release
 notifications:
   email:
     recipients:
