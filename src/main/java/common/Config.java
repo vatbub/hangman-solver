@@ -2,9 +2,11 @@ package common;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
 
 import com.mongodb.MongoClientURI;
 import languages.Language;
+import logging.FOKLogger;
 
 /**
  * A class to configure some parameters.
@@ -13,19 +15,21 @@ import languages.Language;
  *
  */
 public class Config {
+	private static FOKLogger log = new FOKLogger(Config.class.getName());
+	private static int oldThreadCount = 0;
+
 	// Project setup
 	public static URL getUpdateRepoBaseURL() {
 		URL res = null;
 		try {
 			res = new URL("http://dl.bintray.com/vatbub/fokprojectsSnapshots");
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.getLogger().log(Level.SEVERE, "An error occurred", e);
 		}
-		
+
 		return res;
 	}
-	
+
 	public static String artifactID = "hangmanSolver";
 	public static String groupID = "fokprojects";
 	public static String updateFileClassifier = "jar-with-dependencies";
@@ -33,9 +37,22 @@ public class Config {
 	// algorithm
 	/**
 	 * The maximum number of parallel threads that are used to compute the next
-	 * guess in the {@link algorithm.HangmanSolver} class.
+	 * guess in the {@link algorithm.HangmanSolver} class. The number returned
+	 * depends on the number of cpu cores offered to the app.
+	 * 
+	 * @return The maximum number of parallel threads that are used to compute
+	 *         the next guess in the {@link algorithm.HangmanSolver} class.
 	 */
-	public static int parallelThreadCount = 8;
+	public static int getParallelThreadCount() {
+		int threadCount = Runtime.getRuntime().availableProcessors() + 1;
+
+		if (threadCount != oldThreadCount) {
+			oldThreadCount = threadCount;
+			log.getLogger().info("Now using " + threadCount + " threads");
+		}
+
+		return threadCount;
+	};
 
 	/**
 	 * The {@link algorithm.HangmanSolver}-algorithm will find the word in in

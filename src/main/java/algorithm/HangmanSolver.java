@@ -3,9 +3,11 @@ package algorithm;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 
 import common.Config;
 import languages.*;
+import logging.FOKLogger;
 
 /**
  * A class that holds all methods and algorithms to solve a hangman puzzle.
@@ -17,6 +19,7 @@ public class HangmanSolver {
 
 	private static Language langOld;
 	private static TabFile database;
+	private static FOKLogger log = new FOKLogger(HangmanSolver.class.getName());
 
 	/**
 	 * A {@link List} that contains all characters and words that the computer
@@ -47,7 +50,6 @@ public class HangmanSolver {
 		res.gameState = winDetector(currentSequence);
 
 		currentSequenceCopy = currentSequence;
-		;
 
 		if (!lang.equals(langOld) || database == null) {
 			// Load language databases
@@ -84,12 +86,11 @@ public class HangmanSolver {
 			String bestWord = database.getValueWithHighestCorrelation(2, word, proposedSolutions);
 			boolean foundBestWord = true;
 
-			System.out.println("Best match in dictionary:");
-			System.out.println(bestWord);
+			log.getLogger().info("Best match in dictionary: " + bestWord);
 
 			if (bestWord.length() == 0) {
 				// dictionaries are both used up
-				System.out.println("dictionary used up");
+				log.getLogger().severe("dictionary used up");
 				foundBestWord = false;
 			} else if (bestWord.equals("")) {
 				foundBestWord = false;
@@ -99,8 +100,6 @@ public class HangmanSolver {
 
 			if (foundBestWord) {
 				res.bestWordScore = TabFile.stringCorrelation(word, res.bestWord);
-
-				System.out.println(res.bestWordScore);
 
 				if (res.bestWordScore >= Config.thresholdToSelectWord(word.length())) {
 					proposedSolutions.add(res.bestWord);
@@ -113,11 +112,10 @@ public class HangmanSolver {
 
 				// Get all chars from the bestWord
 				char[] priorityChars = res.bestWord.toCharArray();
-
 				res.result = Character.toString(getMostFrequentChar(wordsWithEqualLength, priorityChars));
 			} else {
 				// No bestWord found
-				System.out.println("No best word found, using most common chars only");
+				log.getLogger().info("No best word found, using most common chars only");
 				res.result = Character.toString(getMostFrequentChar(wordsWithEqualLength));
 			}
 			proposedSolutions.add(res.result);
@@ -137,11 +135,11 @@ public class HangmanSolver {
 	 */
 	private static void loadLanguageDatabases(Language lang) {
 		try {
-			System.out.println("Loading language databases for " + lang.getHumanReadableName());
+			log.getLogger().info("Loading language databases for " + lang.getHumanReadableName());
+			langOld = lang;
 			database = lang.getTabFile();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.getLogger().log(Level.SEVERE, "An error occurred", e);
 		}
 	}
 
@@ -173,6 +171,7 @@ public class HangmanSolver {
 		AtomicInteger currentIndex = new AtomicInteger(0);
 		List<CustomAtomicInteger> charCounts = new ArrayList<CustomAtomicInteger>();
 
+		System.out.println("Preparing...");
 		for (int i = 0; i < Character.MAX_VALUE; i++) {
 			CustomAtomicInteger temp = new CustomAtomicInteger(0);
 			charCounts.add(temp);
@@ -182,19 +181,15 @@ public class HangmanSolver {
 		// ArrayList<AtomicInteger>(Collections.nCopies(Character.MAX_VALUE, new
 		// AtomicInteger(0)));
 
-		System.out.println("Size: " + words.size());
-
-		for (int i = 0; i < Config.parallelThreadCount; i++) {
+		log.getLogger().info("Dictionary size: " + words.size());
+		System.out.println("Counting...");
+		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
 			threads.add(new Thread() {
 				@Override
 				public void run() {
 					int index = currentIndex.getAndIncrement();
 					while (index < words.size()) {
-						List<Integer> counts = countAllCharsInString(words.get(index));
-
-						for (int i = 0; i < Character.MAX_VALUE; i++) {
-							charCounts.get(i).set(charCounts.get(i).get() + counts.get(i));
-						}
+						countAllCharsInString(words.get(index), charCounts);
 
 						// Grab the next index
 						index = currentIndex.getAndIncrement();
@@ -205,16 +200,16 @@ public class HangmanSolver {
 		}
 
 		// Wait for threads
-		for (int i = 0; i < Config.parallelThreadCount; i++) {
+		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
 			try {
 				threads.get(i).join();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.getLogger().log(Level.SEVERE, "An error occurred", e);
 			}
 		}
 
 		// Find max count
+		System.out.println("Finding max...");
 		int maxCount = -1;
 		int maxIndex = 0;
 
@@ -260,10 +255,7 @@ public class HangmanSolver {
 				}
 			}
 		}
-
-		System.out.println("(char) maxIndex = " + (char) maxIndex);
-		System.out.println("maxIndex = " + maxIndex);
-
+		System.out.println("Done!");
 		return Character.toUpperCase((char) maxIndex);
 	}
 
@@ -292,26 +284,22 @@ public class HangmanSolver {
 	 * 
 	 * @param str
 	 *            The string of which the chars shall be counted.
-	 * @return An array where each index represents the number of times this
-	 *         char is contained in the string. E. g. the number at the 97th
-	 *         position represents how often the lower case {@code a} is
-	 *         contained in the string as {@code a} is represented as 97 in a
-	 *         char.
+	 * @param countList
+	 *            A List where each index represents the number of times this
+	 *            char is contained in the string. E. g. the number at the 97th
+	 *            position represents how often the lower case {@code a} is
+	 *            contained in the string as {@code a} is represented as 97 in a
+	 *            char.<br>
+	 *            As this method is designed to be used in a
+	 *            multithreading-context, the List specified as
+	 *            {@code countList} must contain
+	 *            {@link CustomAtomicInteger}s.<br>
+	 *            <b>Because of a better performance, this method uses a given list and modifies it rather than creating a new one that has to be summed up to existing ones in another slow {@code for}-loop</b>
 	 */
-	private static List<Integer> countAllCharsInString(String str) {
-		List<Integer> res = new ArrayList<Integer>(Collections.nCopies(Character.MAX_VALUE, 0));
-
+	private static void countAllCharsInString(String str, List<CustomAtomicInteger> countList) {
 		for (char chr : str.toCharArray()) {
-			res.set((int) chr, res.get((int) chr) + 1);
+			countList.get((int) chr).getAndIncrement();
 		}
-
-		/*
-		 * for (int i = 0; i <= Character.MAX_VALUE; i++) {
-		 * res.add(countCharInString(str, Character.toLowerCase((char) i)) +
-		 * countCharInString(str, Character.toUpperCase((char) i))); }
-		 */
-
-		return res;
 	}
 
 	/**
