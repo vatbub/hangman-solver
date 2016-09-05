@@ -45,6 +45,9 @@
 					</releases>
 				</pluginRepository>
 			</pluginRepositories>
+			<properties>
+				<srcclrKey>${env.srcclrKey}</srcclrKey>
+			</properties>
 		</profile>
 	</profiles>
 
