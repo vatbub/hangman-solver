@@ -37,7 +37,11 @@ public class Config {
 	// algorithm
 	/**
 	 * The maximum number of parallel threads that are used to compute the next
-	 * guess in the {@link algorithm.HangmanSolver} class.
+	 * guess in the {@link algorithm.HangmanSolver} class. The number returned
+	 * depends on the number of cpu cores offered to the app.
+	 * 
+	 * @return The maximum number of parallel threads that are used to compute
+	 *         the next guess in the {@link algorithm.HangmanSolver} class.
 	 */
 	public static int getParallelThreadCount() {
 		int threadCount = Runtime.getRuntime().availableProcessors() + 1;
@@ -46,7 +50,7 @@ public class Config {
 			oldThreadCount = threadCount;
 			log.getLogger().info("Now using " + threadCount + " threads");
 		}
-		
+
 		return threadCount;
 	};
 
