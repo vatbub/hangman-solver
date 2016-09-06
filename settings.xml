@@ -47,6 +47,7 @@
 			</pluginRepositories>
 			<properties>
 				<srcclrKey>${env.srcclrKey}</srcclrKey>
+				<coverallsKey>${env.coverallsKey}</coverallsKey>
 			</properties>
 		</profile>
 	</profiles>
