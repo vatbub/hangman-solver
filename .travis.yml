@@ -12,10 +12,11 @@ before_install:
 - git clone -b travis `git config --get remote.origin.url` target/travis
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -U --settings
   target/travis/settings.xml
-script: mvn test -B --settings target/travis/settings.xml
+script: 
+  - mvn test -B --settings target/travis/settings.xml
+  - mvn clean cobertura:cobertura coveralls:report
 after_success: 
   - mvn clean deploy --settings target/travis/settings.xml -DskipTests=true
-  - mvn clean cobertura:cobertura coveralls:report
 branches:
   only:
   - master
