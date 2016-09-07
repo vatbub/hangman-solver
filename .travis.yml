@@ -15,7 +15,7 @@ install:
 script:
 - mvn test jacoco:report coveralls:report --settings target/travis/settings.xml
 after_success:
-  - mvn clean deploy --settings target/travisConfig/settings.xml -DskipTests=true
+  - mvn clean deploy --settings target/travis/settings.xml -DskipTests=true
 branches:
   only:
   - master
