@@ -13,8 +13,11 @@ before_install:
   - ls
   - ls target
   - ls target/travis
-install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -U --settings
-  target/travis/settings.xml
+install: 
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -U --settings target/travis/settings.xml
+  - ls
+  - ls target
+  - ls target/travis
 script:
 - mvn clean test jacoco:report coveralls:report --settings target/travis/settings.xml
 after_success:
