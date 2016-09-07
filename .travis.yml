@@ -17,13 +17,13 @@ install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -U --settings target/travisConfig/settings.xml
   - ls
   - ls target
-  - ls target/travis
+  - ls target/travisConfig
 script:
 - mvn clean test jacoco:report coveralls:report --settings target/travisConfig/settings.xml
 after_success:
   - ls
   - ls target
-  - ls target/travis
+  - ls target/travisConfig
   - mvn clean deploy --settings target/travisConfig/settings.xml -DskipTests=true
 branches:
   only:
