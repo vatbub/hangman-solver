@@ -9,22 +9,22 @@ cache:
   directories:
   - "$HOME/.m2"
 before_install:
-  - git clone -b travis `git config --get remote.origin.url` target/travis
+  - git clone -b travis `git config --get remote.origin.url` target/travisConfig
   - ls
   - ls target
-  - ls target/travis
+  - ls target/travisConfig
 install: 
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -U --settings target/travis/settings.xml
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -U --settings target/travisConfig/settings.xml
   - ls
   - ls target
   - ls target/travis
 script:
-- mvn clean test jacoco:report coveralls:report --settings target/travis/settings.xml
+- mvn clean test jacoco:report coveralls:report --settings target/travisConfig/settings.xml
 after_success:
   - ls
   - ls target
   - ls target/travis
-  - mvn clean deploy --settings target/travis/settings.xml -DskipTests=true
+  - mvn clean deploy --settings target/travisConfig/settings.xml -DskipTests=true
 branches:
   only:
   - master
