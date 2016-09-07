@@ -9,7 +9,10 @@ cache:
   directories:
   - "$HOME/.m2"
 before_install:
-- git clone -b travis `git config --get remote.origin.url` target/travis
+  - git clone -b travis `git config --get remote.origin.url` target/travis
+  - ls
+  - ls target
+  - ls target/travis
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -U --settings
   target/travis/settings.xml
 script:
