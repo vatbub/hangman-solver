@@ -15,7 +15,10 @@ install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -U --setti
 script:
 - mvn clean test jacoco:report coveralls:report --settings target/travis/settings.xml
 after_success:
-- mvn clean deploy --settings target/travis/settings.xml -DskipTests=true
+  - ls
+  - ls target
+  - ls target/travis
+  - mvn clean deploy --settings target/travis/settings.xml -DskipTests=true
 branches:
   only:
   - master
