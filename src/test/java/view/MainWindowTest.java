@@ -1,4 +1,4 @@
-package dummyTests;
+package view;
 
 import org.junit.Test;
 
@@ -7,7 +7,7 @@ import org.junit.Test;
  * @author frede
  *
  */
-public class DummyTests {
+public class MainWindowTest {
 	@Test
 	public void dummyTest(){
 		assert true;
