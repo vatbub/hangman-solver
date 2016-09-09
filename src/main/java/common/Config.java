@@ -1,9 +1,12 @@
 package common;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
 
 import com.mongodb.MongoClientURI;
 import languages.Language;
+import logging.FOKLogger;
 
 /**
  * A class to configure some parameters.
@@ -12,12 +15,44 @@ import languages.Language;
  *
  */
 public class Config {
+	private static FOKLogger log = new FOKLogger(Config.class.getName());
+	private static int oldThreadCount = 0;
+
+	// Project setup
+	public static URL getUpdateRepoBaseURL() {
+		URL res = null;
+		try {
+			res = new URL("http://dl.bintray.com/vatbub/fokprojectsSnapshots");
+		} catch (MalformedURLException e) {
+			log.getLogger().log(Level.SEVERE, "An error occurred", e);
+		}
+
+		return res;
+	}
+
+	public static String artifactID = "hangmanSolver";
+	public static String groupID = "fokprojects";
+	public static String updateFileClassifier = "jar-with-dependencies";
+
 	// algorithm
 	/**
 	 * The maximum number of parallel threads that are used to compute the next
-	 * guess in the {@link algorithm.HangmanSolver} class.
+	 * guess in the {@link algorithm.HangmanSolver} class. The number returned
+	 * depends on the number of cpu cores offered to the app.
+	 * 
+	 * @return The maximum number of parallel threads that are used to compute
+	 *         the next guess in the {@link algorithm.HangmanSolver} class.
 	 */
-	public static int parallelThreadCount = 4;
+	public static int getParallelThreadCount() {
+		int threadCount = Runtime.getRuntime().availableProcessors() + 1;
+
+		if (threadCount != oldThreadCount) {
+			oldThreadCount = threadCount;
+			log.getLogger().info("Now using " + threadCount + " threads");
+		}
+
+		return threadCount;
+	};
 
 	/**
 	 * The {@link algorithm.HangmanSolver}-algorithm will find the word in in
@@ -50,8 +85,8 @@ public class Config {
 
 	// Language class
 	/**
-	 * The path pattern to find the merged word dictionary. {langCode} will
-	 * be replaced by the language code
+	 * The path pattern to find the merged word dictionary. {langCode} will be
+	 * replaced by the language code
 	 */
 	public static String languageDictPattern = "/mergedLanguages/wn-merged-{langCode}.tab";
 	/**
@@ -95,11 +130,13 @@ public class Config {
 	public static MongoClientURI mongoDBServerAddress = new MongoClientURI(
 			"mongodb://user:ljkhfgsd98675@ds019634.mlab.com:19634/hangmanstats");
 	/**
-	 * The name of the <a href="https://www.mongodb.com/">MongoDB</a> database where all submitted words are saved.
+	 * The name of the <a href="https://www.mongodb.com/">MongoDB</a> database
+	 * where all submitted words are saved.
 	 */
 	public static String mongoDBDatabaseName = "hangmanstats";
 	/***
-	 * The name of the <a href="https://www.mongodb.com/">MongoDB</a> collection where all submitted words are saved.
+	 * The name of the <a href="https://www.mongodb.com/">MongoDB</a> collection
+	 * where all submitted words are saved.
 	 */
 	public static String mongoDBWordsUsedCollectionName = "wordsused";
 }

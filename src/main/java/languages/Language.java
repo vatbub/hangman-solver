@@ -2,17 +2,28 @@ package languages;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Level;
 
 import common.Config;
+import logging.FOKLogger;
 
 public class Language {
+	
+	private static FOKLogger log = new FOKLogger(Language.class.getName());
 
 	/**
 	 * Cached list of supported languages
 	 */
-	private static List<Language> supportedLanguages;
+	private static LanguageList supportedLanguages;
+
+	/**
+	 * Map that maps every ISO-2 language code to a iso-1 language code
+	 */
+	private static Map<String, Locale> languageCodeMap = initLanguageCodeMap();
 
 	/**
 	 * The ISO 639-3 language code
@@ -23,6 +34,8 @@ public class Language {
 	 * *.tab file
 	 */
 	private URL tabfileName;
+	
+	private static TabFile languageCodesFile;
 
 	/**
 	 * Creates a new {@link Language}-Object that contains all information about
@@ -34,6 +47,17 @@ public class Language {
 	public Language(String languageCode) {
 		this.languageCode = languageCode;
 		tabfileName = getCldrName(languageCode);
+	}
+
+	private static Map<String, Locale> initLanguageCodeMap() {
+		String[] languages = Locale.getISOLanguages();
+		Map<String, Locale> localeMap = new HashMap<String, Locale>(languages.length);
+		for (String language : languages) {
+			Locale locale = new Locale(language);
+			localeMap.put(locale.getISO3Language(), locale);
+		}
+
+		return localeMap;
 	}
 
 	/**
@@ -60,14 +84,14 @@ public class Language {
 	 * @return A {@link List} of supported languages or {@code null} if an
 	 *         exception occurs.
 	 */
-	public static List<Language> getSupportedLanguages() {
+	public static LanguageList getSupportedLanguages() {
 
 		if (supportedLanguages != null) {
 			// we've got a cached version so return that one
 			return supportedLanguages;
 		} else {
 			// No cached version available so generate a new one
-			List<Language> res = new ArrayList<Language>();
+			LanguageList res = new LanguageList();
 
 			// Open the LanguageCodes.tab-file
 			TabFile languageCodesFile;
@@ -88,8 +112,7 @@ public class Language {
 				supportedLanguages = res;
 				return res;
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.getLogger().log(Level.SEVERE, "An error occurred", e);
 				return null;
 			}
 		}
@@ -105,10 +128,12 @@ public class Language {
 	 *         if the {@code languageCode} could not be found in the
 	 *         language-code-list.
 	 */
-	private String getHumanReadableName(String languageCode) {
+	private static String getHumanReadableName(String languageCode) {
 		try {
-			// Open the LanguageCodes.tab-file
-			TabFile languageCodesFile = new TabFile(Config.languageCodes);
+			if (languageCodesFile==null){
+				// Open the LanguageCodes.tab-file
+				languageCodesFile = new TabFile(Config.languageCodes);
+			}
 
 			// Go through all records to find the language
 			for (int i = 0; i < languageCodesFile.getRowCount(); i++) {
@@ -120,8 +145,7 @@ public class Language {
 			// We only arrive here if the language was not found
 			return null;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.getLogger().log(Level.SEVERE, "An error occurred", e);
 			return null;
 		}
 	}
@@ -155,7 +179,37 @@ public class Language {
 	 * @return The human readable name of this language.
 	 */
 	public String getHumanReadableName() {
-		return getHumanReadableName(this.languageCode);
+		Locale locale = languageCodeMap.get(this.getLanguageCode());
+		String name;
+
+		try {
+			name = locale.getDisplayLanguage(Locale.ENGLISH);
+		} catch (NullPointerException e) {
+			name = getHumanReadableName(this.languageCode);
+		}
+
+		return name;
+	}
+
+	/***
+	 * Returns the human readable name of this language translated into the
+	 * current display language. If no translation can be found, this returns
+	 * the same as {@link #getHumanReadableName()}
+	 * 
+	 * @return The human readable name of this language translated into the
+	 *         current display language.
+	 */
+	public String getHumanReadableTranslatedName() {
+		Locale locale = languageCodeMap.get(this.getLanguageCode());
+		String name;
+
+		try {
+			name = locale.getDisplayLanguage();
+		} catch (NullPointerException e) {
+			name = getHumanReadableName(this.languageCode);
+		}
+
+		return name;
 	}
 
 	/**

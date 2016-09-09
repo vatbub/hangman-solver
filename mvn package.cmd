@@ -1,2 +1,2 @@
-mvn package
+call mvn package
 pause

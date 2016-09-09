@@ -60,7 +60,8 @@ public class TabFile {
 				}
 			}
 		} else if (args[0].equals("merge")) {
-			System.err.println("Merging dictionaries is not supported anymore. Please checkout commit 1a6fa16 to merge dictionaries.");
+			System.err.println(
+					"Merging dictionaries is not supported anymore. Please checkout commit 1a6fa16 to merge dictionaries.");
 		}
 	}
 
@@ -308,7 +309,7 @@ public class TabFile {
 		AtomicInteger maxIndex = new AtomicInteger(-1);
 		AtomicDouble maxCorr = new AtomicDouble(-1);
 
-		for (int i = 0; i < Config.parallelThreadCount; i++) {
+		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
 			threads.add(new Thread() {
 				@Override
 				public void run() {
@@ -334,7 +335,7 @@ public class TabFile {
 		}
 
 		// Wait for threads
-		for (int i = 0; i < Config.parallelThreadCount; i++) {
+		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
 			try {
 				threads.get(i).join();
 			} catch (InterruptedException e) {
@@ -556,7 +557,7 @@ public class TabFile {
 				}
 			}
 		}
-		
+
 		res.setColumnHeader("wiktionary-cldr-merge", 0);
 
 		return res;

@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>hangmanSolver</artifactId>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>0.0.14-SNAPSHOT</version>
 	<name>Hangman Solver</name>
-	<description>An application that sloves Hangman</description>
+	<description>An application that solves Hangman</description>
+	<inceptionYear>2016</inceptionYear>
+	<packaging>jar</packaging>
 
 	<repositories>
 		<repository>
@@ -27,14 +28,6 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-			<id>bintray-vatbub-fokReleases</id>
-			<name>bintray-plugins</name>
-			<url>http://dl.bintray.com/vatbub/fokReleases</url>
-		</pluginRepository>
-		<pluginRepository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
 			<id>bintray-vatbub-fokprojectsSnapshots</id>
 			<name>bintray-plugins</name>
 			<url>http://dl.bintray.com/vatbub/fokprojectsSnapshots</url>
@@ -44,7 +37,7 @@
 	<parent>
 		<groupId>fokprojects</groupId>
 		<artifactId>parentPom</artifactId>
-		<version>0.0.7-SNAPSHOT</version>
+		<version>0.0.13-SNAPSHOT</version>
 	</parent>
 
 	<scm>
@@ -53,6 +46,44 @@
 		<developerConnection>scm:git:git@github.com:vatbub/hangman-solver.git</developerConnection>
 		<tag>testRelease</tag>
 	</scm>
+
+	<licenses>
+		<license>
+			<comments>LICENSE
+
+This software is released under the Apache License v2.0. In short this means:
+- You may reproduce, redistribute and modify  the source code of this application and the application itself as long as you include this licensing information.
+
+The exact wording of the Apache License can be found here:
+http://www.apache.org/licenses/LICENSE-2.0
+
+NOTE:
+Some portions of this software are third-party components and use a different license that the actual software itself:
+
+The software uses databases provided by the Extended Open Multilingual Wordnet:
+
+Francis Bond and Ryan Foster (2013)
+Linking and extending an open multilingual wordnet. 
+In 51st Annual Meeting of the Association for Computational Linguistics: ACL-2013. 
+Sofia. 1352-1362
+http://aclweb.org/anthology/P/P13/P13-1133.pdf
+
+The project uses data from the following providers:
+
+Wiktionary (CC BY-SA 3.0):
+http://creativecommons.org/licenses/by-sa/3.0/
+
+Common Locale Data Repository (MIT-License):
+http://www.unicode.org/copyright.html
+
+Various other wordnet projects, full list available here:
+http://compling.hss.ntu.edu.sg/omw/
+
+The languagecode database is provided by:
+SIL International (www.ethnologue.com)
+http://www.ethnologue.com/terms-use#CodeTables</comments>
+		</license>
+	</licenses>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -85,17 +116,12 @@
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongodb-driver</artifactId>
-			<version>3.2.2</version>
+			<version>3.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>fokprojects</groupId>
 			<artifactId>common</artifactId>
-			<version>0.0.8</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.5</version>
+			<version>0.0.14-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

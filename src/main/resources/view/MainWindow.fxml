@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import java.net.*?>
 <?import java.util.*?>
 <?import javafx.collections.*?>
 <?import javafx.geometry.*?>
@@ -14,19 +15,26 @@
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="532.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.MainWindow">
   <children>
     <Label fx:id="actionLabel" maxWidth="1.7976931348623157E308" prefWidth="572.0" text="%enterInitialSequence" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="84.0" />
-    <ComboBox fx:id="languageSelector" editable="false" prefWidth="572.0" promptText="%languageSelector.PromptText" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="43.0">
+    <ComboBox fx:id="languageSelector" editable="false" prefWidth="572.0" promptText="%languageSelector.PromptText" style="" styleClass=".combo-box:disabled" visible="true" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="43.0">
       <items>
         <FXCollections fx:factory="observableArrayList" />
       </items>
+      <stylesheets>
+        <URL value="@MainWindow.css" />
+      </stylesheets>
     </ComboBox>
     <TextField fx:id="currentSequence" maxWidth="1.7976931348623157E308" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="120.0" />
     <Button fx:id="getNextLetter" defaultButton="true" mnemonicParsing="false" onAction="#getNextLetterAction" prefWidth="571.9998779296875" text="%computeNextLetterButtonLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="162.0" />
-    <TextField fx:id="result" disable="false" editable="false" prefHeight="26.0" prefWidth="572.0" promptText="%clickGenerateButtonText" text="" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="228.0" />
-    <Button id="copyButton" fx:id="applyButton" disable="true" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#applyResult" prefHeight="-1.0" text="%applyButtontext" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="229.0">
-      <font>
-        <Font size="13.0" />
-      </font>
-    </Button>
+    <HBox id="HBox" alignment="CENTER" prefWidth="572.0" spacing="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="228.0">
+      <children>
+        <TextField fx:id="result" disable="false" editable="false" maxHeight="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" promptText="%clickGenerateButtonText" text="" HBox.hgrow="ALWAYS" />
+        <Button id="copyButton" fx:id="applyButton" disable="true" focusTraversable="true" maxHeight="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onAction="#applyResult" onKeyPressed="#applyButtonOnKeyPressed" prefHeight="26.0" text="%applyButtontext">
+          <font>
+            <Font size="13.0" />
+          </font>
+        </Button>
+      </children>
+    </HBox>
     <Label prefWidth="572.0" text="%nextTurnLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="196.0" />
     <Label layoutX="14.0" layoutY="14.0" text="%languageLabel" />
     <Button fx:id="creditsButton" mnemonicParsing="false" onAction="#creditsButtonOnAction" prefWidth="572.0" text="%licenseButton" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="265.0" />
@@ -47,12 +55,13 @@
             <Insets left="5.0" />
           </HBox.margin>
         </Label>
-        <Hyperlink fx:id="updateLink" disable="true" minHeight="-1.0" onAction="#updateLinkOnAction" prefHeight="-1.0" text="%updateLink" textFill="#0066ff" HBox.hgrow="ALWAYS">
+        <Hyperlink fx:id="updateLink" disable="false" minHeight="-1.0" onAction="#updateLinkOnAction" prefHeight="-1.0" text="%updateLink" textFill="#0066ff" HBox.hgrow="ALWAYS">
           <HBox.margin>
             <Insets right="14.0" />
           </HBox.margin>
         </Hyperlink>
       </children>
     </HBox>
+    <ProgressBar fx:id="loadLanguagesProgressBar" minHeight="-1.0" mouseTransparent="true" opacity="0.3" prefHeight="25.0" prefWidth="572.0" progress="0.0" visible="false" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="43.0" />
   </children>
 </AnchorPane>
