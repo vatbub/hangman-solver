@@ -219,6 +219,16 @@ public class TabFile {
 		}
 	}
 
+	/**
+	 * Searches the entire file for the given value
+	 * 
+	 * @param valueToFind
+	 *            The value to find.
+	 * @return The "outer" list is a list of columns, the the "inner" list is a
+	 *         list of hits. That means that {@code indexOf("someValue").get(0)}
+	 *         returns a list of row indexes where the value was found in column
+	 *         0.
+	 */
 	public List<List<Integer>> indexOf(String valueToFind) {
 		List<List<Integer>> res = new ArrayList<List<Integer>>();
 
@@ -229,6 +239,15 @@ public class TabFile {
 		return res;
 	}
 
+	/**
+	 * Searches for the given value in the given column.
+	 * 
+	 * @param valueToFind
+	 *            The value to find.
+	 * @param columnIndex
+	 *            The index of the column to be searched.
+	 * @return A list of row indexes where the value was found.
+	 */
 	public List<Integer> indexOf(String valueToFind, int columnIndex) {
 		List<Integer> res = new ArrayList<Integer>();
 
