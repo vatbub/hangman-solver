@@ -12,6 +12,7 @@ import com.mongodb.client.model.Updates;
 
 import common.Prefs;
 import languages.Language;
+import languages.TabFile;
 import logging.FOKLogger;
 
 /**
@@ -22,7 +23,7 @@ import logging.FOKLogger;
  *
  */
 public class HangmanStats {
-	
+
 	private static FOKLogger log = new FOKLogger(HangmanStats.class.getName());
 
 	/**
@@ -196,5 +197,25 @@ public class HangmanStats {
 			}
 		}
 
+	}
+
+	/**
+	 * Merges the database entries with the given dictionary to enhance the
+	 * dictionary.
+	 * 
+	 * @param dictionary
+	 *            The Dictionary to be merged
+	 * @param lang
+	 *            The language requested
+	 */
+	public static void mergeWithDictionary(TabFile dictionary, Language lang) {
+		MongoCollection<Document> coll = MongoSetup.getWordsUsedCollection();
+		for (Document doc : coll.find(Filters.eq("lang", lang.getLanguageCode()))) {
+			String word = doc.get("word").toString();
+			if (dictionary.indexOf(word, 2).isEmpty()){
+				// Word not yet present in dictionary so add it
+				dictionary.addRow(new String[]{"fromOnlineDatabase", lang.getLanguageCode() + ":lemma", word});
+			}
+		}
 	}
 }
