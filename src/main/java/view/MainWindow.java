@@ -99,8 +99,8 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	public Scene getScene() {
 		return scene;
 	}
-	
-	public Stage getStage(){
+
+	public Stage getStage() {
 		return stage;
 	}
 
@@ -720,10 +720,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 							currentSequence.requestFocus();
 						}
 					});
-				} catch (MongoTimeoutException e3){
-					// Just print it to the log
-					log.getLogger().log(Level.SEVERE, "You are probably not connected to the internet, are you?", e3);
-				}finally {
+				} finally {
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {

@@ -10,6 +10,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 
+import com.mongodb.MongoTimeoutException;
+
 import common.Common;
 import common.Config;
 import logging.FOKLogger;
@@ -286,6 +288,9 @@ public class Language {
 					me.mergeWithOnlineVersion();
 				} catch (IOException e) {
 					me.mergeWithOnlineVersionAsyncOnIOException();
+				}catch (MongoTimeoutException e3){
+					// Just print it to the log
+					log.getLogger().log(Level.SEVERE, "You are probably not connected to the internet, are you?", e3);
 				}
 			}
 		};
