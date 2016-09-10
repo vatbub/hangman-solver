@@ -6,8 +6,6 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
-import com.mongodb.MongoTimeoutException;
-
 import algorithm.*;
 import common.Common;
 import common.Config;
