@@ -409,33 +409,34 @@ public class TabFile {
 
 		System.out.print("Generating empty file in memory...");
 		// Generate the file
-		String str = "";
+		StringBuilder str = new StringBuilder();
 		System.out.println("Done!");
 
 		// Column headers
 		System.out.print("Processing column headers...");
 		for (String colHead : columnHeaders) {
-			str = str + colHead;
+			str.append(colHead);
 			if (!colHead.equals(columnHeaders[columnHeaders.length - 1])) {
-				str = str + "	";
+				str.append("	");
 			}
 		}
 		System.out.println("Done!");
 
-		str = str + "\n";
+		str.append("\n");
 
 		System.out.print("Processing table contents...");
 		// Values
 		for (String[] line : values) {
 			for (String el : line) {
-				str = str + el;
+				str.append(el);
 
 				if (!el.equals(line[line.length - 1])) {
-					str = str + "	";
+					str.append("	");
 				}
 			}
 
-			str = str + "\n";
+			str.append("\n");
+			// str = str + String.join("	", line) + "\n";
 		}
 
 		System.out.println("Done!");
@@ -443,7 +444,7 @@ public class TabFile {
 		System.out.print("Writing to disc...");
 
 		try {
-			FileUtils.writeStringToFile(destinationFile, str, "UTF-8");
+			FileUtils.writeStringToFile(destinationFile, str.toString(), "UTF-8");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
