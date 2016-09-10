@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
+import com.mongodb.MongoTimeoutException;
+
 import algorithm.*;
 import common.Common;
 import common.Config;
@@ -718,7 +720,10 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 							currentSequence.requestFocus();
 						}
 					});
-				} finally {
+				} catch (MongoTimeoutException e3){
+					// Just print it to the log
+					log.getLogger().log(Level.SEVERE, "You are probably not connected to the internet, are you?", e3);
+				}finally {
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
