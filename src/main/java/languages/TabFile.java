@@ -2,6 +2,7 @@ package languages;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +102,10 @@ public class TabFile {
 		createNewFile(columnHeaders);
 	}
 
+	public TabFile(File fileToRead) throws IOException {
+		this(fileToRead.toURI().toURL());
+	}
+
 	/**
 	 * Creates a new object representation of the specified *.tab file.
 	 * 
@@ -110,7 +115,7 @@ public class TabFile {
 	 *             if the file cannot be read.
 	 */
 	public TabFile(String originFileName) throws IOException {
-		this(new File(originFileName).toURI().toURL());
+		this(new File(originFileName));
 	}
 
 	/**
@@ -279,7 +284,9 @@ public class TabFile {
 	public void addRow(String[] newValues) {
 		if (newValues.length != getColumnCount()) {
 			throw new ArrayIndexOutOfBoundsException(
-					"The given values-array dows not match the column-count of this file.");
+					"The given values-array dows not match the column-count of this file. (The file has "
+							+ this.getColumnCount() + " columns and you wanted to add " + newValues.length
+							+ " columns)");
 		}
 
 		values.add(newValues);
@@ -395,6 +402,10 @@ public class TabFile {
 	}
 
 	public void save(String fileName) {
+		save(new File(fileName));
+	}
+
+	public void save(File destinationFile) {
 
 		System.out.print("Generating empty file in memory...");
 		// Generate the file
@@ -430,9 +441,9 @@ public class TabFile {
 		System.out.println("Done!");
 
 		System.out.print("Writing to disc...");
-		File f = new File(fileName);
+
 		try {
-			FileUtils.writeStringToFile(f, str, "UTF-8");
+			FileUtils.writeStringToFile(destinationFile, str, "UTF-8");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

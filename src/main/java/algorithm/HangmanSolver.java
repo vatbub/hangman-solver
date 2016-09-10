@@ -138,6 +138,7 @@ public class HangmanSolver {
 			log.getLogger().info("Loading language databases for " + lang.getHumanReadableName());
 			langOld = lang;
 			database = lang.getTabFile();
+			lang.mergeWithOnlineVersionAsync();
 		} catch (IOException e) {
 			log.getLogger().log(Level.SEVERE, "An error occurred", e);
 		}

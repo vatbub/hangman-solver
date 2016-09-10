@@ -209,13 +209,15 @@ public class HangmanStats {
 	 *            The language requested
 	 */
 	public static void mergeWithDictionary(TabFile dictionary, Language lang) {
+		log.getLogger().info("Merging offline dictionary for language " + lang.getLanguageCode() + " with online database...");
 		MongoCollection<Document> coll = MongoSetup.getWordsUsedCollection();
 		for (Document doc : coll.find(Filters.eq("lang", lang.getLanguageCode()))) {
 			String word = doc.get("word").toString();
 			if (dictionary.indexOf(word, 2).isEmpty()){
 				// Word not yet present in dictionary so add it
-				dictionary.addRow(new String[]{"fromOnlineDatabase", lang.getLanguageCode() + ":lemma", word});
+				dictionary.addRow(new String[]{"fromOnlineDatabase", lang.getLanguageCode() + ":lemma", word, " "});
 			}
 		}
+		log.getLogger().info("Merge finished");
 	}
 }

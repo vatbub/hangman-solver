@@ -1,5 +1,6 @@
 package common;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -89,6 +90,15 @@ public class Config {
 	 * replaced by the language code
 	 */
 	public static final String languageDictPattern = "/mergedLanguages/wn-merged-{langCode}.tab";
+
+	/**
+	 * The app saves an offline copy of the dictionary merged using
+	 * {@link Language#mergeWithOnlineVersion()} at the specified spot. The
+	 * specified file here is saved in a subfolder of the apps appData folder.
+	 * {langCode} will be replaced by the language code
+	 */
+	public static final String languageDictEnhancedPattern = "dictionaries" + File.separator + "{langCode}.tab";
+
 	/**
 	 * The path pattern to find the language code database.
 	 */
