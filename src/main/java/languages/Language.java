@@ -162,8 +162,7 @@ public class Language {
 	@Override
 	public boolean equals(Object anObject) {
 		if (anObject instanceof Language) {
-			if (this.getTabFileName().equals(((Language) anObject).getTabFileName())
-					&& this.getLanguageCode().equals(((Language) anObject).getLanguageCode())) {
+			if (this.getLanguageCode().equals(((Language) anObject).getLanguageCode())) {
 				return true;
 			} else {
 				return false;
