@@ -80,7 +80,7 @@ public class HangmanSolver {
 		// Go through all words
 		for (String word : words) {
 			// Get all words from the database with equal length
-			List<Word> wordsWithEqualLength = database.getValuesWithLength(2, 3, word.length());
+			List<String> wordsWithEqualLength = database.getValuesWithLength(2, word.length());
 
 			// Check if there are words that match 90%
 			String bestWord = database.getValueWithHighestCorrelation(2, word, proposedSolutions);
@@ -151,7 +151,7 @@ public class HangmanSolver {
 	 *            The list for which the most frequent char will be determined.
 	 * @return The most frequent char.
 	 */
-	private static char getMostFrequentChar(List<Word> wordsWithEqualLength) {
+	private static char getMostFrequentChar(List<String> wordsWithEqualLength) {
 		return getMostFrequentChar(wordsWithEqualLength, new char[0]);
 	}
 
@@ -167,7 +167,7 @@ public class HangmanSolver {
 	 *            the method acts like {@code getMostFrequentChar(words)}
 	 * @return The most frequent char.
 	 */
-	private static char getMostFrequentChar(List<Word> wordsWithEqualLength, char[] priorityChars) {
+	private static char getMostFrequentChar(List<String> wordsWithEqualLength, char[] priorityChars) {
 		ArrayList<Thread> threads = new ArrayList<Thread>();
 		AtomicInteger currentIndex = new AtomicInteger(0);
 		List<CustomAtomicInteger> charCounts = new ArrayList<CustomAtomicInteger>();
@@ -190,7 +190,7 @@ public class HangmanSolver {
 				public void run() {
 					int index = currentIndex.getAndIncrement();
 					while (index < wordsWithEqualLength.size()) {
-						countAllCharsInString(wordsWithEqualLength.get(index).getWord(), charCounts);
+						countAllCharsInString(wordsWithEqualLength.get(index), charCounts);
 
 						// Grab the next index
 						index = currentIndex.getAndIncrement();

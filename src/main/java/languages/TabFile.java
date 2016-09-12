@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,7 +14,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 
 import algorithm.HangmanSolver;
-import algorithm.Word;
 import common.*;
 
 public class TabFile {
@@ -73,7 +74,7 @@ public class TabFile {
 	/**
 	 * The values in this *.tab file.
 	 */
-	private ArrayList<String[]> values = new ArrayList<String[]>();
+	private ArrayList<ArrayListWithSortableKey<String>> values = new ArrayList<ArrayListWithSortableKey<String>>();
 
 	/**
 	 * Creates a new object representation of the specified *.tab file.
@@ -135,7 +136,12 @@ public class TabFile {
 		columnHeaders = scan.nextLine().split("	");
 
 		while (scan.hasNextLine()) {
-			values.add(scan.nextLine().split("	"));
+			ArrayListWithSortableKey<String> temp = new ArrayListWithSortableKey<String>(Arrays.asList(scan.nextLine().split("	")));
+			while (temp.size()<this.getColumnCount()){
+				// Fill it up
+				temp.add("");
+			}
+			values.add(temp);
 		}
 
 		scan.close();
@@ -218,7 +224,7 @@ public class TabFile {
 	 */
 	public String getValueAt(int row, int column) {
 		try {
-			return values.get(row)[column];
+			return values.get(row).get(column);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return "";
 		}
@@ -314,7 +320,7 @@ public class TabFile {
 	 *            The column of the cell to be replaced.
 	 */
 	public void setValueAt(String newValue, int row, int column) {
-		values.get(row)[column] = newValue;
+		values.get(row).set(column, newValue);
 	}
 
 	public void addRow(String[] newValues) {
@@ -325,7 +331,7 @@ public class TabFile {
 							+ " columns)");
 		}
 
-		values.add(newValues);
+		values.add(new ArrayListWithSortableKey<String>(Arrays.asList(newValues)));
 	}
 
 	/**
@@ -338,16 +344,12 @@ public class TabFile {
 	 * @return A {@link List} with all values in the specified column that have
 	 *         the specified length.
 	 */
-	public List<Word> getValuesWithLength(int column, int countColumn, int length) {
-		List<Word> res = new ArrayList<Word>();
+	public List<String> getValuesWithLength(int column, int length) {
+		List<String> res = new ArrayList<String>();
 
 		for (int i = 0; i < this.getRowCount(); i++) {
 			if (this.getValueAt(i, column).length() == length) {
-				if (!this.getValueAt(i, countColumn).replaceAll(" ", "").equals("")) {
-					res.add(new Word(this.getValueAt(i, column), Integer.parseInt(this.getValueAt(i, countColumn))));
-				} else {
-					res.add(new Word(this.getValueAt(i, column), 0));
-				}
+				res.add(this.getValueAt(i, column));
 			}
 		}
 
@@ -441,10 +443,46 @@ public class TabFile {
 		return equalLetters / str1.length();
 	}
 
+	/**
+	 * Sorts this TabFile.
+	 * 
+	 * @param sortKey
+	 *            The column that will be compared to sort values.
+	 */
+	public void sort(int sortKey) {
+		setSortKey(sortKey);
+		Collections.sort(values);
+	}
+	
+	public void sortDescending(int sortKey){
+		setSortKey(sortKey);
+		Collections.sort(values, Collections.reverseOrder());
+	}
+	
+	private void setSortKey(int sortKey){
+		for (ArrayListWithSortableKey<String> line : values) {
+			line.setSortKey(sortKey);
+		}
+	}
+
+	/**
+	 * Saves this TabFile at the specified location.
+	 * 
+	 * @param fileName
+	 *            The absolute qualified filename where the file should be
+	 *            saved. Existing files will be overwritten.
+	 */
 	public void save(String fileName) {
 		save(new File(fileName));
 	}
 
+	/**
+	 * Saves this TabFile to the specified {@link File}
+	 * 
+	 * @param destinationFile
+	 *            The {@link File} where this TabFile shall be saved in.
+	 *            Existing files will be overwritten.
+	 */
 	public void save(File destinationFile) {
 
 		System.out.print("Generating empty file in memory...");
@@ -466,11 +504,11 @@ public class TabFile {
 
 		System.out.print("Processing table contents...");
 		// Values
-		for (String[] line : values) {
+		for (ArrayListWithSortableKey<String> line : values) {
 			for (String el : line) {
 				str.append(el);
 
-				if (!el.equals(line[line.length - 1])) {
+				if (!el.equals(line.get(line.size() - 1))) {
 					str.append("	");
 				}
 			}
@@ -524,12 +562,12 @@ public class TabFile {
 		TabFile res = new TabFile(colHeads);
 
 		for (int lineIndex = 0; lineIndex < origin.getRowCount(); lineIndex++) {
-			String[] line = origin.values.get(lineIndex);
+			ArrayListWithSortableKey<String> line = origin.values.get(lineIndex);
 			// Split at spaces
 			String[] words;
 
 			try {
-				words = line[originWordColumnIndex].split(" ");
+				words = line.get(originWordColumnIndex).split(" ");
 			} catch (ArrayIndexOutOfBoundsException e) {
 				words = "".split(" ");
 			}
