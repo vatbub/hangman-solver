@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 
 import algorithm.HangmanSolver;
+import algorithm.Word;
 import common.*;
 
 public class TabFile {
@@ -265,12 +266,48 @@ public class TabFile {
 	}
 
 	/**
+	 * Replaces the old value at the specified positions in the *.tab-file with
+	 * the new value.
+	 * 
+	 * @param newValue
+	 *            The new value o fthe given cells
+	 * @param columnsAndRows
+	 *            A list of column- and row indexes where the value will be
+	 *            replaced. See the return value of {@link #indexOf(String)} to
+	 *            see how the list needs to be built up.
+	 * @see #indexOf(String)
+	 */
+	public void setValueAt(String newValue, List<List<Integer>> columnsAndRows) {
+		for (int c = 0; c < columnsAndRows.size(); c++) {
+			setValueAt(newValue, columnsAndRows.get(c), c);
+		}
+	}
+
+	/**
+	 * Replaces the old value at the specified positions in the *.tab-file with
+	 * the new value.
+	 * 
+	 * @param newValue
+	 *            The new value of the given cells
+	 * @param rows
+	 *            A list of rows the values will be replaced
+	 * @param column
+	 *            The column of the cells to be replaced
+	 * @see #indexOf(String, int)
+	 */
+	public void setValueAt(String newValue, List<Integer> rows, int column) {
+		for (int row : rows) {
+			setValueAt(newValue, row, column);
+		}
+	}
+
+	/**
 	 * Replaces the old value at the given position in the *.tab-file with the
 	 * new Value. This method cannot add rows to the *.tab-file. To add rows,
 	 * use {@link #addRow}
 	 * 
 	 * @param newValue
-	 *            Thenew value of the given cell
+	 *            The new value of the given cell
 	 * @param row
 	 *            The row of the cell to be replaced.
 	 * @param column
@@ -301,12 +338,16 @@ public class TabFile {
 	 * @return A {@link List} with all values in the specified column that have
 	 *         the specified length.
 	 */
-	public List<String> getValuesWithLength(int column, int length) {
-		List<String> res = new ArrayList<String>();
+	public List<Word> getValuesWithLength(int column, int countColumn, int length) {
+		List<Word> res = new ArrayList<Word>();
 
 		for (int i = 0; i < this.getRowCount(); i++) {
 			if (this.getValueAt(i, column).length() == length) {
-				res.add(this.getValueAt(i, column));
+				if (!this.getValueAt(i, countColumn).replaceAll(" ", "").equals("")) {
+					res.add(new Word(this.getValueAt(i, column), Integer.parseInt(this.getValueAt(i, countColumn))));
+				} else {
+					res.add(new Word(this.getValueAt(i, column), 0));
+				}
 			}
 		}
 
@@ -435,7 +476,7 @@ public class TabFile {
 			}
 
 			str.append("\n");
-			// str = str + String.join("	", line) + "\n";
+			// str = str + String.join(" ", line) + "\n";
 		}
 
 		System.out.println("Done!");

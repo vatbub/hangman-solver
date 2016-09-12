@@ -213,9 +213,14 @@ public class HangmanStats {
 		MongoCollection<Document> coll = MongoSetup.getWordsUsedCollection();
 		for (Document doc : coll.find(Filters.eq("lang", lang.getLanguageCode()))) {
 			String word = doc.get("word").toString();
-			if (dictionary.indexOf(word, 2).isEmpty()){
+			int count = doc.getInteger("count");
+			
+			List<Integer>indexList = dictionary.indexOf(word, 2);
+			if (indexList.isEmpty()){
 				// Word not yet present in dictionary so add it
-				dictionary.addRow(new String[]{"fromOnlineDatabase", lang.getLanguageCode() + ":lemma", word, " "});
+				dictionary.addRow(new String[]{"fromOnlineDatabase", lang.getLanguageCode() + ":lemma", word, Integer.toString(count)});
+			}else{
+				dictionary.setValueAt(Integer.toString(count), indexList, 3);
 			}
 		}
 		log.getLogger().info("Merge finished");

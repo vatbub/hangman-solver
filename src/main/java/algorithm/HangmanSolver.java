@@ -80,7 +80,7 @@ public class HangmanSolver {
 		// Go through all words
 		for (String word : words) {
 			// Get all words from the database with equal length
-			List<String> wordsWithEqualLength = database.getValuesWithLength(2, word.length());
+			List<Word> wordsWithEqualLength = database.getValuesWithLength(2, 3, word.length());
 
 			// Check if there are words that match 90%
 			String bestWord = database.getValueWithHighestCorrelation(2, word, proposedSolutions);
@@ -147,18 +147,18 @@ public class HangmanSolver {
 	/**
 	 * Returns the most frequent char in the given word list.
 	 * 
-	 * @param words
+	 * @param wordsWithEqualLength
 	 *            The list for which the most frequent char will be determined.
 	 * @return The most frequent char.
 	 */
-	private static char getMostFrequentChar(List<String> words) {
-		return getMostFrequentChar(words, new char[0]);
+	private static char getMostFrequentChar(List<Word> wordsWithEqualLength) {
+		return getMostFrequentChar(wordsWithEqualLength, new char[0]);
 	}
 
 	/**
 	 * Returns the most frequent char in the given word list.
 	 * 
-	 * @param words
+	 * @param wordsWithEqualLength
 	 *            The list for which the most frequent char will be determined.
 	 * @param priorityChars
 	 *            The ranking of most frequent chars will be filtered so that it
@@ -167,7 +167,7 @@ public class HangmanSolver {
 	 *            the method acts like {@code getMostFrequentChar(words)}
 	 * @return The most frequent char.
 	 */
-	private static char getMostFrequentChar(List<String> words, char[] priorityChars) {
+	private static char getMostFrequentChar(List<Word> wordsWithEqualLength, char[] priorityChars) {
 		ArrayList<Thread> threads = new ArrayList<Thread>();
 		AtomicInteger currentIndex = new AtomicInteger(0);
 		List<CustomAtomicInteger> charCounts = new ArrayList<CustomAtomicInteger>();
@@ -182,15 +182,15 @@ public class HangmanSolver {
 		// ArrayList<AtomicInteger>(Collections.nCopies(Character.MAX_VALUE, new
 		// AtomicInteger(0)));
 
-		log.getLogger().info("Dictionary size: " + words.size());
+		log.getLogger().info("Dictionary size: " + wordsWithEqualLength.size());
 		System.out.println("Counting...");
 		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
 			threads.add(new Thread() {
 				@Override
 				public void run() {
 					int index = currentIndex.getAndIncrement();
-					while (index < words.size()) {
-						countAllCharsInString(words.get(index), charCounts);
+					while (index < wordsWithEqualLength.size()) {
+						countAllCharsInString(wordsWithEqualLength.get(index).getWord(), charCounts);
 
 						// Grab the next index
 						index = currentIndex.getAndIncrement();
@@ -295,7 +295,10 @@ public class HangmanSolver {
 	 *            multithreading-context, the List specified as
 	 *            {@code countList} must contain
 	 *            {@link CustomAtomicInteger}s.<br>
-	 *            <b>Because of a better performance, this method uses a given list and modifies it rather than creating a new one that has to be summed up to existing ones in another slow {@code for}-loop</b>
+	 *            <b>Because of a better performance, this method uses a given
+	 *            list and modifies it rather than creating a new one that has
+	 *            to be summed up to existing ones in another slow
+	 *            {@code for}-loop</b>
 	 */
 	private static void countAllCharsInString(String str, List<CustomAtomicInteger> countList) {
 		for (char chr : str.toCharArray()) {
