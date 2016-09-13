@@ -6,62 +6,78 @@
 <?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 <?scenebuilder-preview-i18n-resource strings/messages.properties?>
+<?scenebuilder-stylesheet MainWindow.css?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="532.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.MainWindow">
+<StackPane id="StackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="532.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.MainWindow">
   <children>
-    <Label fx:id="actionLabel" maxWidth="1.7976931348623157E308" prefWidth="572.0" text="%enterInitialSequence" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="84.0" />
-    <ComboBox fx:id="languageSelector" editable="false" prefWidth="572.0" promptText="%languageSelector.PromptText" style="" styleClass=".combo-box:disabled" visible="true" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="43.0">
-      <items>
-        <FXCollections fx:factory="observableArrayList" />
-      </items>
-      <stylesheets>
-        <URL value="@MainWindow.css" />
-      </stylesheets>
-    </ComboBox>
-    <TextField fx:id="currentSequence" maxWidth="1.7976931348623157E308" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="120.0" />
-    <Button fx:id="getNextLetter" defaultButton="true" mnemonicParsing="false" onAction="#getNextLetterAction" prefWidth="571.9998779296875" text="%computeNextLetterButtonLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="162.0" />
-    <HBox id="HBox" alignment="CENTER" prefWidth="572.0" spacing="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="228.0">
+    <AnchorPane fx:id="oldGui" prefHeight="200.0" prefWidth="200.0" visible="false">
       <children>
-        <TextField fx:id="result" disable="false" editable="false" maxHeight="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" promptText="%clickGenerateButtonText" text="" HBox.hgrow="ALWAYS" />
-        <Button id="copyButton" fx:id="applyButton" disable="true" focusTraversable="true" maxHeight="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onAction="#applyResult" onKeyPressed="#applyButtonOnKeyPressed" prefHeight="26.0" text="%applyButtontext">
-          <font>
-            <Font size="13.0" />
-          </font>
-        </Button>
+        <TextArea fx:id="proposedSolutions" editable="false" prefHeight="55.0" prefWidth="572.0" wrapText="true" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="443.0" />
+        <Label fx:id="actionLabel" maxWidth="1.7976931348623157E308" prefWidth="572.0" text="%enterInitialSequence" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="84.0" />
+        <ComboBox fx:id="languageSelector" editable="false" prefWidth="572.0" promptText="%languageSelector.PromptText" style="" styleClass=".combo-box:disabled" visible="true" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="43.0">
+          <items>
+            <FXCollections fx:factory="observableArrayList" />
+          </items>
+          <stylesheets>
+            <URL value="@MainWindow.css" />
+          </stylesheets>
+        </ComboBox>
+        <TextField fx:id="currentSequence" maxWidth="1.7976931348623157E308" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="120.0" />
+        <Button fx:id="getNextLetter" defaultButton="true" mnemonicParsing="false" onAction="#getNextLetterAction" prefWidth="571.9998779296875" text="%computeNextLetterButtonLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="162.0" />
+        <HBox id="HBox" alignment="CENTER" prefWidth="572.0" spacing="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="228.0">
+          <children>
+            <TextField fx:id="result" disable="false" editable="false" maxHeight="1.7976931348623157E308" prefHeight="-1.0" prefWidth="-1.0" promptText="%clickGenerateButtonText" text="" HBox.hgrow="ALWAYS" />
+            <Button id="copyButton" fx:id="applyButton" disable="true" focusTraversable="true" maxHeight="1.7976931348623157E308" minHeight="0.0" mnemonicParsing="false" onAction="#applyResult" onKeyPressed="#applyButtonOnKeyPressed" prefHeight="26.0" text="%applyButtontext">
+              <font>
+                <Font size="13.0" />
+              </font>
+            </Button>
+          </children>
+        </HBox>
+        <Label prefWidth="572.0" text="%nextTurnLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="196.0" />
+        <Label layoutX="14.0" layoutY="14.0" text="%languageLabel" />
+        <Button fx:id="creditsButton" mnemonicParsing="false" onAction="#creditsButtonOnAction" prefWidth="572.0" text="%licenseButton" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="302.0" />
+        <CheckBox fx:id="shareThoughtsCheckbox" layoutX="14.0" layoutY="341.0" mnemonicParsing="false" onAction="#shareThoughtsCheckboxOnAction" prefWidth="572.0" text="%shareThoughtsCheckbox" />
+        <ProgressBar fx:id="loadLanguagesProgressBar" minHeight="-1.0" mouseTransparent="true" opacity="0.3" prefHeight="25.0" prefWidth="572.0" progress="0.0" visible="false" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="43.0" />
+        <HBox prefHeight="25.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0">
+          <children>
+            <Label id="current" fx:id="currentAppVersionTextLabel" onMouseClicked="#currentAppVersionTextLabelOnMouseClicked" prefHeight="28.0" text="%version.label" HBox.hgrow="ALWAYS">
+              <HBox.margin>
+                <Insets left="14.0" />
+              </HBox.margin>
+            </Label>
+            <Label fx:id="versionLabel" alignment="CENTER_LEFT" prefHeight="28.0" text="unknown" HBox.hgrow="ALWAYS">
+              <HBox.margin>
+                <Insets left="5.0" />
+              </HBox.margin>
+            </Label>
+            <Hyperlink fx:id="updateLink" disable="false" minHeight="-1.0" onAction="#updateLinkOnAction" prefHeight="-1.0" text="%updateLink" textFill="#0066ff" HBox.hgrow="ALWAYS">
+              <HBox.margin>
+                <Insets right="14.0" />
+              </HBox.margin>
+            </Hyperlink>
+          </children>
+        </HBox>
+        <Label prefWidth="572.0" text="%proposedSolutions.Label" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="410.0" />
+        <Label id="thougts" fx:id="thoughts" alignment="TOP_LEFT" labelFor="$thoughts" prefHeight="27.0" prefWidth="572.0" text="" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="376.0" />
+        <Button fx:id="newGameButton" layoutX="14.0" layoutY="266.0" mnemonicParsing="false" onAction="#newGameButtonOnAction" prefWidth="572.0" text="%newGameButton" />
       </children>
-    </HBox>
-    <Label prefWidth="572.0" text="%nextTurnLabel" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="196.0" />
-    <Label layoutX="14.0" layoutY="14.0" text="%languageLabel" />
-    <Button fx:id="creditsButton" mnemonicParsing="false" onAction="#creditsButtonOnAction" prefWidth="572.0" text="%licenseButton" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="265.0" />
-    <Button fx:id="newGameButton" mnemonicParsing="false" onAction="#newGameButtonOnAction" prefWidth="572.0" text="%newGameButton" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="298.0" />
-    <CheckBox fx:id="shareThoughtsCheckbox" mnemonicParsing="false" onAction="#shareThoughtsCheckboxOnAction" prefWidth="572.0" text="%shareThoughtsCheckbox" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="340.0" />
-    <Label id="thougts" fx:id="thoughts" alignment="TOP_LEFT" labelFor="$thoughts" prefHeight="27.0" prefWidth="572.0" text="" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="376.0" />
-    <Label prefWidth="572.0" text="%proposedSolutions.Label" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="410.0" />
-    <TextArea fx:id="proposedSolutions" editable="false" prefHeight="55.0" prefWidth="572.0" wrapText="true" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="443.0" />
-    <HBox prefHeight="25.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0">
+    </AnchorPane>
+    <AnchorPane fx:id="mainMenu" prefHeight="200.0" prefWidth="200.0" visible="true">
       <children>
-        <Label id="current" fx:id="currentAppVersionTextLabel" onMouseClicked="#currentAppVersionTextLabelOnMouseClicked" prefHeight="28.0" text="%version.label" HBox.hgrow="ALWAYS">
-          <HBox.margin>
-            <Insets left="14.0" />
-          </HBox.margin>
-        </Label>
-        <Label fx:id="versionLabel" alignment="CENTER_LEFT" prefHeight="28.0" text="unknown" HBox.hgrow="ALWAYS">
-          <HBox.margin>
-            <Insets left="5.0" />
-          </HBox.margin>
-        </Label>
-        <Hyperlink fx:id="updateLink" disable="false" minHeight="-1.0" onAction="#updateLinkOnAction" prefHeight="-1.0" text="%updateLink" textFill="#0066ff" HBox.hgrow="ALWAYS">
-          <HBox.margin>
-            <Insets right="14.0" />
-          </HBox.margin>
-        </Hyperlink>
+        <Label layoutX="14.0" layoutY="14.0" prefHeight="76.0" prefWidth="308.0" styleClass="text" text="Hangman Solver" />
+        <ImageView fitHeight="401.61674220681834" fitWidth="278.7981643676758" layoutX="15.0" layoutY="116.0" pickOnBounds="true" preserveRatio="true">
+          <image>
+            <Image url="@graphics/Hangman_dead.PNG" />
+          </image>
+        </ImageView>
       </children>
-    </HBox>
-    <ProgressBar fx:id="loadLanguagesProgressBar" minHeight="-1.0" mouseTransparent="true" opacity="0.3" prefHeight="25.0" prefWidth="572.0" progress="0.0" visible="false" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="43.0" />
+    </AnchorPane>
   </children>
-</AnchorPane>
+</StackPane>

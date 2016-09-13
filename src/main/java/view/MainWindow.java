@@ -41,6 +41,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import languages.Language;
@@ -129,6 +130,9 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	 * fx:id="applyButton"
 	 */
 	private Button applyButton; // Value injected by FXMLLoader
+	
+	@FXML // fx:id="oldGui"
+    private AnchorPane oldGui; // Value injected by FXMLLoader
 
 	@FXML
 	/**

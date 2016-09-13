@@ -1,4 +1,12 @@
 
+@font-face {
+    src: url("../Silent_Reaction.ttf");
+}
+
+.text {
+    -fx-font-family: "Silent Reaction";
+}
+
 .progress-bar > .track {
   
   -fx-control-inner-background: transparent;
