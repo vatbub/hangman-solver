@@ -136,8 +136,9 @@ public class TabFile {
 		columnHeaders = scan.nextLine().split("	");
 
 		while (scan.hasNextLine()) {
-			ArrayListWithSortableKey<String> temp = new ArrayListWithSortableKey<String>(Arrays.asList(scan.nextLine().split("	")));
-			while (temp.size()<this.getColumnCount()){
+			ArrayListWithSortableKey<String> temp = new ArrayListWithSortableKey<String>(
+					Arrays.asList(scan.nextLine().split("	")));
+			while (temp.size() < this.getColumnCount()) {
 				// Fill it up
 				temp.add("");
 			}
@@ -231,7 +232,8 @@ public class TabFile {
 	}
 
 	/**
-	 * Searches the entire file for the given value
+	 * Searches the entire file for the given value. The comparison is case
+	 * sensitive.
 	 * 
 	 * @param valueToFind
 	 *            The value to find.
@@ -241,13 +243,73 @@ public class TabFile {
 	 *         0.
 	 */
 	public List<List<Integer>> indexOf(String valueToFind) {
+		return indexOf(valueToFind, false);
+	}
+
+	/**
+	 * Searches the entire file for the given value. The comparison is case
+	 * insensitive.
+	 * 
+	 * @param valueToFind
+	 *            The value to find.
+	 * @return The "outer" list is a list of columns, the the "inner" list is a
+	 *         list of hits. That means that {@code indexOf("someValue").get(0)}
+	 *         returns a list of row indexes where the value was found in column
+	 *         0.
+	 */
+	public List<List<Integer>> indexOfIgnoreCase(String valueToFind) {
+		return indexOf(valueToFind, true);
+	}
+
+	/**
+	 * Searches the entire file for the given value.
+	 * 
+	 * @param valueToFind
+	 *            The value to find.
+	 * @param ignoreCase
+	 *            if {@code true}, the string comparison will be case
+	 *            insensitive.
+	 * @return The "outer" list is a list of columns, the the "inner" list is a
+	 *         list of hits. That means that {@code indexOf("someValue").get(0)}
+	 *         returns a list of row indexes where the value was found in column
+	 *         0.
+	 */
+	public List<List<Integer>> indexOf(String valueToFind, boolean ignoreCase) {
 		List<List<Integer>> res = new ArrayList<List<Integer>>();
 
 		for (int i = 0; i < this.getColumnCount(); i++) {
-			res.add(indexOf(valueToFind, i));
+			res.add(indexOf(valueToFind, i, ignoreCase));
 		}
 
 		return res;
+	}
+
+	/**
+	 * Searches for the given value in the given column. The comparison is case
+	 * insensitive.
+	 * 
+	 * @param valueToFind
+	 *            The value to find.
+	 * @param columnIndex
+	 *            The index of the column to be searched.
+	 * @return A list of row indexes where the value was found.
+	 */
+	public List<Integer> indexOfIgnoreCase(String valueToFind, int columnIndex) {
+		return indexOf(valueToFind, columnIndex, true);
+	}
+
+	/**
+	 * Searches for the given value in the given column. The comparison is case
+	 * sensitive.
+	 * 
+	 * @param valueToFind
+	 *            The value to find.
+	 * @param columnIndex
+	 *            The index of the column to be searched.
+	 * @return A list of row indexes where the value was found.
+	 */
+	public List<Integer> indexOf(String valueToFind, int columnIndex) {
+		return indexOf(valueToFind, columnIndex, false);
 	}
 
 	/**
@@ -257,14 +319,23 @@ public class TabFile {
 	 *            The value to find.
 	 * @param columnIndex
 	 *            The index of the column to be searched.
+	 * @param ignoreCase
+	 *            if {@code true}, the string comparison will be case
+	 *            insensitive.
 	 * @return A list of row indexes where the value was found.
 	 */
-	public List<Integer> indexOf(String valueToFind, int columnIndex) {
+	public List<Integer> indexOf(String valueToFind, int columnIndex, boolean ignoreCase) {
 		List<Integer> res = new ArrayList<Integer>();
 
 		for (int i = 0; i < this.getRowCount(); i++) {
-			if (this.getValueAt(i, columnIndex).equals(valueToFind)) {
-				res.add(i);
+			if (ignoreCase) {
+				if (this.getValueAt(i, columnIndex).equalsIgnoreCase(valueToFind)) {
+					res.add(i);
+				}
+			} else {
+				if (this.getValueAt(i, columnIndex).equals(valueToFind)) {
+					res.add(i);
+				}
 			}
 		}
 
@@ -453,13 +524,13 @@ public class TabFile {
 		setSortKey(sortKey);
 		Collections.sort(values);
 	}
-	
-	public void sortDescending(int sortKey){
+
+	public void sortDescending(int sortKey) {
 		setSortKey(sortKey);
 		Collections.sort(values, Collections.reverseOrder());
 	}
-	
-	private void setSortKey(int sortKey){
+
+	private void setSortKey(int sortKey) {
 		for (ArrayListWithSortableKey<String> line : values) {
 			line.setSortKey(sortKey);
 		}

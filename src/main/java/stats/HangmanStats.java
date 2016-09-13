@@ -218,7 +218,7 @@ public class HangmanStats {
 			String word = doc.get("word").toString();
 			int count = doc.getInteger("count");
 
-			List<Integer> indexList = dictionary.indexOf(word, 2);
+			List<Integer> indexList = dictionary.indexOfIgnoreCase(word, 2);
 			if (indexList.isEmpty()) {
 				// Word not yet present in dictionary so add it
 				dictionary.addRow(new String[] { "fromOnlineDatabase", lang.getLanguageCode() + ":lemma", word,
