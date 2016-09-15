@@ -1,10 +1,32 @@
 
-@font-face {
-    src: url("../Silent_Reaction.ttf");
-}
-
 .text {
     -fx-font-family: "Silent Reaction";
+}
+
+.title{
+	-fx-font-size: 50;
+	-fx-text-fill: white;
+}
+
+.button{
+	-fx-font-size: 25;
+	-fx-background-image: url('/view/graphics/Button.png');
+	-fx-background-size: contain;
+	-fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+}
+
+.background{
+	-fx-background-color: darkolivegreen;
+}
+
+#hangmanPane{
+	-fx-background-image: url('/view/graphics/Hangman_dead.PNG');
+	-fx-background-size: contain;
+	-fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
 }
 
 .progress-bar > .track {

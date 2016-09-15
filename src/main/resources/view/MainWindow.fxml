@@ -6,6 +6,7 @@
 <?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
@@ -14,7 +15,7 @@
 <?scenebuilder-preview-i18n-resource strings/messages.properties?>
 <?scenebuilder-stylesheet MainWindow.css?>
 
-<StackPane id="StackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="532.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.MainWindow">
+<StackPane id="StackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="633.0" prefWidth="600.0000999999975" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.MainWindow">
   <children>
     <AnchorPane fx:id="oldGui" prefHeight="200.0" prefWidth="200.0" visible="false">
       <children>
@@ -69,15 +70,26 @@
         <Button fx:id="newGameButton" layoutX="14.0" layoutY="266.0" mnemonicParsing="false" onAction="#newGameButtonOnAction" prefWidth="572.0" text="%newGameButton" />
       </children>
     </AnchorPane>
-    <AnchorPane fx:id="mainMenu" prefHeight="200.0" prefWidth="200.0" visible="true">
+    <AnchorPane fx:id="mainMenu" prefHeight="200.0" prefWidth="200.0" styleClass="background" visible="true">
       <children>
-        <Label layoutX="14.0" layoutY="14.0" prefHeight="76.0" prefWidth="308.0" styleClass="text" text="Hangman Solver" />
-        <ImageView fitHeight="401.61674220681834" fitWidth="278.7981643676758" layoutX="15.0" layoutY="116.0" pickOnBounds="true" preserveRatio="true">
-          <image>
-            <Image url="@graphics/Hangman_dead.PNG" />
-          </image>
-        </ImageView>
+        <Label alignment="TOP_CENTER" prefHeight="150.0" prefWidth="513.0" styleClass="title" text="Hangman Solver" wrapText="true" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="34.0" />
+        <HBox id="HBox" fx:id="mainMenuHBox" alignment="CENTER" prefWidth="512.9999000000025" spacing="5.0" AnchorPane.bottomAnchor="49.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="184.0">
+          <children>
+            <AnchorPane id="hangmanPane" fx:id="hangmanView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="200.0" HBox.hgrow="SOMETIMES" />
+            <VBox id="VBox" alignment="CENTER" prefHeight="216.0" spacing="5.0" HBox.hgrow="ALWAYS">
+              <children>
+                <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="218.0" text="New game" VBox.vgrow="ALWAYS" />
+                <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="218.0" text="Settings" VBox.vgrow="ALWAYS" />
+                <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="218.0" text="How it works" VBox.vgrow="ALWAYS" />
+                <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="218.0" text="Privacy &amp; Imprint" VBox.vgrow="ALWAYS" />
+              </children>
+            </VBox>
+          </children>
+        </HBox>
       </children>
+      <effect>
+        <InnerShadow blurType="GAUSSIAN" color="#103300" height="255.0" radius="127.0" width="255.0" />
+      </effect>
     </AnchorPane>
   </children>
 </StackPane>

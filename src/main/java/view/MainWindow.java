@@ -37,11 +37,13 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -99,8 +101,8 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	public Scene getScene() {
 		return scene;
 	}
-	
-	public Stage getStage(){
+
+	public Stage getStage() {
 		return stage;
 	}
 
@@ -131,9 +133,15 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	 * fx:id="applyButton"
 	 */
 	private Button applyButton; // Value injected by FXMLLoader
-	
+
 	@FXML // fx:id="oldGui"
-    private AnchorPane oldGui; // Value injected by FXMLLoader
+	private AnchorPane oldGui; // Value injected by FXMLLoader
+
+	@FXML // fx:id="mainMenu"
+	private AnchorPane mainMenu; // Value injected by FXMLLoader
+
+	@FXML // fx:id="mainMenuHBox"
+	private HBox mainMenuHBox; // Value injected by FXMLLoader
 
 	@FXML
 	/**
@@ -204,6 +212,9 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	 * fx:id="versionLabel"
 	 */
 	private Label versionLabel; // Value injected by FXMLLoader
+
+	@FXML // fx:id="hangmanView"
+	private AnchorPane hangmanView; // Value injected by FXMLLoader
 
 	@FXML
 	/**
@@ -505,7 +516,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 				updateThread.setName("updateThread");
 				updateThread.start();
 			}
-			
+
 			Font.loadFont(MainWindow.class.getResourceAsStream("Silent_Reaction.ttf"), 14);
 
 			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"), bundle);
@@ -545,9 +556,13 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		assert currentAppVersionTextLabel != null : "fx:id=\"currentAppVersionTextLabel\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert currentSequence != null : "fx:id=\"currentSequence\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert getNextLetter != null : "fx:id=\"getNextLetter\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert hangmanView != null : "fx:id=\"hangmanView\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert languageSelector != null : "fx:id=\"languageSelector\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert loadLanguagesProgressBar != null : "fx:id=\"loadLanguagesProgressBar\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert mainMenu != null : "fx:id=\"mainMenu\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert mainMenuHBox != null : "fx:id=\"mainMenuHBox\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert newGameButton != null : "fx:id=\"newGameButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert oldGui != null : "fx:id=\"oldGui\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert proposedSolutions != null : "fx:id=\"proposedSolutions\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert result != null : "fx:id=\"result\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert shareThoughtsCheckbox != null : "fx:id=\"shareThoughtsCheckbox\" was not injected: check your FXML file 'MainWindow.fxml'.";
@@ -557,6 +572,31 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 
 		// Initialize your logic here: all @FXML variables will have been
 		// injected
+		
+		// We need this ugly workaround to give the image half of the window
+		Thread bindPropertyThread = new Thread() {
+			@Override
+			public void run() {
+				boolean finished = false;
+				while (!finished) {
+					System.err.println("Started");
+					try {
+						hangmanView.prefWidthProperty().bind(mainMenuHBox.widthProperty().divide(2));
+						// We did it apparently
+						finished = true;
+					} catch (NullPointerException e) {
+						// Ignore
+					} catch (Exception e) {
+						// TODO: print it for now
+						e.printStackTrace();
+					}
+				}
+				System.err.println("Stopped");
+			}
+		};
+
+		bindPropertyThread.setName("bindPropertyThread");
+		bindPropertyThread.start();
 
 		// Initialize the language search field.
 		new AutoCompleteComboBoxListener<String>(languageSelector);
