@@ -42,6 +42,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import languages.Language;
@@ -504,6 +505,8 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 				updateThread.setName("updateThread");
 				updateThread.start();
 			}
+			
+			Font.loadFont(MainWindow.class.getResourceAsStream("Silent_Reaction.ttf"), 14);
 
 			Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"), bundle);
 
