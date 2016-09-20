@@ -264,7 +264,6 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	 */
 	@FXML
 	void applyButtonOnKeyPressed(KeyEvent event) {
-		System.out.println(event.getCode());
 		if (!event.getCode().equals(KeyCode.ENTER) && !event.getCode().equals(KeyCode.SPACE)) {
 			// If any other Key than ENTER or SPACE is pressed (they have
 			// special meanings already handled by JavaFX
