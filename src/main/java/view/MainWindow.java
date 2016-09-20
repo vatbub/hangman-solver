@@ -325,6 +325,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 						newSequence = newSequence + " ";
 					}
 					newSequence = newSequence + newWord;
+					wordReplaced=true;
 				}
 			}
 		} else {
@@ -359,6 +360,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 						newSequence = newSequence + " ";
 					}
 					newSequence = newSequence + newWord;
+					wordReplaced=true;
 				}
 			}
 		}
