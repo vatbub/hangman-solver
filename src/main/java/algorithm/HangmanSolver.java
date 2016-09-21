@@ -44,7 +44,11 @@ public class HangmanSolver {
 	 * @see Result
 	 */
 	public static Result solve(String currentSequence, Language lang) {
-		
+
+		if (currentSequence.equals("Hang_an ____er")) {
+			System.out.println("Stopping...");
+		}
+
 		ResultList resultList = new ResultList();
 
 		if (!lang.equals(langOld) || database == null) {
@@ -76,18 +80,29 @@ public class HangmanSolver {
 
 			// Find the best score
 			int maxIndex = 0;
+			int maxIndexCopy;
 			ResultList maxValues = new ResultList();
+			
+			// find first valid solution
+			while (resultList.get(maxIndex).resultType != ResultType.letter){
+				maxIndex++;
+			}
+			
+			maxIndexCopy = maxIndex;
 
-			for (int i = 0; i < resultList.size(); i++) {
-				if (resultList.get(i).bestCharScore > resultList.get(maxIndex).bestCharScore && resultList.get(i).resultType==ResultType.letter) {
-					// new max found
-					maxIndex = i;
-					maxValues = new ResultList();
-					maxValues.add(resultList.get(i));
-				} else if (resultList.get(i).bestCharScore == resultList.get(maxIndex).bestCharScore) {
-					// found another letter with the same score so add it to the
-					// list too
-					maxValues.add(resultList.get(i));
+			for (int i = maxIndexCopy; i < resultList.size(); i++) {
+				if (resultList.get(i).resultType == ResultType.letter) {
+					if (resultList.get(i).bestCharScore > resultList.get(maxIndex).bestCharScore) {
+						// new max found
+						maxIndex = i;
+						maxValues = new ResultList();
+						maxValues.add(resultList.get(i));
+					} else if (resultList.get(i).bestCharScore == resultList.get(maxIndex).bestCharScore) {
+						// found another letter with the same score so add it to
+						// the
+						// list too
+						maxValues.add(resultList.get(i));
+					}
 				}
 			}
 
@@ -112,14 +127,12 @@ public class HangmanSolver {
 				// Get the char with most appearances
 				Map.Entry<Character, Integer> maxEntry = null;
 
-				for (Entry<Character, Integer> entry : charCounts.entrySet())
-				{
-				    if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
-				    {
-				        maxEntry = entry;
-				    }
+				for (Entry<Character, Integer> entry : charCounts.entrySet()) {
+					if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
+						maxEntry = entry;
+					}
 				}
-				
+
 				globalResult = resultList.getFirstResultWithBestChar(maxEntry.getKey());
 			}
 
