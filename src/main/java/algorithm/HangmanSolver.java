@@ -55,16 +55,6 @@ public class HangmanSolver {
 		// Split the pattern up in words
 		ArrayList<String> words = new ArrayList<String>(Arrays.asList(currentSequence.split(" ")));
 
-		// Remove all words that don't contain an underscore as they are fully
-		// solved
-		/*int indexCorr = 0;
-		for (int i = 0; i < words.size(); i++) {
-			if (!words.get(i - indexCorr).contains("_")) {
-				words.remove(i - indexCorr);
-				indexCorr = indexCorr + 1;
-			}
-		}*/
-
 		// Go through all words
 		for (String word : words) {
 			resultList.add(solveWord(word, lang));
