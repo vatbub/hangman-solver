@@ -316,7 +316,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 					for (int t = 0; t < oldWord.length(); t++) {
 						if (oldWord.charAt(t) == '_') {
 							// replace it
-							newWord = newWord + currentSolution.result.charAt(t);
+							newWord = newWord + bestWords.get(i).charAt(t);
 						} else {
 							// Don't replace it as there is no _
 							newWord = newWord + oldWord.charAt(t);
