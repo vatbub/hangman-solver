@@ -3,6 +3,7 @@ package view;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
@@ -291,7 +292,8 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		String newSequence = "";
 
 		// Split the pattern up in words
-		ArrayList<String> words = new ArrayList<String>(Arrays.asList(currentSequence.getText().split(" ")));
+		List<String> words = new ArrayList<String>(Arrays.asList(currentSequence.getText().split(" ")));
+		List<String> bestWords = new ArrayList<String>(Arrays.asList(currentSolution.bestWord.split(" ")));
 
 		boolean wordReplaced = false;
 
@@ -325,7 +327,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 						newSequence = newSequence + " ";
 					}
 					newSequence = newSequence + newWord;
-					wordReplaced=true;
+					//wordReplaced=true;
 				}
 			}
 		} else {
@@ -346,10 +348,10 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 
 					for (int t = 0; t < oldWord.length(); t++) {
 						if (oldWord.charAt(t) == '_'
-								&& Character.toUpperCase(currentSolution.bestWord.charAt(t)) == Character
+								&& Character.toUpperCase(bestWords.get(i).charAt(t)) == Character
 										.toUpperCase(currentSolution.result.charAt(0))) {
 							// replace it
-							newWord = newWord + currentSolution.bestWord.charAt(t);
+							newWord = newWord + bestWords.get(i).charAt(t);
 						} else {
 							// Don't replace it as there is no _
 							newWord = newWord + oldWord.charAt(t);
@@ -360,7 +362,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 						newSequence = newSequence + " ";
 					}
 					newSequence = newSequence + newWord;
-					wordReplaced=true;
+					// wordReplaced=true;
 				}
 			}
 		}
