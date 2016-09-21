@@ -500,7 +500,7 @@ public class TabFile {
 	 */
 	public static double stringCorrelation(String str1, String str2) {
 		if (str1.length() != str2.length()) {
-			throw new RuntimeException("str1 and str2 must be of equal length");
+			throw new IllegalArgumentException("str1 and str2 must be of equal length");
 		}
 
 		double equalLetters = 0;
