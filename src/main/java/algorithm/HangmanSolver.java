@@ -45,10 +45,6 @@ public class HangmanSolver {
 	 */
 	public static Result solve(String currentSequence, Language lang) {
 
-		if (currentSequence.equals("Hang_an ____er")) {
-			System.out.println("Stopping...");
-		}
-
 		ResultList resultList = new ResultList();
 
 		if (!lang.equals(langOld) || database == null) {
