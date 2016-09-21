@@ -327,7 +327,9 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 						newSequence = newSequence + " ";
 					}
 					newSequence = newSequence + newWord;
-					//wordReplaced=true;
+					if (currentSolution.resultType == ResultType.word) {
+						wordReplaced = true;
+					}
 				}
 			}
 		} else {
@@ -347,9 +349,8 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 					String oldWord = words.get(i);
 
 					for (int t = 0; t < oldWord.length(); t++) {
-						if (oldWord.charAt(t) == '_'
-								&& Character.toUpperCase(bestWords.get(i).charAt(t)) == Character
-										.toUpperCase(currentSolution.result.charAt(0))) {
+						if (oldWord.charAt(t) == '_' && Character.toUpperCase(bestWords.get(i).charAt(t)) == Character
+								.toUpperCase(currentSolution.result.charAt(0))) {
 							// replace it
 							newWord = newWord + bestWords.get(i).charAt(t);
 						} else {
