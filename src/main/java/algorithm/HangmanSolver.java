@@ -120,7 +120,6 @@ public class HangmanSolver {
 				    }
 				}
 				
-				globalResult = new Result();
 				globalResult = resultList.getFirstResultWithBestChar(maxEntry.getKey());
 			}
 
@@ -130,6 +129,7 @@ public class HangmanSolver {
 			globalResult.bestWordScore = TabFile.stringCorrelation(currentSequence, globalResult.bestWord);
 		}
 
+		globalResult.gameState = winDetector(currentSequence);
 		proposedSolutions.add(globalResult.result);
 		return globalResult;
 	}

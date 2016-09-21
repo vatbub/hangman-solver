@@ -73,12 +73,6 @@ public class Result {
 		
 		List<GameState> gameStates = new ArrayList<GameState>(resultsToCombine.size());
 		
-		for (Result result:resultsToCombine){
-			gameStates.add(result.gameState);
-		}
-		
-		res.gameState = Collections.min(gameStates);
-		
 		return res;
 	}
 }
