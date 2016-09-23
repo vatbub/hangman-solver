@@ -70,8 +70,6 @@ public class Result {
 		res.resultType = ResultType.phrase;
 		res.lang = resultsToCombine.get(0).lang;
 		
-		List<GameState> gameStates = new ArrayList<GameState>(resultsToCombine.size());
-		
 		return res;
 	}
 }
