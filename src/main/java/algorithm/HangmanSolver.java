@@ -28,6 +28,8 @@ public class HangmanSolver {
 	 */
 	public static List<String> proposedSolutions = new ArrayList<String>();
 
+	private static String currentSequenceCopy;
+
 	private static String currentWordCopy;
 
 	/**
@@ -46,6 +48,8 @@ public class HangmanSolver {
 	public static Result solve(String currentSequence, Language lang) {
 
 		ResultList resultList = new ResultList();
+
+		currentSequenceCopy = currentSequence;
 
 		if (!lang.equals(langOld) || database == null) {
 			// Load language databases
@@ -78,12 +82,12 @@ public class HangmanSolver {
 			int maxIndex = 0;
 			int maxIndexCopy;
 			ResultList maxValues = new ResultList();
-			
+
 			// find first valid solution
-			while (resultList.get(maxIndex).resultType != ResultType.letter){
+			while (resultList.get(maxIndex).resultType != ResultType.letter) {
 				maxIndex++;
 			}
-			
+
 			maxIndexCopy = maxIndex;
 
 			for (int i = maxIndexCopy; i < resultList.size(); i++) {
@@ -147,10 +151,10 @@ public class HangmanSolver {
 
 		Result res = new Result();
 
+		currentWordCopy = word;
+
 		res.lang = lang;
 		res.gameState = winDetector(word);
-
-		currentWordCopy = word;
 
 		// Get all words from the database with equal length
 		List<String> wordsWithEqualLength = database.getValuesWithLength(2, word.length());
@@ -383,7 +387,8 @@ public class HangmanSolver {
 	}
 
 	/**
-	 * Checks if the given word contains a char that is proven to be wrong.
+	 * Checks if the given word contains a char that is proven to be wrong. This
+	 * method uses the entire current sequence to verify.
 	 * 
 	 * @param word
 	 *            The word to be checked.
@@ -391,11 +396,38 @@ public class HangmanSolver {
 	 *         otherwise.
 	 */
 	public static boolean wordContainsWrongChar(String word) {
+		return wordContainsWrongChar(currentSequenceCopy, word);
+	}
+
+	/**
+	 * Checks if the given word contains a char that is proven to be wrong. This
+	 * method uses only the currently solved word to verify.
+	 * 
+	 * @param word
+	 *            The word to be checked.
+	 * @return {@code true} if the word contains a wrong char, {@code false}
+	 *         otherwise.
+	 */
+	public static boolean currentWordContainsWrongChar(String word) {
+		return wordContainsWrongChar(currentWordCopy, word);
+	}
+
+	/**
+	 * Checks if the given word contains a char that is proven to be wrong.
+	 * 
+	 * @param compareSequence
+	 *            The sequence to use to check if a letter is wrong or not.
+	 * @param word
+	 *            The word to be checked.
+	 * @return {@code true} if the word contains a wrong char, {@code false}
+	 *         otherwise.
+	 */
+	private static boolean wordContainsWrongChar(String compareSequence, String word) {
 
 		char[] chars = word.toCharArray();
 
 		for (char chr : chars) {
-			if (!currentWordCopy.toUpperCase().contains(Character.toString(Character.toUpperCase(chr)))
+			if (!compareSequence.toUpperCase().contains(Character.toString(Character.toUpperCase(chr)))
 					&& proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))) {
 				return true;
 			}

@@ -447,6 +447,24 @@ public class TabFile {
 		AtomicInteger currentIndex = new AtomicInteger(0);
 		AtomicInteger maxIndex = new AtomicInteger(-1);
 		AtomicDouble maxCorr = new AtomicDouble(-1);
+		
+		List<String> ignoredWordsCopy = new ArrayList<String>(ignoredWords);
+		
+		// split all entries up that contain a space
+		List<String> stringsToSplit = new ArrayList<String>();
+		
+		// Find words to split
+		for (String word:ignoredWordsCopy){
+			if (word.contains(" ")){
+				stringsToSplit.add(word);
+			}
+		}
+		
+		// Actually to the splitting
+		for (String word:stringsToSplit){
+			ignoredWordsCopy.remove(word);
+			ignoredWordsCopy.addAll(Arrays.asList(word.split(" ")));
+		}
 
 		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
 			threads.add(new Thread() {
@@ -455,8 +473,8 @@ public class TabFile {
 					int index = currentIndex.getAndIncrement();
 					while (index < getRowCount()) {
 						if (value.length() == getValueAt(index, column).length()
-								&& !ignoredWords.contains(getValueAt(index, column))
-								&& !HangmanSolver.wordContainsWrongChar(getValueAt(index, column))) {
+								&& !ignoredWordsCopy.contains(getValueAt(index, column))
+								&& !HangmanSolver.currentWordContainsWrongChar(getValueAt(index, column))) {
 							double corr = stringCorrelation(value, getValueAt(index, column));
 
 							if (corr > maxCorr.get()) {
