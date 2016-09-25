@@ -19,32 +19,32 @@ public class ResultList extends ArrayList<Result> {
 	public ResultList(Collection<? extends Result> arg0) {
 		super(arg0);
 	}
-	
-	public List<ResultType> getResultTypeList(){
-		List<ResultType> res =new ArrayList<ResultType>();
-		for (Result result:this){
+
+	public List<ResultType> getResultTypeList() {
+		List<ResultType> res = new ArrayList<ResultType>();
+		for (Result result : this) {
 			res.add(result.resultType);
 		}
-		
+
 		return res;
 	}
-	
-	public List<String> getBestWords(){
-		List<String> res =new ArrayList<String>();
-		for (Result result:this){
+
+	public List<String> getBestWords() {
+		List<String> res = new ArrayList<String>();
+		for (Result result : this) {
 			res.add(result.bestWord);
 		}
-		
+
 		return res;
 	}
-	
-	public Result getFirstResultWithBestChar(char chr){
-		for (Result res:this){
-			if (res.bestChar==chr){
+
+	public Result getFirstResultWithBestChar(char chr) {
+		for (Result res : this) {
+			if (res.resultType == ResultType.letter & res.bestChar == chr) {
 				return res;
 			}
 		}
-		
+
 		// We only arrive here if no match has been found
 		return null;
 	}

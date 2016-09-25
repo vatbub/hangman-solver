@@ -69,4 +69,9 @@ public class Result {
 		
 		return res;
 	}
+	
+	@Override
+	public String toString(){
+		return this.result;
+	}
 }
