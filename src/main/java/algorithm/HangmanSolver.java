@@ -31,6 +31,13 @@ public class HangmanSolver {
 	private static String currentSequenceCopy;
 
 	private static String currentWordCopy;
+	
+	/**
+	 * Forces a reload of the word database on the next call of {@link #solve(String, Language)}
+	 */
+	public static void reloadDatabase(){
+		database=null;
+	}
 
 	/**
 	 * Solves a Hangman puzzle.

@@ -252,7 +252,8 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 			submitWordOnQuit();
 		}
 
-		algorithm.HangmanSolver.proposedSolutions.clear();
+		HangmanSolver.proposedSolutions.clear();
+		HangmanSolver.reloadDatabase();
 		applyButton.setDisable(true);
 		languageSelector.setDisable(false);
 		currentSequence.setText("");
