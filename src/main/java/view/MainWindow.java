@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
@@ -79,6 +80,10 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 				// Set the mock packaging
 				String packaging = arg.substring(arg.toLowerCase().indexOf('=') + 1);
 				Common.setMockPackaging(packaging);
+			} else if (arg.toLowerCase().matches("locale=.*")) {
+				// set the gui language
+				String guiLanguageCode = arg.substring(arg.toLowerCase().indexOf('=') + 1);
+				Locale.setDefault(new Locale(guiLanguageCode));
 			}
 		}
 
