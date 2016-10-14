@@ -83,6 +83,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 			} else if (arg.toLowerCase().matches("locale=.*")) {
 				// set the gui language
 				String guiLanguageCode = arg.substring(arg.toLowerCase().indexOf('=') + 1);
+				log.getLogger().info("Setting language: " + guiLanguageCode);
 				Locale.setDefault(new Locale(guiLanguageCode));
 			}
 		}
