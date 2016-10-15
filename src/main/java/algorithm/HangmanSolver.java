@@ -2,6 +2,7 @@ package algorithm;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
@@ -29,6 +30,15 @@ public class HangmanSolver {
 
 	private static String currentSequenceCopy;
 
+	private static String currentWordCopy;
+	
+	/**
+	 * Forces a reload of the word database on the next call of {@link #solve(String, Language)}
+	 */
+	public static void reloadDatabase(){
+		database=null;
+	}
+
 	/**
 	 * Solves a Hangman puzzle.
 	 * 
@@ -44,10 +54,7 @@ public class HangmanSolver {
 	 */
 	public static Result solve(String currentSequence, Language lang) {
 
-		Result res = new Result();
-
-		res.lang = lang;
-		res.gameState = winDetector(currentSequence);
+		ResultList resultList = new ResultList();
 
 		currentSequenceCopy = currentSequence;
 
@@ -59,71 +66,151 @@ public class HangmanSolver {
 		// Split the pattern up in words
 		ArrayList<String> words = new ArrayList<String>(Arrays.asList(currentSequence.split(" ")));
 
-		// Remove all words that don't contain an underscore as they are fully
-		// solved
-		int indexCorr = 0;
-		for (int i = 0; i < words.size(); i++) {
-			if (!words.get(i - indexCorr).contains("_")) {
-				if (!words.get(i - indexCorr).equals("")) {
-					// Submit the word to the internet db.
-					// Although this method is called quite often, it keeps
-					// track of
-					// the submissions to avoid duplicates.
-					// HangmanStats.addWordToDatabase(words.get(i - indexCorr),
-					// lang);
-				}
-				words.remove(i - indexCorr);
-				indexCorr = indexCorr + 1;
-			}
-		}
-
 		// Go through all words
 		for (String word : words) {
-			// Get all words from the database with equal length
-			List<String> wordsWithEqualLength = database.getValuesWithLength(2, word.length());
-
-			// Check if there are words that match 90%
-			String bestWord = database.getValueWithHighestCorrelation(2, word, proposedSolutions);
-			boolean foundBestWord = true;
-
-			log.getLogger().info("Best match in dictionary: " + bestWord);
-
-			if (bestWord.length() == 0) {
-				// dictionaries are both used up
-				log.getLogger().severe("dictionary used up");
-				foundBestWord = false;
-			} else if (bestWord.equals("")) {
-				foundBestWord = false;
-			} else {
-				res.bestWord = bestWord;
-			}
-
-			if (foundBestWord) {
-				res.bestWordScore = TabFile.stringCorrelation(word, res.bestWord);
-
-				if (res.bestWordScore >= Config.thresholdToSelectWord(word.length())) {
-					proposedSolutions.add(res.bestWord);
-					res.result = res.bestWord;
-					return res;
-				}
-
-				// apparently no direct match, get the most used letter from the
-				// results
-
-				// Get all chars from the bestWord
-				char[] priorityChars = res.bestWord.toCharArray();
-				res.result = Character.toString(getMostFrequentChar(wordsWithEqualLength, priorityChars));
-			} else {
-				// No bestWord found
-				log.getLogger().info("No best word found, using most common chars only");
-				res.result = Character.toString(getMostFrequentChar(wordsWithEqualLength));
-			}
-			proposedSolutions.add(res.result);
-			return res;
-
+			resultList.add(solveWord(word, lang));
 		}
 
-		res.result = "";
+		ResultType globalResType = Collections.min(resultList.getResultTypeList());
+		Result globalResult;
+
+		if (globalResType == ResultType.word) {
+			// all results are words so generate a phrase from it
+			globalResult = Result.generatePhraseResult(resultList);
+			globalResult.bestWordScore = TabFile.stringCorrelation(currentSequence, globalResult.result);
+		} else if (resultList.size() == 1) {
+			// We only got one result so return that
+			globalResult = resultList.get(0);
+		} else {
+			// Generate a global solution from letters by taking the letter with
+			// the highest score
+
+			// Find the best score
+			int maxIndex = 0;
+			int maxIndexCopy;
+			ResultList maxValues = new ResultList();
+
+			// find first valid solution
+			while (resultList.get(maxIndex).resultType != ResultType.letter) {
+				maxIndex++;
+			}
+
+			maxIndexCopy = maxIndex;
+
+			for (int i = maxIndexCopy; i < resultList.size(); i++) {
+				if (resultList.get(i).resultType == ResultType.letter) {
+					if (resultList.get(i).bestCharScore > resultList.get(maxIndex).bestCharScore) {
+						// new max found
+						maxIndex = i;
+						maxValues = new ResultList();
+						maxValues.add(resultList.get(i));
+					} else if (resultList.get(i).bestCharScore == resultList.get(maxIndex).bestCharScore) {
+						// found another letter with the same score so add it to
+						// the
+						// list too
+						maxValues.add(resultList.get(i));
+					}
+				}
+			}
+
+			if (maxValues.size() == 0) {
+				// only one maxValue
+				globalResult = maxValues.get(0);
+			} else {
+				// More than one maxValue found, return the one that appears the
+				// most
+				Map<Character, Integer> charCounts = new HashMap<Character, Integer>();
+
+				for (Result res : maxValues) {
+					if (charCounts.containsKey(res.bestChar)) {
+						// Increment the value
+						charCounts.put(res.bestChar, charCounts.get(res.bestChar) + 1);
+					} else {
+						// Add new entry to the map
+						charCounts.put(res.bestChar, 1);
+					}
+				}
+
+				// Get the char with most appearances
+				Map.Entry<Character, Integer> maxEntry = null;
+
+				for (Entry<Character, Integer> entry : charCounts.entrySet()) {
+					if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
+						maxEntry = entry;
+					}
+				}
+
+				globalResult = resultList.getFirstResultWithBestChar(maxEntry.getKey());
+			}
+
+			// generate the best word as a phrase
+			globalResult.bestWord = Result.generatePhraseResult(resultList).result;
+			// calculate global word score
+			globalResult.bestWordScore = TabFile.stringCorrelation(currentSequence, globalResult.bestWord);
+		}
+
+		globalResult.gameState = winDetector(currentSequence);
+		proposedSolutions.add(globalResult.result);
+		return globalResult;
+	}
+
+	public static Result solveWord(String word, Language lang) {
+
+		Result res = new Result();
+
+		currentWordCopy = word;
+
+		res.lang = lang;
+		res.gameState = winDetector(word);
+
+		// Get all words from the database with equal length
+		List<String> wordsWithEqualLength = database.getValuesWithLength(2, word.length());
+
+		// Check if there are words that match 90%
+		String bestWord = database.getValueWithHighestCorrelation(2, word, proposedSolutions);
+		boolean foundBestWord = true;
+
+		log.getLogger().info("Best match in dictionary: " + bestWord);
+
+		if (bestWord.length() == 0) {
+			// dictionaries are both used up
+			log.getLogger().severe("dictionary used up");
+			foundBestWord = false;
+		} else if (bestWord.equals("")) {
+			foundBestWord = false;
+		} else {
+			res.bestWord = bestWord;
+		}
+
+		if (foundBestWord) {
+			res.bestWordScore = TabFile.stringCorrelation(word, res.bestWord);
+
+			// compute best letter (even if a bestWord has already been found,
+			// for completeness)
+
+			// Get all chars from the bestWord
+			char[] priorityChars = res.bestWord.toCharArray();
+			SingleChar chr = getMostFrequentChar(wordsWithEqualLength, priorityChars);
+			res.bestChar = chr.chr;
+			res.bestCharScore = chr.letterScore;
+
+			// Set the result type
+			if (res.bestWordScore >= Config.thresholdToSelectWord(word.length())) {
+				// Specify the bestWord as the global result
+				res.convertToWordResult();
+			} else {
+				res.convertToLetterResult();
+			}
+
+		} else {
+			// No bestWord found
+			log.getLogger().info("No best word found, using most common chars only");
+			SingleChar chr = getMostFrequentChar(wordsWithEqualLength);
+			res.bestChar = chr.chr;
+			res.bestCharScore = chr.letterScore;
+			res.convertToLetterResult();
+		}
+
 		return res;
 	}
 
@@ -138,6 +225,7 @@ public class HangmanSolver {
 			log.getLogger().info("Loading language databases for " + lang.getHumanReadableName());
 			langOld = lang;
 			database = lang.getTabFile();
+			lang.mergeWithOnlineVersionAsync();
 		} catch (IOException e) {
 			log.getLogger().log(Level.SEVERE, "An error occurred", e);
 		}
@@ -146,18 +234,18 @@ public class HangmanSolver {
 	/**
 	 * Returns the most frequent char in the given word list.
 	 * 
-	 * @param words
+	 * @param wordsWithEqualLength
 	 *            The list for which the most frequent char will be determined.
 	 * @return The most frequent char.
 	 */
-	private static char getMostFrequentChar(List<String> words) {
-		return getMostFrequentChar(words, new char[0]);
+	private static SingleChar getMostFrequentChar(List<String> wordsWithEqualLength) {
+		return getMostFrequentChar(wordsWithEqualLength, new char[0]);
 	}
 
 	/**
 	 * Returns the most frequent char in the given word list.
 	 * 
-	 * @param words
+	 * @param wordsWithEqualLength
 	 *            The list for which the most frequent char will be determined.
 	 * @param priorityChars
 	 *            The ranking of most frequent chars will be filtered so that it
@@ -166,7 +254,7 @@ public class HangmanSolver {
 	 *            the method acts like {@code getMostFrequentChar(words)}
 	 * @return The most frequent char.
 	 */
-	private static char getMostFrequentChar(List<String> words, char[] priorityChars) {
+	private static SingleChar getMostFrequentChar(List<String> wordsWithEqualLength, char[] priorityChars) {
 		ArrayList<Thread> threads = new ArrayList<Thread>();
 		AtomicInteger currentIndex = new AtomicInteger(0);
 		List<CustomAtomicInteger> charCounts = new ArrayList<CustomAtomicInteger>();
@@ -181,15 +269,15 @@ public class HangmanSolver {
 		// ArrayList<AtomicInteger>(Collections.nCopies(Character.MAX_VALUE, new
 		// AtomicInteger(0)));
 
-		log.getLogger().info("Dictionary size: " + words.size());
+		log.getLogger().info("Dictionary size: " + wordsWithEqualLength.size());
 		System.out.println("Counting...");
 		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
 			threads.add(new Thread() {
 				@Override
 				public void run() {
 					int index = currentIndex.getAndIncrement();
-					while (index < words.size()) {
-						countAllCharsInString(words.get(index), charCounts);
+					while (index < wordsWithEqualLength.size()) {
+						countAllCharsInString(wordsWithEqualLength.get(index), charCounts);
 
 						// Grab the next index
 						index = currentIndex.getAndIncrement();
@@ -256,7 +344,7 @@ public class HangmanSolver {
 			}
 		}
 		System.out.println("Done!");
-		return Character.toUpperCase((char) maxIndex);
+		return new SingleChar(Character.toUpperCase((char) maxIndex), maxCount);
 	}
 
 	/**
@@ -294,7 +382,10 @@ public class HangmanSolver {
 	 *            multithreading-context, the List specified as
 	 *            {@code countList} must contain
 	 *            {@link CustomAtomicInteger}s.<br>
-	 *            <b>Because of a better performance, this method uses a given list and modifies it rather than creating a new one that has to be summed up to existing ones in another slow {@code for}-loop</b>
+	 *            <b>Because of a better performance, this method uses a given
+	 *            list and modifies it rather than creating a new one that has
+	 *            to be summed up to existing ones in another slow
+	 *            {@code for}-loop</b>
 	 */
 	private static void countAllCharsInString(String str, List<CustomAtomicInteger> countList) {
 		for (char chr : str.toCharArray()) {
@@ -303,7 +394,8 @@ public class HangmanSolver {
 	}
 
 	/**
-	 * Checks if the given word contains a char that is proven to be wrong.
+	 * Checks if the given word contains a char that is proven to be wrong. This
+	 * method uses the entire current sequence to verify.
 	 * 
 	 * @param word
 	 *            The word to be checked.
@@ -311,11 +403,38 @@ public class HangmanSolver {
 	 *         otherwise.
 	 */
 	public static boolean wordContainsWrongChar(String word) {
+		return wordContainsWrongChar(currentSequenceCopy, word);
+	}
+
+	/**
+	 * Checks if the given word contains a char that is proven to be wrong. This
+	 * method uses only the currently solved word to verify.
+	 * 
+	 * @param word
+	 *            The word to be checked.
+	 * @return {@code true} if the word contains a wrong char, {@code false}
+	 *         otherwise.
+	 */
+	public static boolean currentWordContainsWrongChar(String word) {
+		return wordContainsWrongChar(currentWordCopy, word);
+	}
+
+	/**
+	 * Checks if the given word contains a char that is proven to be wrong.
+	 * 
+	 * @param compareSequence
+	 *            The sequence to use to check if a letter is wrong or not.
+	 * @param word
+	 *            The word to be checked.
+	 * @return {@code true} if the word contains a wrong char, {@code false}
+	 *         otherwise.
+	 */
+	private static boolean wordContainsWrongChar(String compareSequence, String word) {
 
 		char[] chars = word.toCharArray();
 
 		for (char chr : chars) {
-			if (!currentSequenceCopy.toUpperCase().contains(Character.toString(Character.toUpperCase(chr)))
+			if (!compareSequence.toUpperCase().contains(Character.toString(Character.toUpperCase(chr)))
 					&& proposedSolutions.contains(Character.toString(Character.toUpperCase(chr)))) {
 				return true;
 			}
@@ -382,5 +501,15 @@ public class HangmanSolver {
 
 		// If we did not win nor loose, the game is still running
 		return GameState.GAME_RUNNING;
+	}
+
+	private static class SingleChar {
+		public SingleChar(char chr, int letterScore) {
+			this.chr = chr;
+			this.letterScore = letterScore;
+		}
+
+		char chr;
+		double letterScore;
 	}
 }

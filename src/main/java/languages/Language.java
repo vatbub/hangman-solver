@@ -1,6 +1,8 @@
 package languages;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -8,11 +10,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 
+import com.mongodb.MongoTimeoutException;
+
+import common.Common;
 import common.Config;
 import logging.FOKLogger;
+import stats.HangmanStats;
 
 public class Language {
-	
+
 	private static FOKLogger log = new FOKLogger(Language.class.getName());
 
 	/**
@@ -29,13 +35,13 @@ public class Language {
 	 * The ISO 639-3 language code
 	 */
 	private String languageCode;
-	/**
-	 * The URL pointing to the resource file that contains the word list as a
-	 * *.tab file
-	 */
-	private URL tabfileName;
-	
+
 	private static TabFile languageCodesFile;
+
+	/**
+	 * The {@link TabFile} that contains the dictionary of this language
+	 */
+	private TabFile dictionaryTabFile;
 
 	/**
 	 * Creates a new {@link Language}-Object that contains all information about
@@ -46,7 +52,6 @@ public class Language {
 	 */
 	public Language(String languageCode) {
 		this.languageCode = languageCode;
-		tabfileName = getCldrName(languageCode);
 	}
 
 	private static Map<String, Locale> initLanguageCodeMap() {
@@ -61,19 +66,25 @@ public class Language {
 	}
 
 	/**
-	 * Looks up the {@link URL} to the resource file for the specified language
+	 * Looks up the {@link URL} to the resource file for the specified language.
+	 * Uses the dictionary files shipped in this jar.
 	 * 
 	 * @param languageCode
 	 *            The ISO 639-3 language code
-	 * @return The {@link URL} to the resource file that contains the word list
-	 *         for the specified language or {@code null} if the language is not
-	 *         supported.
+	 * @return The {@link File}-representation of the resource file that
+	 *         contains the word list for the specified language or {@code null}
+	 *         if the language is not supported.
 	 */
-	private URL getCldrName(String languageCode) {
+	private URL getTabFileNameInternalResource() {
 
 		// Try to get the resource file, if it fails, the language is not
 		// supported
-		return Language.class.getResource(Config.languageDictPattern.replace("{langCode}", languageCode));
+		return Language.class.getResource(Config.languageDictPattern.replace("{langCode}", this.getLanguageCode()));
+	}
+
+	private File getMergedDictionaryFile() {
+		return new File(Common.getAndCreateAppDataPath()
+				+ Config.languageDictEnhancedPattern.replace("{langCode}", this.getLanguageCode()));
 	}
 
 	/**
@@ -130,7 +141,7 @@ public class Language {
 	 */
 	private static String getHumanReadableName(String languageCode) {
 		try {
-			if (languageCodesFile==null){
+			if (languageCodesFile == null) {
 				// Open the LanguageCodes.tab-file
 				languageCodesFile = new TabFile(Config.languageCodes);
 			}
@@ -153,8 +164,7 @@ public class Language {
 	@Override
 	public boolean equals(Object anObject) {
 		if (anObject instanceof Language) {
-			if (this.getTabFileName().equals(((Language) anObject).getTabFileName())
-					&& this.getLanguageCode().equals(((Language) anObject).getLanguageCode())) {
+			if (this.getLanguageCode().equals(((Language) anObject).getLanguageCode())) {
 				return true;
 			} else {
 				return false;
@@ -214,17 +224,81 @@ public class Language {
 
 	/**
 	 *
-	 * Returns the URL pointing to the resource file that contains the word list
-	 * as a *.tab file
+	 * Returns the URL pointing to the dictionary file that was merged with the
+	 * online word list (if one is already downloaded) or else the resource file
+	 * shipped with this jar as a *.tab file
 	 *
 	 * @return The URL pointing to the resource file that contains the word list
 	 *         provided by the cldr as a *.tab file
 	 */
 	public URL getTabFileName() {
-		return tabfileName;
+		try {
+			// Check if we have a merged version available
+			if (getMergedDictionaryFile().exists()) {
+				return getMergedDictionaryFile().toURI().toURL();
+			} else {
+				return getTabFileNameInternalResource();
+			}
+		} catch (MalformedURLException e) {
+			// This error should never happen because all generated urls only
+			// depend on the app config in common.Config
+			log.getLogger().log(Level.SEVERE, "An error occurred that should never occur", e);
+			return null;
+		}
 	}
 
 	public TabFile getTabFile() throws IOException {
-		return new TabFile(getTabFileName());
+		if (dictionaryTabFile == null) {
+			dictionaryTabFile = new TabFile(getTabFileName());
+		}
+
+		return dictionaryTabFile;
+	}
+
+	/**
+	 * Merges the content of this languages offline dictionary with the online
+	 * database and caches the result offline. Once the job finishes, the
+	 * TabFile instance that you retrieved using {@link #getTabFile()} is
+	 * refreshed automatically.
+	 * 
+	 * @throws IOException
+	 *             If the offline copy cannot be saved
+	 */
+	public void mergeWithOnlineVersion() throws IOException {
+		TabFile file = this.getTabFile();
+
+		HangmanStats.mergeWithDictionary(file, this);
+
+		file.save(this.getMergedDictionaryFile());
+	}
+
+	/**
+	 * Same as {@link #mergeWithOnlineVersion()} but does the job
+	 * asynchronously.<br>
+	 * Override {@link #mergeWithOnlineVersionAsyncOnIOException()} if you wish
+	 * to handle the IOException that might be thrown by
+	 * {@link #mergeWithOnlineVersion()}
+	 */
+	public void mergeWithOnlineVersionAsync() {
+		Language me = this;
+		Thread mergeWithOnlineVersionAsyncThread = new Thread() {
+			@Override
+			public void run() {
+				try {
+					me.mergeWithOnlineVersion();
+				} catch (IOException e) {
+					me.mergeWithOnlineVersionAsyncOnIOException();
+				}catch (MongoTimeoutException e3){
+					// Just print it to the log
+					log.getLogger().log(Level.SEVERE, "You are probably not connected to the internet, are you?", e3);
+				}
+			}
+		};
+		mergeWithOnlineVersionAsyncThread.setName("mergeWithOnlineVersionAsyncThread");
+		mergeWithOnlineVersionAsyncThread.start();
+	}
+
+	public void mergeWithOnlineVersionAsyncOnIOException() {
+
 	}
 }

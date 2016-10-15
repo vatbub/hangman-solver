@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -72,7 +74,7 @@ public class TabFile {
 	/**
 	 * The values in this *.tab file.
 	 */
-	private ArrayList<String[]> values = new ArrayList<String[]>();
+	private ArrayList<ArrayListWithSortableKey<String>> values = new ArrayList<ArrayListWithSortableKey<String>>();
 
 	/**
 	 * Creates a new object representation of the specified *.tab file.
@@ -101,6 +103,10 @@ public class TabFile {
 		createNewFile(columnHeaders);
 	}
 
+	public TabFile(File fileToRead) throws IOException {
+		this(fileToRead.toURI().toURL());
+	}
+
 	/**
 	 * Creates a new object representation of the specified *.tab file.
 	 * 
@@ -110,7 +116,7 @@ public class TabFile {
 	 *             if the file cannot be read.
 	 */
 	public TabFile(String originFileName) throws IOException {
-		this(new File(originFileName).toURI().toURL());
+		this(new File(originFileName));
 	}
 
 	/**
@@ -130,7 +136,13 @@ public class TabFile {
 		columnHeaders = scan.nextLine().split("	");
 
 		while (scan.hasNextLine()) {
-			values.add(scan.nextLine().split("	"));
+			ArrayListWithSortableKey<String> temp = new ArrayListWithSortableKey<String>(
+					Arrays.asList(scan.nextLine().split("	")));
+			while (temp.size() < this.getColumnCount()) {
+				// Fill it up
+				temp.add("");
+			}
+			values.add(temp);
 		}
 
 		scan.close();
@@ -213,32 +225,157 @@ public class TabFile {
 	 */
 	public String getValueAt(int row, int column) {
 		try {
-			return values.get(row)[column];
+			return values.get(row).get(column);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return "";
 		}
 	}
 
+	/**
+	 * Searches the entire file for the given value. The comparison is case
+	 * sensitive.
+	 * 
+	 * @param valueToFind
+	 *            The value to find.
+	 * @return The "outer" list is a list of columns, the the "inner" list is a
+	 *         list of hits. That means that {@code indexOf("someValue").get(0)}
+	 *         returns a list of row indexes where the value was found in column
+	 *         0.
+	 */
 	public List<List<Integer>> indexOf(String valueToFind) {
+		return indexOf(valueToFind, false);
+	}
+
+	/**
+	 * Searches the entire file for the given value. The comparison is case
+	 * insensitive.
+	 * 
+	 * @param valueToFind
+	 *            The value to find.
+	 * @return The "outer" list is a list of columns, the the "inner" list is a
+	 *         list of hits. That means that {@code indexOf("someValue").get(0)}
+	 *         returns a list of row indexes where the value was found in column
+	 *         0.
+	 */
+	public List<List<Integer>> indexOfIgnoreCase(String valueToFind) {
+		return indexOf(valueToFind, true);
+	}
+
+	/**
+	 * Searches the entire file for the given value.
+	 * 
+	 * @param valueToFind
+	 *            The value to find.
+	 * @param ignoreCase
+	 *            if {@code true}, the string comparison will be case
+	 *            insensitive.
+	 * @return The "outer" list is a list of columns, the the "inner" list is a
+	 *         list of hits. That means that {@code indexOf("someValue").get(0)}
+	 *         returns a list of row indexes where the value was found in column
+	 *         0.
+	 */
+	public List<List<Integer>> indexOf(String valueToFind, boolean ignoreCase) {
 		List<List<Integer>> res = new ArrayList<List<Integer>>();
 
 		for (int i = 0; i < this.getColumnCount(); i++) {
-			res.add(indexOf(valueToFind, i));
+			res.add(indexOf(valueToFind, i, ignoreCase));
 		}
 
 		return res;
 	}
 
+	/**
+	 * Searches for the given value in the given column. The comparison is case
+	 * insensitive.
+	 * 
+	 * @param valueToFind
+	 *            The value to find.
+	 * @param columnIndex
+	 *            The index of the column to be searched.
+	 * @return A list of row indexes where the value was found.
+	 */
+	public List<Integer> indexOfIgnoreCase(String valueToFind, int columnIndex) {
+		return indexOf(valueToFind, columnIndex, true);
+	}
+
+	/**
+	 * Searches for the given value in the given column. The comparison is case
+	 * sensitive.
+	 * 
+	 * @param valueToFind
+	 *            The value to find.
+	 * @param columnIndex
+	 *            The index of the column to be searched.
+	 * @return A list of row indexes where the value was found.
+	 */
 	public List<Integer> indexOf(String valueToFind, int columnIndex) {
+		return indexOf(valueToFind, columnIndex, false);
+	}
+
+	/**
+	 * Searches for the given value in the given column.
+	 * 
+	 * @param valueToFind
+	 *            The value to find.
+	 * @param columnIndex
+	 *            The index of the column to be searched.
+	 * @param ignoreCase
+	 *            if {@code true}, the string comparison will be case
+	 *            insensitive.
+	 * @return A list of row indexes where the value was found.
+	 */
+	public List<Integer> indexOf(String valueToFind, int columnIndex, boolean ignoreCase) {
 		List<Integer> res = new ArrayList<Integer>();
 
 		for (int i = 0; i < this.getRowCount(); i++) {
-			if (this.getValueAt(i, columnIndex).equals(valueToFind)) {
-				res.add(i);
+			if (ignoreCase) {
+				if (this.getValueAt(i, columnIndex).equalsIgnoreCase(valueToFind)) {
+					res.add(i);
+				}
+			} else {
+				if (this.getValueAt(i, columnIndex).equals(valueToFind)) {
+					res.add(i);
+				}
 			}
 		}
 
 		return res;
+	}
+
+	/**
+	 * Replaces the old value at the specified positions in the *.tab-file with
+	 * the new value.
+	 * 
+	 * @param newValue
+	 *            The new value o fthe given cells
+	 * @param columnsAndRows
+	 *            A list of column- and row indexes where the value will be
+	 *            replaced. See the return value of {@link #indexOf(String)} to
+	 *            see how the list needs to be built up.
+	 * @see #indexOf(String)
+	 */
+	public void setValueAt(String newValue, List<List<Integer>> columnsAndRows) {
+		for (int c = 0; c < columnsAndRows.size(); c++) {
+			setValueAt(newValue, columnsAndRows.get(c), c);
+		}
+	}
+
+	/**
+	 * Replaces the old value at the specified positions in the *.tab-file with
+	 * the new value.
+	 * 
+	 * @param newValue
+	 *            The new value of the given cells
+	 * @param rows
+	 *            A list of rows the values will be replaced
+	 * @param column
+	 *            The column of the cells to be replaced
+	 * @see #indexOf(String, int)
+	 */
+	public void setValueAt(String newValue, List<Integer> rows, int column) {
+		for (int row : rows) {
+			setValueAt(newValue, row, column);
+		}
 	}
 
 	/**
@@ -247,23 +384,25 @@ public class TabFile {
 	 * use {@link #addRow}
 	 * 
 	 * @param newValue
-	 *            Thenew value of the given cell
+	 *            The new value of the given cell
 	 * @param row
 	 *            The row of the cell to be replaced.
 	 * @param column
 	 *            The column of the cell to be replaced.
 	 */
 	public void setValueAt(String newValue, int row, int column) {
-		values.get(row)[column] = newValue;
+		values.get(row).set(column, newValue);
 	}
 
 	public void addRow(String[] newValues) {
 		if (newValues.length != getColumnCount()) {
 			throw new ArrayIndexOutOfBoundsException(
-					"The given values-array dows not match the column-count of this file.");
+					"The given values-array dows not match the column-count of this file. (The file has "
+							+ this.getColumnCount() + " columns and you wanted to add " + newValues.length
+							+ " columns)");
 		}
 
-		values.add(newValues);
+		values.add(new ArrayListWithSortableKey<String>(Arrays.asList(newValues)));
 	}
 
 	/**
@@ -308,6 +447,24 @@ public class TabFile {
 		AtomicInteger currentIndex = new AtomicInteger(0);
 		AtomicInteger maxIndex = new AtomicInteger(-1);
 		AtomicDouble maxCorr = new AtomicDouble(-1);
+		
+		List<String> ignoredWordsCopy = new ArrayList<String>(ignoredWords);
+		
+		// split all entries up that contain a space
+		List<String> stringsToSplit = new ArrayList<String>();
+		
+		// Find words to split
+		for (String word:ignoredWordsCopy){
+			if (word.contains(" ")){
+				stringsToSplit.add(word);
+			}
+		}
+		
+		// Actually to the splitting
+		for (String word:stringsToSplit){
+			ignoredWordsCopy.remove(word);
+			ignoredWordsCopy.addAll(Arrays.asList(word.split(" ")));
+		}
 
 		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
 			threads.add(new Thread() {
@@ -316,8 +473,8 @@ public class TabFile {
 					int index = currentIndex.getAndIncrement();
 					while (index < getRowCount()) {
 						if (value.length() == getValueAt(index, column).length()
-								&& !ignoredWords.contains(getValueAt(index, column))
-								&& !HangmanSolver.wordContainsWrongChar(getValueAt(index, column))) {
+								&& !ignoredWordsCopy.contains(getValueAt(index, column))
+								&& !HangmanSolver.currentWordContainsWrongChar(getValueAt(index, column))) {
 							double corr = stringCorrelation(value, getValueAt(index, column));
 
 							if (corr > maxCorr.get()) {
@@ -361,7 +518,7 @@ public class TabFile {
 	 */
 	public static double stringCorrelation(String str1, String str2) {
 		if (str1.length() != str2.length()) {
-			throw new RuntimeException("str1 and str2 must be of equal length");
+			throw new IllegalArgumentException("str1 and str2 must be of equal length");
 		}
 
 		double equalLetters = 0;
@@ -375,45 +532,86 @@ public class TabFile {
 		return equalLetters / str1.length();
 	}
 
+	/**
+	 * Sorts this TabFile.
+	 * 
+	 * @param sortKey
+	 *            The column that will be compared to sort values.
+	 */
+	public void sort(int sortKey) {
+		setSortKey(sortKey);
+		Collections.sort(values);
+	}
+
+	public void sortDescending(int sortKey) {
+		setSortKey(sortKey);
+		Collections.sort(values, Collections.reverseOrder());
+	}
+
+	private void setSortKey(int sortKey) {
+		for (ArrayListWithSortableKey<String> line : values) {
+			line.setSortKey(sortKey);
+		}
+	}
+
+	/**
+	 * Saves this TabFile at the specified location.
+	 * 
+	 * @param fileName
+	 *            The absolute qualified filename where the file should be
+	 *            saved. Existing files will be overwritten.
+	 */
 	public void save(String fileName) {
+		save(new File(fileName));
+	}
+
+	/**
+	 * Saves this TabFile to the specified {@link File}
+	 * 
+	 * @param destinationFile
+	 *            The {@link File} where this TabFile shall be saved in.
+	 *            Existing files will be overwritten.
+	 */
+	public void save(File destinationFile) {
 
 		System.out.print("Generating empty file in memory...");
 		// Generate the file
-		String str = "";
+		StringBuilder str = new StringBuilder();
 		System.out.println("Done!");
 
 		// Column headers
 		System.out.print("Processing column headers...");
 		for (String colHead : columnHeaders) {
-			str = str + colHead;
+			str.append(colHead);
 			if (!colHead.equals(columnHeaders[columnHeaders.length - 1])) {
-				str = str + "	";
+				str.append("	");
 			}
 		}
 		System.out.println("Done!");
 
-		str = str + "\n";
+		str.append("\n");
 
 		System.out.print("Processing table contents...");
 		// Values
-		for (String[] line : values) {
+		for (ArrayListWithSortableKey<String> line : values) {
 			for (String el : line) {
-				str = str + el;
+				str.append(el);
 
-				if (!el.equals(line[line.length - 1])) {
-					str = str + "	";
+				if (!el.equals(line.get(line.size() - 1))) {
+					str.append("	");
 				}
 			}
 
-			str = str + "\n";
+			str.append("\n");
+			// str = str + String.join(" ", line) + "\n";
 		}
 
 		System.out.println("Done!");
 
 		System.out.print("Writing to disc...");
-		File f = new File(fileName);
+
 		try {
-			FileUtils.writeStringToFile(f, str, "UTF-8");
+			FileUtils.writeStringToFile(destinationFile, str.toString(), "UTF-8");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -453,12 +651,12 @@ public class TabFile {
 		TabFile res = new TabFile(colHeads);
 
 		for (int lineIndex = 0; lineIndex < origin.getRowCount(); lineIndex++) {
-			String[] line = origin.values.get(lineIndex);
+			ArrayListWithSortableKey<String> line = origin.values.get(lineIndex);
 			// Split at spaces
 			String[] words;
 
 			try {
-				words = line[originWordColumnIndex].split(" ");
+				words = line.get(originWordColumnIndex).split(" ");
 			} catch (ArrayIndexOutOfBoundsException e) {
 				words = "".split(" ");
 			}

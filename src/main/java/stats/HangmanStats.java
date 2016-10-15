@@ -12,6 +12,7 @@ import com.mongodb.client.model.Updates;
 
 import common.Prefs;
 import languages.Language;
+import languages.TabFile;
 import logging.FOKLogger;
 
 /**
@@ -22,7 +23,7 @@ import logging.FOKLogger;
  *
  */
 public class HangmanStats {
-	
+
 	private static FOKLogger log = new FOKLogger(HangmanStats.class.getName());
 
 	/**
@@ -196,5 +197,41 @@ public class HangmanStats {
 			}
 		}
 
+	}
+
+	/**
+	 * Merges the database entries with the given dictionary to enhance the
+	 * dictionary. After merging the online database and the local one, the
+	 * local copy will be sorted by the amount that users used a word so that
+	 * most used words will be preffered.
+	 * 
+	 * @param dictionary
+	 *            The Dictionary to be merged
+	 * @param lang
+	 *            The language requested
+	 */
+	public static void mergeWithDictionary(TabFile dictionary, Language lang) {
+		log.getLogger()
+				.info("Merging offline dictionary for language " + lang.getLanguageCode() + " with online database...");
+		MongoCollection<Document> coll = MongoSetup.getWordsUsedCollection();
+		for (Document doc : coll.find(Filters.eq("lang", lang.getLanguageCode()))) {
+			String word = doc.get("word").toString();
+			int count = doc.getInteger("count");
+
+			List<Integer> indexList = dictionary.indexOfIgnoreCase(word, 2);
+			if (indexList.isEmpty()) {
+				// Word not yet present in dictionary so add it
+				dictionary.addRow(new String[] { "fromOnlineDatabase", lang.getLanguageCode() + ":lemma", word,
+						Integer.toString(count) });
+			} else {
+				dictionary.setValueAt(Integer.toString(count), indexList, 3);
+			}
+		}
+		log.getLogger().info("Merge finished, sorting TabFile now...");
+
+		dictionary.sortDescending(3);
+		
+
+		log.getLogger().info("Sorting finished.");
 	}
 }

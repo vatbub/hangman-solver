@@ -20,6 +20,13 @@ One evening when we were testing the algorithm, we had the idea to launch a soci
   - Next, we will collect what words are the most used in hangman
   - Which will give us a better dictionary
   - And most importantly a good overview about what humans are thinking about most of the time.
+  
+## Build the current snapshot
+1. Clone this repository
+2. Run `mvn package`
+
+## Build the latest release
+Repeat the steps mentioned above but switch to the `release` branch by running `git checkout release` prior to runing `mvn package`.
 
 #Current build status
 [![Travis build status](https://travis-ci.org/vatbub/hangman-solver.svg?branch=master)](https://travis-ci.org/vatbub/hangman-solver/)
