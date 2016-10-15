@@ -1,6 +1,9 @@
 # hangman-solver
 This is an algorithm to solve the popular [hangman game](https://en.wikipedia.org/wiki/Hangman_(game)).
 
+##Download the standalone app
+Get the FOKLauncher ([Download](https://bintray.com/vatbub/fokprojectsSnapshots/foklauncher#downloads)|[GitHub Repo](https://github.com/vatbub/fokLauncher)) and download "Hangman Solver" there.
+
 ##How the algorithm works
 The algorithm is based on a dictionary taken from [Wiktionary](https://www.wiktionary.org/), the [Common Locale Data Repository](http://cldr.unicode.org/) and [various other WordNet projects](http://compling.hss.ntu.edu.sg/omw/).
   1. At first, the algorithm will compare the letter sequence it already guessed correctly (e. g. `_n_` if the word is `and` and `n` was already guessed) to all words in the dictionary with the same length.
