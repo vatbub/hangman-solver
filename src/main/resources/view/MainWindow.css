@@ -1,6 +1,7 @@
 
 .text {
     -fx-font-family: "Silent Reaction";
+    -fx-font-size: 20;
 }
 
 .title{

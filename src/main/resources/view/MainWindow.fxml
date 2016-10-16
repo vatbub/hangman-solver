@@ -15,7 +15,7 @@
 <?scenebuilder-preview-i18n-resource strings/messages.properties?>
 <?scenebuilder-stylesheet MainWindow.css?>
 
-<StackPane id="StackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="633.0" prefWidth="600.0000999999975" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.MainWindow">
+<StackPane id="StackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="633.0" prefWidth="600.0000999999975" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindow">
   <children>
     <AnchorPane fx:id="oldGui" prefHeight="200.0" prefWidth="200.0" visible="false">
       <children>
@@ -67,23 +67,38 @@
         </HBox>
         <Label prefWidth="572.0" text="%proposedSolutions.Label" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="410.0" />
         <Label id="thougts" fx:id="thoughts" alignment="TOP_LEFT" labelFor="$thoughts" prefHeight="27.0" prefWidth="572.0" text="" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="376.0" />
-        <Button fx:id="newGameButton" layoutX="14.0" layoutY="266.0" mnemonicParsing="false" onAction="#newGameButtonOnAction" prefWidth="572.0" text="%newGameButton" />
+        <Button layoutX="14.0" layoutY="266.0" mnemonicParsing="false" prefWidth="572.0" text="%newGameButton" />
       </children>
     </AnchorPane>
-    <AnchorPane fx:id="mainMenu" prefHeight="200.0" prefWidth="200.0" styleClass="background" visible="true">
+    <AnchorPane fx:id="newGUI" prefHeight="200.0" prefWidth="200.0" styleClass="background" visible="true">
       <children>
         <Label alignment="TOP_CENTER" prefHeight="150.0" prefWidth="513.0" styleClass="title" text="Hangman Solver" wrapText="true" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="34.0" />
         <HBox id="HBox" fx:id="mainMenuHBox" alignment="CENTER" prefWidth="512.9999000000025" spacing="5.0" AnchorPane.bottomAnchor="49.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="184.0">
           <children>
             <AnchorPane id="hangmanPane" fx:id="hangmanView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="200.0" HBox.hgrow="SOMETIMES" />
-            <VBox id="VBox" alignment="CENTER" prefHeight="216.0" spacing="5.0" HBox.hgrow="ALWAYS">
-              <children>
-                <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="218.0" text="New game" VBox.vgrow="ALWAYS" />
-                <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="218.0" text="Settings" VBox.vgrow="ALWAYS" />
-                <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="218.0" text="How it works" VBox.vgrow="ALWAYS" />
-                <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="218.0" text="Privacy &amp; Imprint" VBox.vgrow="ALWAYS" />
-              </children>
-            </VBox>
+                  <StackPane>
+                     <children>
+                  <VBox id="VBox" fx:id="mainMenu" alignment="CENTER" prefHeight="216.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                    <children>
+                      <Button fx:id="newGameButton" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#newGameButtonOnAction" prefHeight="45.0" prefWidth="218.0" text="New game" VBox.vgrow="ALWAYS" />
+                      <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="218.0" text="Settings" VBox.vgrow="ALWAYS" />
+                      <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="218.0" text="How it works" VBox.vgrow="ALWAYS" />
+                      <Button contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="45.0" prefWidth="218.0" text="Privacy &amp; Imprint" VBox.vgrow="ALWAYS" />
+                    </children>
+                  </VBox>
+                        <VBox fx:id="letterCountInput" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Label prefHeight="59.0" prefWidth="230.0" text="How many letters does your word have?" wrapText="true" VBox.vgrow="ALWAYS" />
+                              <HBox prefWidth="218.0">
+                                 <children>
+                                    <TextField maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                                    <Button maxHeight="1.7976931348623157E308" mnemonicParsing="false" text="Go" HBox.hgrow="ALWAYS" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </StackPane>
           </children>
         </HBox>
       </children>

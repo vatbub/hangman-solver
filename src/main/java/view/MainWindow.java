@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 
 import algorithm.*;
+import common.Animations;
 import common.Common;
 import common.Config;
 import common.ProgressDialog;
@@ -46,6 +47,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -140,12 +142,18 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	 * fx:id="applyButton"
 	 */
 	private Button applyButton; // Value injected by FXMLLoader
+	
+	@FXML
+	private VBox mainMenu; 
+	
+	@FXML
+	private VBox letterCountInput;
 
 	@FXML // fx:id="oldGui"
 	private AnchorPane oldGui; // Value injected by FXMLLoader
 
-	@FXML // fx:id="mainMenu"
-	private AnchorPane mainMenu; // Value injected by FXMLLoader
+	@FXML // fx:id="newGUI"
+	private AnchorPane newGUI; // Value injected by FXMLLoader
 
 	@FXML // fx:id="mainMenuHBox"
 	private HBox mainMenuHBox; // Value injected by FXMLLoader
@@ -255,7 +263,8 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	 * 
 	 */
 	void newGameButtonOnAction(ActionEvent event) {
-		startNewGame();
+		Animations.disableControl(mainMenu);
+		Animations.enableControl(letterCountInput);
 	}
 
 	public void startNewGame() {
@@ -570,7 +579,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		assert hangmanView != null : "fx:id=\"hangmanView\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert languageSelector != null : "fx:id=\"languageSelector\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert loadLanguagesProgressBar != null : "fx:id=\"loadLanguagesProgressBar\" was not injected: check your FXML file 'MainWindow.fxml'.";
-		assert mainMenu != null : "fx:id=\"mainMenu\" was not injected: check your FXML file 'MainWindow.fxml'.";
+		assert newGUI != null : "fx:id=\"mainMenu\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert mainMenuHBox != null : "fx:id=\"mainMenuHBox\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert newGameButton != null : "fx:id=\"newGameButton\" was not injected: check your FXML file 'MainWindow.fxml'.";
 		assert oldGui != null : "fx:id=\"oldGui\" was not injected: check your FXML file 'MainWindow.fxml'.";
@@ -590,7 +599,6 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 			public void run() {
 				boolean finished = false;
 				while (!finished) {
-					System.err.println("Started");
 					try {
 						hangmanView.prefWidthProperty().bind(mainMenuHBox.widthProperty().divide(2));
 						// We did it apparently
@@ -602,7 +610,6 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 						e.printStackTrace();
 					}
 				}
-				System.err.println("Stopped");
 			}
 		};
 
