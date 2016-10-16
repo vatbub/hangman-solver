@@ -131,7 +131,7 @@ http://www.ethnologue.com/terms-use#CodeTables</comments>
 		<dependency>
 			<groupId>fokprojects</groupId>
 			<artifactId>common</artifactId>
-			<version>0.0.15-SNAPSHOT</version>
+			<version>0.0.16-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
