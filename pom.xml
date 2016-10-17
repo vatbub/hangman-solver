@@ -35,9 +35,9 @@
 	</pluginRepositories>
 
 	<parent>
-		<groupId>com.github.vatbub</groupId>
+		<groupId>fokprojects</groupId>
 		<artifactId>parentPom</artifactId>
-		<version>0.0.14</version>
+		<version>0.0.14-SNAPSHOT</version>
 	</parent>
 
 	<scm>
@@ -129,9 +129,9 @@ http://www.ethnologue.com/terms-use#CodeTables</comments>
 			<version>3.3.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.vatbub</groupId>
+			<groupId>fokprojects</groupId>
 			<artifactId>common</artifactId>
-			<version>0.0.16</version>
+			<version>0.0.16-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
