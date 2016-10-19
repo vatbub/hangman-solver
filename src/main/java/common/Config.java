@@ -32,7 +32,7 @@ public class Config {
 	}
 
 	public static final String artifactID = "hangmanSolver";
-	public static final String groupID = "fokprojects";
+	public static final String groupID = "com.github.vatbub";
 	public static final String updateFileClassifier = "jar-with-dependencies";
 
 	// algorithm
