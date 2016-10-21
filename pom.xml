@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>hangmanSolver</artifactId>
 	<version>0.0.17-SNAPSHOT</version>
@@ -6,6 +7,21 @@
 	<description>An application that solves Hangman</description>
 	<inceptionYear>2016</inceptionYear>
 	<packaging>jar</packaging>
+	<url>https://github.com/vatbub/defaultRepo</url>
+
+	<developers>
+		<developer>
+			<id>fkammel</id>
+			<name>Frederik Kammel</name>
+			<email>vatbub123@googlemail.com</email>
+			<url>https://fokprojects.mo-mar.de/</url>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>Europe/Berlin</timezone>
+		</developer>
+	</developers>
 
 	<repositories>
 		<repository>
