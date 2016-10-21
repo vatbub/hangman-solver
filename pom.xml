@@ -7,7 +7,7 @@
 	<description>An application that solves Hangman</description>
 	<inceptionYear>2016</inceptionYear>
 	<packaging>jar</packaging>
-	<url>https://github.com/vatbub/defaultRepo</url>
+	<url>https://github.com/vatbub/hangman-solver</url>
 
 	<developers>
 		<developer>
