@@ -207,7 +207,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	/**
 	 * fx:id="versionLabel"
 	 */
-	private Label versionLabel; // Value injected by FXMLLoader
+	private CustomLabel versionLabel; // Value injected by FXMLLoader
 
 	@FXML
 	/**
@@ -398,7 +398,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		if (event.getButton().equals(MouseButton.PRIMARY)) {
 			// Do the easter egg when clicking with the left mouse button
 			clickCounter++;
-			updateLink.setText(Integer.toString(clickCounter));
+			versionLabel.setTemporaryText(Integer.toString(clickCounter));
 
 			// Add a timer to reset the clickCounter after 1 seconds
 			Timer timer = new Timer();
@@ -409,7 +409,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
-							updateLink.setText(bundle.getString("updateLink"));
+							versionLabel.resetText();
 						}
 					});
 				}
@@ -432,7 +432,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 						Platform.runLater(new Runnable() {
 							@Override
 							public void run() {
-								updateLink.setText(bundle.getString("updateLink"));
+								versionLabel.resetText();
 							}
 						});
 					}

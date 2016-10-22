@@ -10,6 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
+<?import view.*?>
 <?scenebuilder-preview-i18n-resource strings/messages.properties?>
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-1.0" minWidth="-1.0" prefHeight="532.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="view.MainWindow">
@@ -50,11 +51,11 @@
             <Insets left="14.0" />
           </HBox.margin>
         </Label>
-        <Label fx:id="versionLabel" alignment="CENTER_LEFT" prefHeight="28.0" text="unknown" HBox.hgrow="ALWAYS">
+        <CustomLabel fx:id="versionLabel" alignment="CENTER_LEFT" prefHeight="28.0" text="unknown" HBox.hgrow="ALWAYS">
           <HBox.margin>
             <Insets left="5.0" />
           </HBox.margin>
-        </Label>
+        </CustomLabel>
         <Hyperlink fx:id="updateLink" disable="false" minHeight="-1.0" onAction="#updateLinkOnAction" prefHeight="-1.0" text="%updateLink" textFill="#0066ff" HBox.hgrow="ALWAYS">
           <HBox.margin>
             <Insets right="14.0" />
