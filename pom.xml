@@ -117,6 +117,13 @@ SIL International (www.ethnologue.com)
 http://www.ethnologue.com/terms-use#CodeTables</comments>
 		</license>
 	</licenses>
+	
+	<properties>
+		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+		<!-- Access the build timestamp with ${maven.build.timestamp} -->
+		<gitRepoName>hangman-solver</gitRepoName>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
