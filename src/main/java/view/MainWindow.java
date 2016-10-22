@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 
 import algorithm.*;
@@ -396,6 +398,22 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		if (event.getButton().equals(MouseButton.PRIMARY)) {
 			// Do the easter egg when clicking with the left mouse button
 			clickCounter++;
+			updateLink.setText(Integer.toString(clickCounter));
+
+			// Add a timer to reset the clickCounter after 1 seconds
+			Timer timer = new Timer();
+			timer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					clickCounter = 0;
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							updateLink.setText(bundle.getString("updateLink"));
+						}
+					});
+				}
+			}, 1 * 1000);
 
 			if (clickCounter >= 3) {
 				// rotate
@@ -408,6 +426,17 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 
 				rt.play();
 				clickCounter = 0;
+				timer.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								updateLink.setText(bundle.getString("updateLink"));
+							}
+						});
+					}
+				}, 1 * 1000);
 
 				currentAppVersionTextLabel.setTooltip(new Tooltip(bundle.getString("resetEasterEgg")));
 
