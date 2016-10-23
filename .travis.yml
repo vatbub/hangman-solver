@@ -16,6 +16,7 @@ script:
 - mvn test jacoco:report coveralls:report --settings target/travis/settings.xml
 deploy:
   provider: script
+  skip_cleanup: true
   script:
     - mvn site site:deploy
     - mvn clean deploy --settings target/travis/settings.xml -DskipTests=true
