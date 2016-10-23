@@ -65,7 +65,7 @@
 
 	<scm>
 		<connection>scm:git:git@github.com:vatbub/hangman-solver.git</connection>
-		<url>https://github.com/vatbub/hangman-solver/blob/master/</url>
+		<url>https://github.com/vatbub/hangman-solver</url>
 		<developerConnection>scm:git:git@github.com:vatbub/hangman-solver.git</developerConnection>
 		<tag>testRelease</tag>
 	</scm>
