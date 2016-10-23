@@ -17,8 +17,8 @@ script:
 deploy:
   provider: script
   script:
-- mvn site site:deploy
-- mvn clean deploy --settings target/travis/settings.xml -DskipTests=true
+    - mvn site site:deploy
+    - mvn clean deploy --settings target/travis/settings.xml -DskipTests=true
 branches:
   only:
   - master
