@@ -53,6 +53,8 @@
 			<properties>
 				<srcclrKey>${env.srcclrKey}</srcclrKey>
 				<coverallsKey>${env.coverallsKey}</coverallsKey>
+				<ojoUsername>${env.OJO_USERNAME}</ojoUsername>
+				<ojoPassword>${env.OJO_PASSWORD}</ojoPassword>
 			</properties>
 		</profile>
 	</profiles>
