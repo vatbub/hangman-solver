@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import com.mongodb.MongoTimeoutException;
 
 import common.Common;
-import common.Config;
+import common.AppConfig;
 import logging.FOKLogger;
 import stats.HangmanStats;
 
@@ -79,12 +79,12 @@ public class Language {
 
 		// Try to get the resource file, if it fails, the language is not
 		// supported
-		return Language.class.getResource(Config.languageDictPattern.replace("{langCode}", this.getLanguageCode()));
+		return Language.class.getResource(AppConfig.languageDictPattern.replace("{langCode}", this.getLanguageCode()));
 	}
 
 	private File getMergedDictionaryFile() {
 		return new File(Common.getAndCreateAppDataPath()
-				+ Config.languageDictEnhancedPattern.replace("{langCode}", this.getLanguageCode()));
+				+ AppConfig.languageDictEnhancedPattern.replace("{langCode}", this.getLanguageCode()));
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class Language {
 			// Open the LanguageCodes.tab-file
 			TabFile languageCodesFile;
 			try {
-				languageCodesFile = new TabFile(Config.languageCodes);
+				languageCodesFile = new TabFile(AppConfig.languageCodes);
 				// Go through all records and check if the word databases to all
 				// files
 				// can be found for each language
@@ -143,7 +143,7 @@ public class Language {
 		try {
 			if (languageCodesFile == null) {
 				// Open the LanguageCodes.tab-file
-				languageCodesFile = new TabFile(Config.languageCodes);
+				languageCodesFile = new TabFile(AppConfig.languageCodes);
 			}
 
 			// Go through all records to find the language

@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
-import common.Config;
+import common.AppConfig;
 import languages.*;
 import logging.FOKLogger;
 
@@ -195,7 +195,7 @@ public class HangmanSolver {
 			res.bestCharScore = chr.letterScore;
 
 			// Set the result type
-			if (res.bestWordScore >= Config.thresholdToSelectWord(word.length())) {
+			if (res.bestWordScore >= AppConfig.thresholdToSelectWord(word.length())) {
 				// Specify the bestWord as the global result
 				res.convertToWordResult();
 			} else {
@@ -271,7 +271,7 @@ public class HangmanSolver {
 
 		log.getLogger().info("Dictionary size: " + wordsWithEqualLength.size());
 		System.out.println("Counting...");
-		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
+		for (int i = 0; i < AppConfig.getParallelThreadCount(); i++) {
 			threads.add(new Thread() {
 				@Override
 				public void run() {
@@ -288,7 +288,7 @@ public class HangmanSolver {
 		}
 
 		// Wait for threads
-		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
+		for (int i = 0; i < AppConfig.getParallelThreadCount(); i++) {
 			try {
 				threads.get(i).join();
 			} catch (InterruptedException e) {
@@ -495,7 +495,7 @@ public class HangmanSolver {
 
 		// If the current wrong guess count is bigger than or equal to the
 		// permitted wrong guess count, we've lost.
-		if (getWrongGuessCount() + 1 >= Config.maxTurnCountToLoose) {
+		if (getWrongGuessCount() + 1 >= AppConfig.maxTurnCountToLoose) {
 			return GameState.GAME_LOST;
 		}
 

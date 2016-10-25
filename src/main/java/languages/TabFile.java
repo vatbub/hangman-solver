@@ -466,7 +466,7 @@ public class TabFile {
 			ignoredWordsCopy.addAll(Arrays.asList(word.split(" ")));
 		}
 
-		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
+		for (int i = 0; i < AppConfig.getParallelThreadCount(); i++) {
 			threads.add(new Thread() {
 				@Override
 				public void run() {
@@ -492,7 +492,7 @@ public class TabFile {
 		}
 
 		// Wait for threads
-		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
+		for (int i = 0; i < AppConfig.getParallelThreadCount(); i++) {
 			try {
 				threads.get(i).join();
 			} catch (InterruptedException e) {

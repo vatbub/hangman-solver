@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import common.Config;
+import common.AppConfig;
 import common.Internet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -60,7 +60,7 @@ public class SendReportQuestion {
     @FXML
     void actionButtonOnAction(ActionEvent event) {
     	try {
-			Internet.sendEventToIFTTTMakerChannel(Config.iftttMakerApiKey, eventName);
+			Internet.sendEventToIFTTTMakerChannel(AppConfig.iftttMakerApiKey, eventName);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

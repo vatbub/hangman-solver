@@ -12,7 +12,7 @@ import java.util.logging.Level;
 
 import algorithm.*;
 import common.Common;
-import common.Config;
+import common.AppConfig;
 import common.ProgressDialog;
 import common.UpdateChecker;
 import common.UpdateInfo;
@@ -221,8 +221,8 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		Thread updateThread = new Thread() {
 			@Override
 			public void run() {
-				UpdateInfo update = UpdateChecker.isUpdateAvailableCompareAppVersion(Config.getUpdateRepoBaseURL(),
-						Config.groupID, Config.artifactID, Config.updateFileClassifier);
+				UpdateInfo update = UpdateChecker.isUpdateAvailableCompareAppVersion(AppConfig.getUpdateRepoBaseURL(),
+						AppConfig.groupID, AppConfig.artifactID, AppConfig.updateFileClassifier);
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
@@ -523,8 +523,8 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 				Thread updateThread = new Thread() {
 					@Override
 					public void run() {
-						UpdateInfo update = UpdateChecker.isUpdateAvailable(Config.getUpdateRepoBaseURL(),
-								Config.groupID, Config.artifactID, Config.updateFileClassifier);
+						UpdateInfo update = UpdateChecker.isUpdateAvailable(AppConfig.getUpdateRepoBaseURL(),
+								AppConfig.groupID, AppConfig.artifactID, AppConfig.updateFileClassifier);
 						if (update.showAlert) {
 							Platform.runLater(new Runnable() {
 
@@ -694,7 +694,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 								// thought
 								String thoughtText = "";
 
-								if (currentSolution.bestWordScore >= Config.thresholdToShowWord) {
+								if (currentSolution.bestWordScore >= AppConfig.thresholdToShowWord) {
 									applyButton.setDisable(false);
 									thoughtText = bundle.getString("thinkOfAWord")
 											.replace("<percent>",
@@ -708,7 +708,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 								// Add the remeaning wrong guesses
 								thoughtText = thoughtText + " " + bundle.getString("remeaningWrongGuesses")
 										.replace("<number>", Integer.toString(
-												Config.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
+												AppConfig.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
 
 								setThought(thoughtText);
 
@@ -899,7 +899,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 
 			for (String word : words) {
 				if (word.length() == currentSolution.bestWord.length())
-					if (TabFile.stringCorrelation(word, currentSolution.bestWord) >= Config
+					if (TabFile.stringCorrelation(word, currentSolution.bestWord) >= AppConfig
 							.thresholdToSelectWord(word.length())) {
 						HangmanStats.addWordToDatabase(currentSolution.bestWord, currentSolution.lang);
 					}

@@ -15,8 +15,8 @@ import logging.FOKLogger;
  * @author frede
  *
  */
-public class Config {
-	private static final FOKLogger log = new FOKLogger(Config.class.getName());
+public class AppConfig {
+	private static final FOKLogger log = new FOKLogger(AppConfig.class.getName());
 	private static int oldThreadCount = 0;
 
 	// Project setup

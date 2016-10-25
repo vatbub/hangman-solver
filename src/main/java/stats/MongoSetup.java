@@ -5,7 +5,7 @@ import org.bson.Document;
 import com.mongodb.*;
 import com.mongodb.client.*;
 
-import common.Config;
+import common.AppConfig;
 
 /**
  * This class sets up the connection to the
@@ -18,10 +18,10 @@ import common.Config;
  */
 public class MongoSetup {
 
-	private static MongoClient mongoClient = new MongoClient(Config.mongoDBServerAddress);
-	private static MongoDatabase mongoDatabase = mongoClient.getDatabase(Config.mongoDBDatabaseName);
+	private static MongoClient mongoClient = new MongoClient(AppConfig.mongoDBServerAddress);
+	private static MongoDatabase mongoDatabase = mongoClient.getDatabase(AppConfig.mongoDBDatabaseName);
 	private static MongoCollection<Document> wordsUsedCollection = mongoDatabase
-			.getCollection(Config.mongoDBWordsUsedCollectionName);
+			.getCollection(AppConfig.mongoDBWordsUsedCollectionName);
 
 	/**
 	 * Returns the collection where the used words are saved.
