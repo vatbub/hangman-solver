@@ -10,8 +10,7 @@ cache:
   - "$HOME/.m2"
 before_install:
 - git clone -b travis `git config --get remote.origin.url` target/travis
-install:
-- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -U --settings target/travis/settings.xml
+install: echo Install phase has been disabled as a complete buidl is run during deployment
 script:
 - mvn test jacoco:report coveralls:report --settings target/travis/settings.xml
 before_cache:
