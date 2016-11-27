@@ -1,13 +1,13 @@
 package common;
 
+import com.mongodb.MongoClientURI;
+import languages.Language;
+import logging.FOKLogger;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
-
-import com.mongodb.MongoClientURI;
-import languages.Language;
-import logging.FOKLogger;
 
 /**
  * A class to configure some parameters.
@@ -23,7 +23,7 @@ public class AppConfig {
 	public static URL getUpdateRepoBaseURL() {
 		URL res = null;
 		try {
-			res = new URL("http://dl.bintray.com/vatbub/fokprojectsSnapshots");
+			res = new URL("http://dl.bintray.com/vatbub/fokprojectsReleases");
 		} catch (MalformedURLException e) {
 			log.getLogger().log(Level.SEVERE, "An error occurred", e);
 		}
