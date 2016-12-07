@@ -28,10 +28,13 @@ import common.AtomicDouble;
 import common.Common;
 import org.apache.commons.io.FileUtils;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
@@ -88,17 +91,23 @@ public class TabFile {
             String languageCode = args[1];
             char[] availableLetters = args[2].toCharArray();
             Language language = new Language(languageCode);
+            String res = "";
             try {
                 TabFile tabFile = language.getTabFile();
                 List<String> printedWords = new ArrayList<>();
                 for (int row = 1; row < tabFile.getRowCount(); row++) {
                     if (tabFile.isPermitted(row, 2, availableLetters)) {
                         if (!printedWords.contains(tabFile.getValueAt(row, 2))) {
-                            System.out.println(tabFile.getValueAt(row, 2));
+                            res = res + tabFile.getValueAt(row, 2) + "\n";
                             printedWords.add(tabFile.getValueAt(row, 2));
                         }
                     }
                 }
+
+                // Copy result to clipboard
+                StringSelection selection = new StringSelection(res);
+                System.out.println(res);
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
             } catch (Exception e) {
                 e.printStackTrace();
             }
