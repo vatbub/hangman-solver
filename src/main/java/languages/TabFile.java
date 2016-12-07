@@ -21,21 +21,18 @@ package languages;
  */
 
 
+import algorithm.HangmanSolver;
+import common.AppConfig;
+import common.ArrayListWithSortableKey;
+import common.AtomicDouble;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
-
-import org.apache.commons.io.FileUtils;
-
-import algorithm.HangmanSolver;
-import common.*;
 
 public class TabFile {
 
