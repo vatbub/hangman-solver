@@ -113,13 +113,14 @@ public class TabFile {
             permittedChars2.add(chr);
         }
 
-        for (char chr : word.toCharArray()) {
+        /*for (char chr : word.toCharArray()) {
             if (!permittedChars2.contains(chr)) {
                 return false;
             }
         }
 
-        return true;
+        return true;*/
+        return permittedChars2.contains(word.charAt(0));
     }
 
     /**
