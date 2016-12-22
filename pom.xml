@@ -8,20 +8,6 @@
 	<packaging>jar</packaging>
 	<url>https://github.com/vatbub/hangman-solver</url>
 
-	<developers>
-		<developer>
-			<id>fkammel</id>
-			<name>Frederik Kammel</name>
-			<email>vatbub123@googlemail.com</email>
-			<url>https://fokprojects.mo-mar.de/</url>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>Europe/Berlin</timezone>
-		</developer>
-	</developers>
-
 	<repositories>
 		<repository>
 			<snapshots>
