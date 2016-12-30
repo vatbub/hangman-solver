@@ -21,6 +21,12 @@ package languages;
  */
 
 
+import com.mongodb.MongoTimeoutException;
+import common.AppConfig;
+import common.Common;
+import logging.FOKLogger;
+import stats.HangmanStats;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -30,13 +36,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
-
-import com.mongodb.MongoTimeoutException;
-
-import common.Common;
-import common.AppConfig;
-import logging.FOKLogger;
-import stats.HangmanStats;
 
 public class Language {
 	/**
@@ -86,11 +85,9 @@ public class Language {
 	/**
 	 * Looks up the {@link URL} to the resource file for the specified language.
 	 * Uses the dictionary files shipped in this jar.
-	 * 
-	 * @param languageCode
-	 *            The ISO 639-3 language code
+	 *
 	 * @return The {@link File}-representation of the resource file that
-	 *         contains the word list for the specified language or {@code null}
+	 *         contains the word list for the language specified in the constructor or {@code null}
 	 *         if the language is not supported.
 	 */
 	private URL getTabFileNameInternalResource() {
@@ -149,7 +146,7 @@ public class Language {
 
 	/**
 	 * Returns the human readable name of the language taken from the resource
-	 * specified in {@link languageCodes}.
+	 * specified in {@link AppConfig#languageCodes}.
 	 * 
 	 * @param languageCode
 	 *            The ISO 639-3 language code
@@ -260,7 +257,7 @@ public class Language {
 		} catch (MalformedURLException e) {
 			// This error should never happen because all generated urls only
 			// depend on the app config in common.Config
-			FOKLogger.log(Level.SEVERE, "An error occurred that should never occur", e);
+			FOKLogger.log(Language.class.getName(), Level.SEVERE, "An error occurred that should never occur", e);
 			return null;
 		}
 	}
@@ -308,7 +305,7 @@ public class Language {
 					me.mergeWithOnlineVersionAsyncOnIOException();
 				}catch (MongoTimeoutException e3){
 					// Just print it to the log
-					FOKLogger.log(Level.SEVERE, "You are probably not connected to the internet, are you?", e3);
+					FOKLogger.log(Language.class.getName(), Level.SEVERE, "You are probably not connected to the internet, are you?", e3);
 				}
 			}
 		};
