@@ -37,7 +37,6 @@ import java.util.logging.Level;
  *
  */
 public class AppConfig {
-	private static final FOKLogger log = new FOKLogger(AppConfig.class.getName());
 	private static int oldThreadCount = 0;
 
 	// Project setup
@@ -46,7 +45,7 @@ public class AppConfig {
 		try {
 			res = new URL("http://dl.bintray.com/vatbub/fokprojectsReleases");
 		} catch (MalformedURLException e) {
-			log.getLogger().log(Level.SEVERE, "An error occurred", e);
+			FOKLogger.log(AppConfig.class.getName(), Level.SEVERE, "An error occurred", e);
 		}
 
 		return res;
@@ -70,7 +69,7 @@ public class AppConfig {
 
 		if (threadCount != oldThreadCount) {
 			oldThreadCount = threadCount;
-			log.getLogger().info("Now using " + threadCount + " threads");
+			FOKLogger.info(AppConfig.class.getName(), "Now using " + threadCount + " threads");
 		}
 
 		return threadCount;

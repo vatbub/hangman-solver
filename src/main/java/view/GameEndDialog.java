@@ -21,17 +21,6 @@ package view;
  */
 
 
-import java.io.IOException;
-
-/**
- * Sample Skeleton for "askIfWin.fxml" Controller Class
- * You can copy and paste this code into your favorite IDE
- **/
-
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-
 import algorithm.GameState;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -49,6 +38,16 @@ import javafx.stage.Stage;
 import logging.FOKLogger;
 import stats.HangmanStats;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+
+/**
+ * Sample Skeleton for "askIfWin.fxml" Controller Class
+ * You can copy and paste this code into your favorite IDE
+ **/
+
 /**
  * A dialog to ask the user if the computer has won the game. Will probably be
  * removed when the win detector is introduced.
@@ -62,7 +61,6 @@ public class GameEndDialog {
 	private static MainWindow mainWindowCopy;
 	private static GameState gameStateCopy;
 	private static ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
-	private static FOKLogger log = new FOKLogger(GameEndDialog.class.getName());
 
 	@FXML // ResourceBundle that was given to the FXMLLoader
 	private ResourceBundle resources;
@@ -185,7 +183,7 @@ public class GameEndDialog {
 			
 			stage.show();
 		} catch (IOException e) {
-			log.getLogger().log(Level.SEVERE, "An error occurred", e);
+			FOKLogger.log(GameEndDialog.class.getName(), Level.SEVERE, "An error occurred", e);
 		}
 	}
 

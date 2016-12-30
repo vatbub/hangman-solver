@@ -21,17 +21,17 @@ package view;
  */
 
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import logging.FOKLogger;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 /**
  * A window diaplying a dialog with some licensing info.
@@ -40,9 +40,6 @@ import logging.FOKLogger;
  *
  */
 public class LicenseWindow {
-	
-	private static FOKLogger log = new FOKLogger(LicenseWindow.class.getName());
-
 	@FXML
 	private ResourceBundle resources;
 
@@ -75,7 +72,7 @@ public class LicenseWindow {
 			stage.setScene(scene);
 			stage.show();
 		} catch (IOException e) {
-			log.getLogger().log(Level.SEVERE, "An error occurred", e);
+			FOKLogger.log(LicenseWindow.class.getName(), Level.SEVERE, "An error occurred", e);
 		}
 	}
 

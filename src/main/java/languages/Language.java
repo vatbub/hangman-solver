@@ -39,9 +39,6 @@ import logging.FOKLogger;
 import stats.HangmanStats;
 
 public class Language {
-
-	private static FOKLogger log = new FOKLogger(Language.class.getName());
-
 	/**
 	 * Cached list of supported languages
 	 */
@@ -144,7 +141,7 @@ public class Language {
 				supportedLanguages = res;
 				return res;
 			} catch (IOException e) {
-				log.getLogger().log(Level.SEVERE, "An error occurred", e);
+				FOKLogger.log(Language.class.getName(), Level.SEVERE, "An error occurred", e);
 				return null;
 			}
 		}
@@ -177,7 +174,7 @@ public class Language {
 			// We only arrive here if the language was not found
 			return null;
 		} catch (IOException e) {
-			log.getLogger().log(Level.SEVERE, "An error occurred", e);
+			FOKLogger.log(Language.class.getName(), Level.SEVERE, "An error occurred", e);
 			return null;
 		}
 	}
@@ -263,7 +260,7 @@ public class Language {
 		} catch (MalformedURLException e) {
 			// This error should never happen because all generated urls only
 			// depend on the app config in common.Config
-			log.getLogger().log(Level.SEVERE, "An error occurred that should never occur", e);
+			FOKLogger.log(Level.SEVERE, "An error occurred that should never occur", e);
 			return null;
 		}
 	}
@@ -311,7 +308,7 @@ public class Language {
 					me.mergeWithOnlineVersionAsyncOnIOException();
 				}catch (MongoTimeoutException e3){
 					// Just print it to the log
-					log.getLogger().log(Level.SEVERE, "You are probably not connected to the internet, are you?", e3);
+					FOKLogger.log(Level.SEVERE, "You are probably not connected to the internet, are you?", e3);
 				}
 			}
 		};

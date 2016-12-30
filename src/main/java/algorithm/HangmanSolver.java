@@ -21,15 +21,16 @@ package algorithm;
  */
 
 
+import common.AppConfig;
+import languages.Language;
+import languages.TabFile;
+import logging.FOKLogger;
+
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
-
-import common.AppConfig;
-import languages.*;
-import logging.FOKLogger;
 
 /**
  * A class that holds all methods and algorithms to solve a hangman puzzle.
@@ -41,7 +42,6 @@ public class HangmanSolver {
 
 	private static Language langOld;
 	private static TabFile database;
-	private static FOKLogger log = new FOKLogger(HangmanSolver.class.getName());
 
 	/**
 	 * A {@link List} that contains all characters and words that the computer
@@ -191,11 +191,11 @@ public class HangmanSolver {
 		String bestWord = database.getValueWithHighestCorrelation(2, word, proposedSolutions);
 		boolean foundBestWord = true;
 
-		log.getLogger().info("Best match in dictionary: " + bestWord);
+		FOKLogger.info(HangmanSolver.class.getName(), "Best match in dictionary: " + bestWord);
 
 		if (bestWord.length() == 0) {
 			// dictionaries are both used up
-			log.getLogger().severe("dictionary used up");
+			FOKLogger.severe(HangmanSolver.class.getName(), "dictionary used up");
 			foundBestWord = false;
 		} else if (bestWord.equals("")) {
 			foundBestWord = false;
@@ -225,7 +225,7 @@ public class HangmanSolver {
 
 		} else {
 			// No bestWord found
-			log.getLogger().info("No best word found, using most common chars only");
+			FOKLogger.info(HangmanSolver.class.getName(), "No best word found, using most common chars only");
 			SingleChar chr = getMostFrequentChar(wordsWithEqualLength);
 			res.bestChar = chr.chr;
 			res.bestCharScore = chr.letterScore;
@@ -243,12 +243,12 @@ public class HangmanSolver {
 	 */
 	private static void loadLanguageDatabases(Language lang) {
 		try {
-			log.getLogger().info("Loading language databases for " + lang.getHumanReadableName());
+			FOKLogger.info(HangmanSolver.class.getName(), "Loading language databases for " + lang.getHumanReadableName());
 			langOld = lang;
 			database = lang.getTabFile();
 			lang.mergeWithOnlineVersionAsync();
 		} catch (IOException e) {
-			log.getLogger().log(Level.SEVERE, "An error occurred", e);
+			FOKLogger.log(HangmanSolver.class.getName(), Level.SEVERE, "An error occurred", e);
 		}
 	}
 
@@ -290,7 +290,7 @@ public class HangmanSolver {
 		// ArrayList<AtomicInteger>(Collections.nCopies(Character.MAX_VALUE, new
 		// AtomicInteger(0)));
 
-		log.getLogger().info("Dictionary size: " + wordsWithEqualLength.size());
+		FOKLogger.info(HangmanSolver.class.getName(), "Dictionary size: " + wordsWithEqualLength.size());
 		System.out.println("Counting...");
 		for (int i = 0; i < AppConfig.getParallelThreadCount(); i++) {
 			threads.add(new Thread() {
@@ -313,7 +313,7 @@ public class HangmanSolver {
 			try {
 				threads.get(i).join();
 			} catch (InterruptedException e) {
-				log.getLogger().log(Level.SEVERE, "An error occurred", e);
+				FOKLogger.log(HangmanSolver.class.getName(), Level.SEVERE, "An error occurred", e);
 			}
 		}
 

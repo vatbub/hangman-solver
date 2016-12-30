@@ -21,23 +21,11 @@ package view;
  */
 
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Level;
-
-import algorithm.*;
-import common.Common;
-import common.AppConfig;
-import common.ProgressDialog;
-import common.UpdateChecker;
-import common.UpdateInfo;
-import common.Version;
+import algorithm.GameState;
+import algorithm.HangmanSolver;
+import algorithm.Result;
+import algorithm.ResultType;
+import common.*;
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -51,16 +39,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -75,6 +54,10 @@ import stats.HangmanStats;
 import stats.MongoSetup;
 import view.updateAvailableDialog.UpdateAvailableDialog;
 
+import java.net.URL;
+import java.util.*;
+import java.util.logging.Level;
+
 /**
  * The MainWindow controller class.
  **/
@@ -82,11 +65,9 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 
 	private static double curVersionEasterEggTurnDegrees = 0;
 	private static boolean disableUpdateChecks = false;
-	private static FOKLogger log;
 
 	public static void main(String[] args) {
 		common.Common.setAppName("hangmanSolver");
-		log = new FOKLogger(MainWindow.class.getName());
 		for (String arg : args) {
 			if (arg.toLowerCase().matches("mockappversion=.*")) {
 				// Set the mock version
@@ -97,7 +78,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 				String buildnumber = arg.substring(arg.toLowerCase().indexOf('=') + 1);
 				Common.setMockBuildNumber(buildnumber);
 			} else if (arg.toLowerCase().matches("disableupdatechecks")) {
-				log.getLogger().info("Update checks are disabled as app was launched from launcher.");
+				FOKLogger.info(MainWindow.class.getName(), "Update checks are disabled as app was launched from launcher.");
 				disableUpdateChecks = true;
 			} else if (arg.toLowerCase().matches("mockpackaging=.*")) {
 				// Set the mock packaging
@@ -106,7 +87,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 			} else if (arg.toLowerCase().matches("locale=.*")) {
 				// set the gui language
 				String guiLanguageCode = arg.substring(arg.toLowerCase().indexOf('=') + 1);
-				log.getLogger().info("Setting language: " + guiLanguageCode);
+				FOKLogger.info(MainWindow.class.getName(), "Setting language: " + guiLanguageCode);
 				Locale.setDefault(new Locale(guiLanguageCode));
 			}
 		}
@@ -579,7 +560,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 
 			primaryStage.show();
 		} catch (Exception e) {
-			log.getLogger().log(Level.SEVERE, "An error occurred", e);
+			FOKLogger.log(MainWindow.class.getName(), Level.SEVERE, "An error occurred", e);
 		}
 	}
 
@@ -840,7 +821,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 
 	@Override
 	public void operationsStarted() {
-		log.getLogger().info("Loading language list...");
+		FOKLogger.info(MainWindow.class.getName(), "Loading language list...");
 
 		Platform.runLater(new Runnable() {
 			@Override
@@ -870,7 +851,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 
 	@Override
 	public void operationsFinished() {
-		log.getLogger().info("Languages loaded");
+		FOKLogger.info(MainWindow.class.getName(), "Languages loaded");
 
 		Platform.runLater(new Runnable() {
 			@Override
@@ -896,15 +877,15 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	 */
 	public static void shutDown() {
 		try {
-			log.getLogger().info("Shutting down....");
+			FOKLogger.info(MainWindow.class.getName(), "Shutting down....");
 			// Maybe submit the current word
 			submitWordOnQuit();
 			HangmanStats.uploadThread.interrupt();
 			HangmanStats.uploadThread.join();
 			MongoSetup.close();
-			log.getLogger().info("Good bye");
+			FOKLogger.info(MainWindow.class.getName(), "Good bye");
 		} catch (InterruptedException e) {
-			log.getLogger().log(Level.SEVERE, "An error occurred", e);
+			FOKLogger.log(MainWindow.class.getName(), Level.SEVERE, "An error occurred", e);
 		}
 
 	}

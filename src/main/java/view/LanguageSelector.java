@@ -33,7 +33,6 @@ public class LanguageSelector extends ComboBox<String> implements ProgressDialog
 	
 	private LanguageList langList;
 	private ProgressBar loadLanguagesProgressBar;
-	private static FOKLogger log = new FOKLogger(LanguageSelector.class.getName());
 
 	public LanguageSelector() {
 		super();
@@ -57,7 +56,7 @@ public class LanguageSelector extends ComboBox<String> implements ProgressDialog
 	
 	@Override
 	public void operationsStarted() {
-		log.getLogger().info("Loading language list...");
+		FOKLogger.info(LanguageSelector.class.getName(), "Loading language list...");
 		LanguageSelector me = this;
 
 		Platform.runLater(new Runnable() {

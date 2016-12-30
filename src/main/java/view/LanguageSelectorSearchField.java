@@ -35,7 +35,6 @@ public class LanguageSelectorSearchField implements ProgressDialog{
 	private Parent parentNode;
 	private LanguageList langList;
 	private ProgressBar loadLanguagesProgressBar;
-	private static FOKLogger log = new FOKLogger(LanguageSelectorSearchField.class.getName());
 
 	public LanguageSelectorSearchField(ComboBox<String> comboBox, Parent parentNode, LanguageList langList) {
 		this.comboBox = comboBox;
@@ -46,7 +45,7 @@ public class LanguageSelectorSearchField implements ProgressDialog{
 	
 		@Override
 		public void operationsStarted() {
-			log.getLogger().info("Loading language list...");
+			FOKLogger.info(LanguageSelectorSearchField.class.getName(), "Loading language list...");
 			LanguageSelectorSearchField me = this;
 
 			Platform.runLater(new Runnable() {
