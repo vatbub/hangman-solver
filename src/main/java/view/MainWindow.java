@@ -68,6 +68,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 
 	public static void main(String[] args) {
 		common.Common.setAppName("hangmanSolver");
+		FOKLogger.enableLoggingOfUncaughtExceptions();
 		for (String arg : args) {
 			if (arg.toLowerCase().matches("mockappversion=.*")) {
 				// Set the mock version
