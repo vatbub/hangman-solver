@@ -118,7 +118,7 @@ http://www.ethnologue.com/terms-use#CodeTables</comments>
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongodb-driver</artifactId>
-			<version>3.3.0</version>
+			<version>3.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.vatbub</groupId>
