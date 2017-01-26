@@ -21,11 +21,11 @@ package languages;
  */
 
 
+import common.ProgressDialog;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import common.ProgressDialog;
 
 public class LanguageList extends ArrayList<Language> {
 
@@ -50,8 +50,8 @@ public class LanguageList extends ArrayList<Language> {
 		return getHumanReadableNames(null);
 	}
 
-	public List<String> getHumanReadableNames(ProgressDialog gui) {
-		List<String> res = new ArrayList<String>(this.size());
+	public List<String> getHumanReadableNames(@SuppressWarnings("SameParameterValue") ProgressDialog gui) {
+		List<String> res = new ArrayList<>(this.size());
 
 		if (gui != null) {
 			gui.operationsStarted();
@@ -77,7 +77,7 @@ public class LanguageList extends ArrayList<Language> {
 	}
 
 	public List<String> getHumanReadableTranslatedNames(ProgressDialog gui) {
-		List<String> res = new ArrayList<String>(this.size());
+		List<String> res = new ArrayList<>(this.size());
 
 		if (gui != null) {
 			gui.operationsStarted();

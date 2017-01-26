@@ -73,7 +73,7 @@ public class AppConfig {
 		}
 
 		return threadCount;
-	};
+	}
 
 	/**
 	 * The {@link algorithm.HangmanSolver}-algorithm will find the word in in

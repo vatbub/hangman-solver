@@ -47,7 +47,7 @@ public class HangmanSolver {
 	 * A {@link List} that contains all characters and words that the computer
 	 * has guessed.
 	 */
-	public static List<String> proposedSolutions = new ArrayList<String>();
+	public static final List<String> proposedSolutions = new ArrayList<>();
 
 	private static String currentSequenceCopy;
 
@@ -85,7 +85,7 @@ public class HangmanSolver {
 		}
 
 		// Split the pattern up in words
-		ArrayList<String> words = new ArrayList<String>(Arrays.asList(currentSequence.split(" ")));
+		ArrayList<String> words = new ArrayList<>(Arrays.asList(currentSequence.split(" ")));
 
 		// Go through all words
 		for (String word : words) {
@@ -140,7 +140,7 @@ public class HangmanSolver {
 			} else {
 				// More than one maxValue found, return the one that appears the
 				// most
-				Map<Character, Integer> charCounts = new HashMap<Character, Integer>();
+				Map<Character, Integer> charCounts = new HashMap<>();
 
 				for (Result res : maxValues) {
 					if (charCounts.containsKey(res.bestChar)) {
@@ -161,6 +161,7 @@ public class HangmanSolver {
 					}
 				}
 
+				assert maxEntry != null;
 				globalResult = resultList.getFirstResultWithBestChar(maxEntry.getKey());
 			}
 
@@ -276,9 +277,9 @@ public class HangmanSolver {
 	 * @return The most frequent char.
 	 */
 	private static SingleChar getMostFrequentChar(List<String> wordsWithEqualLength, char[] priorityChars) {
-		ArrayList<Thread> threads = new ArrayList<Thread>();
+		ArrayList<Thread> threads = new ArrayList<>();
 		AtomicInteger currentIndex = new AtomicInteger(0);
-		List<CustomAtomicInteger> charCounts = new ArrayList<CustomAtomicInteger>();
+		List<CustomAtomicInteger> charCounts = new ArrayList<>();
 
 		System.out.println("Preparing...");
 		for (int i = 0; i < Character.MAX_VALUE; i++) {
@@ -293,18 +294,15 @@ public class HangmanSolver {
 		FOKLogger.info(HangmanSolver.class.getName(), "Dictionary size: " + wordsWithEqualLength.size());
 		System.out.println("Counting...");
 		for (int i = 0; i < AppConfig.getParallelThreadCount(); i++) {
-			threads.add(new Thread() {
-				@Override
-				public void run() {
-					int index = currentIndex.getAndIncrement();
-					while (index < wordsWithEqualLength.size()) {
-						countAllCharsInString(wordsWithEqualLength.get(index), charCounts);
+			threads.add(new Thread(() -> {
+                int index = currentIndex.getAndIncrement();
+                while (index < wordsWithEqualLength.size()) {
+                    countAllCharsInString(wordsWithEqualLength.get(index), charCounts);
 
-						// Grab the next index
-						index = currentIndex.getAndIncrement();
-					}
-				}
-			});
+                    // Grab the next index
+                    index = currentIndex.getAndIncrement();
+                }
+            }));
 			threads.get(i).start();
 		}
 
@@ -323,7 +321,7 @@ public class HangmanSolver {
 		int maxIndex = 0;
 
 		// copy charCounts
-		List<CustomAtomicInteger> sortedCharCounts = new ArrayList<CustomAtomicInteger>(charCounts);
+		List<CustomAtomicInteger> sortedCharCounts = new ArrayList<>(charCounts);
 		// sort the charCounts
 		Collections.sort(sortedCharCounts);
 		Collections.reverse(sortedCharCounts);
@@ -436,6 +434,7 @@ public class HangmanSolver {
 	 * @return {@code true} if the word contains a wrong char, {@code false}
 	 *         otherwise.
 	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public static boolean currentWordContainsWrongChar(String word) {
 		return wordContainsWrongChar(currentWordCopy, word);
 	}
@@ -470,7 +469,7 @@ public class HangmanSolver {
 	 * @return The number of wrong guesses done so far.
 	 */
 	public static int getWrongGuessCount() {
-		List<String> wrongSolutions = new ArrayList<String>();
+		List<String> wrongSolutions = new ArrayList<>();
 		for (String solution : proposedSolutions) {
 			if (wordContainsWrongChar(solution)) {
 				wrongSolutions.add(solution);
@@ -492,7 +491,7 @@ public class HangmanSolver {
 	 */
 	public static GameState winDetector(String currentSequence) {
 		// Split the pattern up in words
-		ArrayList<String> words = new ArrayList<String>(Arrays.asList(currentSequence.split(" ")));
+		ArrayList<String> words = new ArrayList<>(Arrays.asList(currentSequence.split(" ")));
 
 		// Remove all words that don't contain an underscore as they are fully
 		// solved
@@ -530,7 +529,7 @@ public class HangmanSolver {
 			this.letterScore = letterScore;
 		}
 
-		char chr;
-		double letterScore;
+		final char chr;
+		final double letterScore;
 	}
 }

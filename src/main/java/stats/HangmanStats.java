@@ -48,27 +48,27 @@ public class HangmanStats {
 	 * ensures that the word counts in the
 	 * <a href="https://www.mongodb.com/">MongoDB</a> are correct.
 	 */
-	private static List<String> alreadySubmittedWordsInThisSession = new ArrayList<String>();
+	private static final List<String> alreadySubmittedWordsInThisSession = new ArrayList<>();
 	/**
 	 * The current upload queue.
 	 */
-	private static LinkedBlockingQueue<Document> docQueue = new LinkedBlockingQueue<Document>();
+	private static final LinkedBlockingQueue<Document> docQueue = new LinkedBlockingQueue<>();
 	/**
 	 * This object is used to save a copy of the upload queue on the disc to
 	 * keep it even if the app is relaunched.
 	 */
-	private static Prefs preferences = initPrefs();
+	private static final Prefs preferences = initPrefs();
 	/**
 	 * The pref key where the offline copy of the upload queue is saved.
 	 */
-	private static String persistentDocQueueKey = "docQueue";
+	private static final String persistentDocQueueKey = "docQueue";
 
 	/**
 	 * This thread runs in the background and uploads all submitted words. This
 	 * concept ensures that all words are submitted even if the player was
 	 * offline while playing.
 	 */
-	public static Thread uploadThread = new Thread() {
+	public static final Thread uploadThread = new Thread() {
 		private boolean interrupted = false;
 
 		@Override
@@ -193,7 +193,7 @@ public class HangmanStats {
 	 */
 	public static void addWordToDatabase(String word, Language lang) {
 
-		if (uploadThread.isAlive() == false) {
+		if (!uploadThread.isAlive()) {
 			uploadThread.start();
 		}
 

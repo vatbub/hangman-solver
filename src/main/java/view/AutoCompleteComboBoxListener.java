@@ -46,8 +46,8 @@ import javafx.scene.input.KeyEvent;
 @SuppressWarnings("restriction")
 public class AutoCompleteComboBoxListener<T> {
 
-	private ComboBox<T> comboBox;
-	private StringBuilder sb;
+	private final ComboBox<T> comboBox;
+	private final StringBuilder sb;
 	private int lastLength;
 
 	public AutoCompleteComboBoxListener(ComboBox<T> comboBox) {

@@ -21,9 +21,6 @@ package view.noSequenceEntered;
  */
 
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,6 +31,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 /**
  * An alert box that pops up if the user has entered no letter sequence.
  * @author frede
@@ -41,7 +42,7 @@ import javafx.stage.Stage;
  */
 public class NoSequenceEntered {
 	
-	private static ResourceBundle bundle = ResourceBundle.getBundle("view.noSequenceEntered.AlertDialog");
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("view.noSequenceEntered.AlertDialog");
 	private static Stage stage;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
@@ -50,6 +51,7 @@ public class NoSequenceEntered {
     @FXML // URL location of the FXML file that was given to the FXMLLoader
     private URL location;
 
+    @SuppressWarnings("CanBeFinal")
     @FXML // fx:id="detailsLabel"
     private Label detailsLabel; // Value injected by FXMLLoader
 

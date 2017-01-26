@@ -29,6 +29,7 @@ import javafx.scene.control.ProgressBar;
 import languages.LanguageList;
 import logging.FOKLogger;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class LanguageSelector extends ComboBox<String> implements ProgressDialog{
 	
 	private LanguageList langList;
@@ -59,19 +60,16 @@ public class LanguageSelector extends ComboBox<String> implements ProgressDialog
 		FOKLogger.info(LanguageSelector.class.getName(), "Loading language list...");
 		LanguageSelector me = this;
 
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				me.setDisable(true);
-				//TODO Get String from resource bundle
-				me.setPromptText("Loading languages, please wait...");
+		Platform.runLater(() -> {
+            me.setDisable(true);
+            //TODO Get String from resource bundle
+            me.setPromptText("Loading languages, please wait...");
 
-				loadLanguagesProgressBar.setPrefHeight(me.getHeight());
-				me.getParent();
-				
-				loadLanguagesProgressBar.setVisible(true);
-			}
-		});
+            loadLanguagesProgressBar.setPrefHeight(me.getHeight());
+            me.getParent();
+
+            loadLanguagesProgressBar.setVisible(true);
+        });
 	}
 
 	@Override

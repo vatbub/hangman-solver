@@ -39,9 +39,9 @@ import common.AppConfig;
  */
 public class MongoSetup {
 
-	private static MongoClient mongoClient = new MongoClient(AppConfig.mongoDBServerAddress);
-	private static MongoDatabase mongoDatabase = mongoClient.getDatabase(AppConfig.mongoDBDatabaseName);
-	private static MongoCollection<Document> wordsUsedCollection = mongoDatabase
+	private static final MongoClient mongoClient = new MongoClient(AppConfig.mongoDBServerAddress);
+	private static final MongoDatabase mongoDatabase = mongoClient.getDatabase(AppConfig.mongoDBDatabaseName);
+	private static final MongoCollection<Document> wordsUsedCollection = mongoDatabase
 			.getCollection(AppConfig.mongoDBWordsUsedCollectionName);
 
 	/**

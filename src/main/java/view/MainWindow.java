@@ -29,8 +29,6 @@ import common.*;
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -96,8 +94,8 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		launch(args);
 	}
 
-	private ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
-	private ResourceBundle errorMessageBundle = ResourceBundle.getBundle("view.strings.errormessages");
+	private final ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
+	private final ResourceBundle errorMessageBundle = ResourceBundle.getBundle("view.strings.errormessages");
 	private static String currentSequenceStr;
 	public static Result currentSolution;
 	private boolean shareThoughtsBool;
@@ -119,130 +117,67 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 													// FXMLLoader
 
 	@FXML
-	/**
-	 * ResourceBundle that was given to the FXMLLoader
-	 */
 	private ResourceBundle resources;
 
 	@FXML
-	/**
-	 * URL location of the FXML file that was given to the FXMLLoader
-	 */
 	private URL location;
 
 	@FXML
-	/**
-	 * fx:id="actionLabel"
-	 */
 	private Label actionLabel; // Value injected by FXMLLoader
 
 	@FXML
-	/**
-	 * fx:id="applyButton"
-	 */
 	private Button applyButton; // Value injected by FXMLLoader
 
 	@FXML
-	/**
-	 * fx:id="creditsButton"
-	 */
 	private Button creditsButton;
 
 	@FXML // fx:id="currentAppVersionTextLabel"
 	private Label currentAppVersionTextLabel; // Value injected by FXMLLoader
 
+	@SuppressWarnings("CanBeFinal")
 	@FXML
-	/**
-	 * fx:id="currentSequence"
-	 */
 	public TextField currentSequence; // Value injected by FXMLLoader
 
 	@FXML
-	/**
-	 * fx:id="getNextLetter"
-	 */
 	private Button getNextLetter; // Value injected by FXMLLoader
 
 	@FXML
-	/**
-	 * fx:id="languageSelector"
-	 * 
-	 */
 	private ComboBox<String> languageSelector; // Value injected by FXMLLoader
 
 	@FXML
-	/**
-	 * fx:id="result"
-	 */
 	private TextField result; // Value injected by FXMLLoader
 
 	@FXML
-	/**
-	 * fx:id="shareThoughtsCheckbox"
-	 */
 	private CheckBox shareThoughtsCheckbox;
 
 	@FXML
-	/**
-	 * fx:id="thoughts"
-	 */
 	private Label thoughts;
 
 	@FXML
-	/**
-	 * fx:id="newGameButton"
-	 */
 	private Button newGameButton;
 
 	@FXML
-	/**
-	 * fx:id="proposedSolutions"
-	 */
 	private TextArea proposedSolutions;
 
 	@FXML
-	/**
-	 * fx:id="updateLink"
-	 */
 	private Hyperlink updateLink; // Value injected by FXMLLoader
 
 	@FXML
-	/**
-	 * fx:id="versionLabel"
-	 */
 	private CustomLabel versionLabel; // Value injected by FXMLLoader
 
 	@FXML
-	/**
-	 * Handler for Hyperlink[fx:id="updateLink"] onAction
-	 * 
-	 * @param event
-	 *            The event object that contains information about the event.
-	 */
 	void updateLinkOnAction(ActionEvent event) {
 		// Check for new version ignoring ignored updates
-		Thread updateThread = new Thread() {
-			@Override
-			public void run() {
-				UpdateInfo update = UpdateChecker.isUpdateAvailableCompareAppVersion(AppConfig.getUpdateRepoBaseURL(),
-						AppConfig.groupID, AppConfig.artifactID, AppConfig.updateFileClassifier);
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						new UpdateAvailableDialog(update);
-					}
-				});
-			}
-		};
+		Thread updateThread = new Thread(() -> {
+            UpdateInfo update = UpdateChecker.isUpdateAvailableCompareAppVersion(AppConfig.getUpdateRepoBaseURL(),
+                    AppConfig.groupID, AppConfig.artifactID, AppConfig.updateFileClassifier);
+            Platform.runLater(() -> new UpdateAvailableDialog(update));
+        });
 		updateThread.setName("manualUpdateThread");
 		updateThread.start();
 	}
 
 	@FXML
-	/**
-	 * Handler for Hyperlink[fx:id="newGameButton"] onAction
-	 * 
-	 */
 	void newGameButtonOnAction(ActionEvent event) {
 		startNewGame();
 	}
@@ -304,8 +239,8 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		String newSequence = "";
 
 		// Split the pattern up in words
-		List<String> words = new ArrayList<String>(Arrays.asList(currentSequence.getText().split(" ")));
-		List<String> bestWords = new ArrayList<String>(Arrays.asList(currentSolution.bestWord.split(" ")));
+		List<String> words = new ArrayList<>(Arrays.asList(currentSequence.getText().split(" ")));
+		List<String> bestWords = new ArrayList<>(Arrays.asList(currentSolution.bestWord.split(" ")));
 
 		boolean wordReplaced = false;
 
@@ -409,14 +344,9 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 				@Override
 				public void run() {
 					clickCounter = 0;
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							versionLabel.resetText();
-						}
-					});
+					Platform.runLater(() -> versionLabel.resetText());
 				}
-			}, 1 * 1000);
+			}, 1000);
 
 			if (clickCounter >= 3) {
 				// rotate
@@ -432,14 +362,9 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 				timer.schedule(new TimerTask() {
 					@Override
 					public void run() {
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								versionLabel.resetText();
-							}
-						});
+						Platform.runLater(() -> versionLabel.resetText());
 					}
-				}, 1 * 1000);
+				}, 1000);
 
 				currentAppVersionTextLabel.setTooltip(new Tooltip(bundle.getString("resetEasterEgg")));
 
@@ -481,24 +406,14 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		launchAlgorithm();
 	}
 
+
+
 	@FXML
-	/**
-	 * Handler for Hyperlink[fx:id="creditsButton"] onAction
-	 * 
-	 * @param event
-	 *            The event object that contains information about the event.
-	 */
 	void creditsButtonOnAction(ActionEvent event) {
 		LicenseWindow.show(bundle.getString("licenseWindowTitle"));
 	}
 
 	@FXML
-	/**
-	 * Handler for Hyperlink[fx:id="shareThoughtsCheckbox"] onAction
-	 * 
-	 * @param event
-	 *            The event object that contains information about the event.
-	 */
 	void shareThoughtsCheckboxOnAction(ActionEvent event) {
 		shareThoughtsBool = shareThoughtsCheckbox.isSelected();
 
@@ -511,35 +426,22 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	}
 
 	@Override
-	/**
-	 * Method is invoked by JavaFX after the application launch
-	 */
 	public void start(Stage primaryStage) {
 		stage = primaryStage;
 		try {
-			if (HangmanStats.uploadThread.isAlive() == false) {
+			if (!HangmanStats.uploadThread.isAlive()) {
 				HangmanStats.uploadThread.start();
 			}
 
 			// Dont check for updates if launched from launcher
 			if (!disableUpdateChecks) {
-				Thread updateThread = new Thread() {
-					@Override
-					public void run() {
-						UpdateInfo update = UpdateChecker.isUpdateAvailable(AppConfig.getUpdateRepoBaseURL(),
-								AppConfig.groupID, AppConfig.artifactID, AppConfig.updateFileClassifier);
-						if (update.showAlert) {
-							Platform.runLater(new Runnable() {
-
-								@Override
-								public void run() {
-									new UpdateAvailableDialog(update);
-								}
-
-							});
-						}
-					}
-				};
+				Thread updateThread = new Thread(() -> {
+                    UpdateInfo update = UpdateChecker.isUpdateAvailable(AppConfig.getUpdateRepoBaseURL(),
+                            AppConfig.groupID, AppConfig.artifactID, AppConfig.updateFileClassifier);
+                    if (update.showAlert) {
+                        Platform.runLater(() -> new UpdateAvailableDialog(update));
+                    }
+                });
 				updateThread.setName("updateThread");
 				updateThread.start();
 			}
@@ -595,7 +497,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		// injected
 
 		// Initialize the language search field.
-		new AutoCompleteComboBoxListener<String>(languageSelector);
+		new AutoCompleteComboBoxListener<>(languageSelector);
 
 		loadLanguageList();
 		shareThoughtsCheckbox.setSelected(true);
@@ -613,14 +515,11 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 		}
 
 		// Listen for TextField text changes
-		currentSequence.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+		currentSequence.textProperty().addListener((observable, oldValue, newValue) -> {
 
-				currentSequenceStr = currentSequence.getText();
-				getNextLetter.setText(bundle.getString("computeNextLetterButtonLabel"));
-			}
-		});
+            currentSequenceStr = currentSequence.getText();
+            getNextLetter.setText(bundle.getString("computeNextLetterButtonLabel"));
+        });
 	}
 
 	/**
@@ -628,150 +527,128 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	 */
 	void launchAlgorithm() {
 		MainWindow window = this;
-		Thread algorithmThread = new Thread() {
-			@Override
-			public void run() {
-				try {
+		Thread algorithmThread = new Thread(() -> {
+            try {
 
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							languageSelector.setDisable(true);
-							getNextLetter.setDisable(true);
-							applyButton.setDisable(true);
-							newGameButton.setDisable(true);
-							currentSequence.setDisable(true);
-							getNextLetter.setText(bundle.getString("computeNextLetterButton.waitForAlgorithmText"));
-						}
-					});
+                Platform.runLater(() -> {
+languageSelector.setDisable(true);
+getNextLetter.setDisable(true);
+applyButton.setDisable(true);
+newGameButton.setDisable(true);
+currentSequence.setDisable(true);
+getNextLetter.setText(bundle.getString("computeNextLetterButton.waitForAlgorithmText"));
+});
 
-					currentSolution = HangmanSolver.solve(currentSequence.getText(), Language.getSupportedLanguages()
-							.get(languageSelector.getSelectionModel().getSelectedIndex()));
-					/*
-					 * Platform.runLater(new Runnable() {
-					 * 
-					 * @Override public void run() {
-					 * System.out.println("Setting resultText...");
-					 * result.setText(currentSolution.result); } });
-					 */
+				//noinspection ConstantConditions
+				currentSolution = HangmanSolver.solve(currentSequence.getText(), Language.getSupportedLanguages()
+                        .get(languageSelector.getSelectionModel().getSelectedIndex()));
+                /*
+                 * Platform.runLater(new Runnable() {
+                 *
+                 * @Override public void run() {
+                 * System.out.println("Setting resultText...");
+                 * result.setText(currentSolution.result); } });
+                 */
 
-					String proposedSolutionsString = "";
-					for (String solution : HangmanSolver.proposedSolutions) {
-						proposedSolutionsString = proposedSolutionsString + solution + ", ";
-					}
+                String proposedSolutionsString = "";
+                for (String solution : HangmanSolver.proposedSolutions) {
+                    proposedSolutionsString = proposedSolutionsString + solution + ", ";
+                }
 
-					// remove last ,
-					proposedSolutionsString = proposedSolutionsString.substring(0,
-							proposedSolutionsString.length() - 2);
-					final String proposedSolutionsStringCopy = proposedSolutionsString;
+                // remove last ,
+                proposedSolutionsString = proposedSolutionsString.substring(0,
+                        proposedSolutionsString.length() - 2);
+                final String proposedSolutionsStringCopy = proposedSolutionsString;
 
-					/*
-					 * Platform.runLater(new Runnable() {
-					 * 
-					 * @Override public void run() {
-					 * proposedSolutions.setText(proposedSolutionsStringCopy); }
-					 * });
-					 */
+                /*
+                 * Platform.runLater(new Runnable() {
+                 *
+                 * @Override public void run() {
+                 * proposedSolutions.setText(proposedSolutionsStringCopy); }
+                 * });
+                 */
 
-					if (currentSolution.gameState == GameState.GAME_LOST
-							|| currentSolution.gameState == GameState.GAME_WON) {
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								GameEndDialog.show(bundle.getString("GameEndDialog.windowTitle"),
-										currentSolution.gameState, window);
-							}
-						});
-					} else {
-						Platform.runLater(new Runnable() {
-							@Override
-							public void run() {
-								// Update gui
+                if (currentSolution.gameState == GameState.GAME_LOST
+                        || currentSolution.gameState == GameState.GAME_WON) {
+                    Platform.runLater(() -> GameEndDialog.show(bundle.getString("GameEndDialog.windowTitle"),
+currentSolution.gameState, window));
+                } else {
+                    Platform.runLater(() -> {
+// Update gui
 
-								// next guess
-								result.setText(currentSolution.result);
+// next guess
+result.setText(currentSolution.result);
 
-								// already proposed solutions
-								proposedSolutions.setText(proposedSolutionsStringCopy);
+// already proposed solutions
+proposedSolutions.setText(proposedSolutionsStringCopy);
 
-								// thought
-								String thoughtText = "";
+// thought
+String thoughtText;
 
-								if (currentSolution.bestWordScore >= AppConfig.thresholdToShowWord) {
-									applyButton.setDisable(false);
-									thoughtText = bundle.getString("thinkOfAWord")
-											.replace("<percent>",
-													Double.toString(Math.round(currentSolution.bestWordScore * 100)))
-											.replace("<word>", currentSolution.bestWord);
-								} else {
-									applyButton.setDisable(true);
-									thoughtText = bundle.getString("dontThinkAWord");
-								}
+if (currentSolution.bestWordScore >= AppConfig.thresholdToShowWord) {
+applyButton.setDisable(false);
+thoughtText = bundle.getString("thinkOfAWord")
+.replace("<percent>",
+Double.toString(Math.round(currentSolution.bestWordScore * 100)))
+.replace("<word>", currentSolution.bestWord);
+} else {
+applyButton.setDisable(true);
+thoughtText = bundle.getString("dontThinkAWord");
+}
 
-								// Add the remeaning wrong guesses
-								thoughtText = thoughtText + " " + bundle.getString("remeaningWrongGuesses")
-										.replace("<number>", Integer.toString(
-												AppConfig.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
+// Add the remeaning wrong guesses
+thoughtText = thoughtText + " " + bundle.getString("remeaningWrongGuesses")
+.replace("<number>", Integer.toString(
+AppConfig.maxTurnCountToLoose - HangmanSolver.getWrongGuessCount()));
 
-								setThought(thoughtText);
+setThought(thoughtText);
 
-								// Update buttons etc only if everything else
-								// succeeded
-								getNextLetter.setText(bundle.getString("computeNextLetterButton.letterWrongText"));
-								currentSequence.setDisable(false);
+// Update buttons etc only if everything else
+// succeeded
+getNextLetter.setText(bundle.getString("computeNextLetterButton.letterWrongText"));
+currentSequence.setDisable(false);
 
-								// If the apply button is enabled, give it the
-								// focus, else focus the current sequence
-								if (!applyButton.isDisable()) {
-									applyButton.requestFocus();
-								} else {
-									currentSequence.requestFocus();
-								}
-							}
-						});
-					}
-				} catch (ArrayIndexOutOfBoundsException e) {
-					// No language selected
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							// NoLanguageSelected.show();
-							Alert alert = new Alert(Alert.AlertType.ERROR,
-									errorMessageBundle.getString("selectLanguage"));
-							alert.show();
-							// Replace button text with original string
-							getNextLetter.setText(bundle.getString("computeNextLetterButtonLabel"));
-							languageSelector.setDisable(false);
-							currentSequence.setDisable(false);
-							languageSelector.requestFocus();
-						}
-					});
-				} catch (StringIndexOutOfBoundsException e2) {
-					// No sequence entered
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							// NoSequenceEntered.show();
-							Alert alert = new Alert(Alert.AlertType.ERROR,
-									errorMessageBundle.getString("enterWordSequence"));
-							alert.show();
-							// Replace button text with original string
-							getNextLetter.setText(bundle.getString("computeNextLetterButtonLabel"));
-							currentSequence.setDisable(false);
-							currentSequence.requestFocus();
-						}
-					});
-				} finally {
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							getNextLetter.setDisable(false);
-							newGameButton.setDisable(false);
-						}
-					});
-				}
-			}
-		};
+// If the apply button is enabled, give it the
+// focus, else focus the current sequence
+if (!applyButton.isDisable()) {
+applyButton.requestFocus();
+} else {
+currentSequence.requestFocus();
+}
+});
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                // No language selected
+                Platform.runLater(() -> {
+// NoLanguageSelected.show();
+Alert alert = new Alert(Alert.AlertType.ERROR,
+errorMessageBundle.getString("selectLanguage"));
+alert.show();
+// Replace button text with original string
+getNextLetter.setText(bundle.getString("computeNextLetterButtonLabel"));
+languageSelector.setDisable(false);
+currentSequence.setDisable(false);
+languageSelector.requestFocus();
+});
+            } catch (StringIndexOutOfBoundsException e2) {
+                // No sequence entered
+                Platform.runLater(() -> {
+// NoSequenceEntered.show();
+Alert alert = new Alert(Alert.AlertType.ERROR,
+errorMessageBundle.getString("enterWordSequence"));
+alert.show();
+// Replace button text with original string
+getNextLetter.setText(bundle.getString("computeNextLetterButtonLabel"));
+currentSequence.setDisable(false);
+currentSequence.requestFocus();
+});
+            } finally {
+                Platform.runLater(() -> {
+getNextLetter.setDisable(false);
+newGameButton.setDisable(false);
+});
+            }
+        });
 		algorithmThread.start();
 
 	}
@@ -804,16 +681,13 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	 */
 	private void loadLanguageList() {
 		MainWindow gui = this;
-		Thread loadLangThread = new Thread() {
-			@Override
-			public void run() {
+		Thread loadLangThread = new Thread(() -> {
 
-				ObservableList<String> items = FXCollections
-						.observableArrayList(Language.getSupportedLanguages().getHumanReadableTranslatedNames(gui));
+            @SuppressWarnings("ConstantConditions") ObservableList<String> items = FXCollections
+                    .observableArrayList(Language.getSupportedLanguages().getHumanReadableTranslatedNames(gui));
 
-				languageSelector.setItems(items);
-			}
-		};
+            languageSelector.setItems(items);
+        });
 
 		loadLangThread.start();
 	}
@@ -824,50 +698,39 @@ public class MainWindow extends Application implements Initializable, ProgressDi
 	public void operationsStarted() {
 		FOKLogger.info(MainWindow.class.getName(), "Loading language list...");
 
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				languageSelector.setDisable(true);
-				languageSelector.setPromptText(bundle.getString("languageSelector.waitText"));
-				currentSequence.setDisable(true);
-				getNextLetter.setDisable(true);
-				result.setDisable(true);
-				newGameButton.setDisable(true);
+		Platform.runLater(() -> {
+            languageSelector.setDisable(true);
+            languageSelector.setPromptText(bundle.getString("languageSelector.waitText"));
+            currentSequence.setDisable(true);
+            getNextLetter.setDisable(true);
+            result.setDisable(true);
+            newGameButton.setDisable(true);
 
-				loadLanguagesProgressBar.setPrefHeight(languageSelector.getHeight());
-				loadLanguagesProgressBar.setVisible(true);
-			}
-		});
+            loadLanguagesProgressBar.setPrefHeight(languageSelector.getHeight());
+            loadLanguagesProgressBar.setVisible(true);
+        });
 	}
 
 	@Override
 	public void progressChanged(double operationsDone, double totalOperationsToDo) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				loadLanguagesProgressBar.setProgress(operationsDone / totalOperationsToDo);
-			}
-		});
+		Platform.runLater(() -> loadLanguagesProgressBar.setProgress(operationsDone / totalOperationsToDo));
 	}
 
 	@Override
 	public void operationsFinished() {
 		FOKLogger.info(MainWindow.class.getName(), "Languages loaded");
 
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				languageSelector.setDisable(false);
-				languageSelector.setPromptText(bundle.getString("languageSelector.PromptText"));
-				currentSequence.setDisable(false);
-				getNextLetter.setDisable(false);
-				result.setDisable(false);
-				newGameButton.setDisable(false);
-				loadLanguagesProgressBar.setVisible(false);
+		Platform.runLater(() -> {
+            languageSelector.setDisable(false);
+            languageSelector.setPromptText(bundle.getString("languageSelector.PromptText"));
+            currentSequence.setDisable(false);
+            getNextLetter.setDisable(false);
+            result.setDisable(false);
+            newGameButton.setDisable(false);
+            loadLanguagesProgressBar.setVisible(false);
 
-				languageSelector.requestFocus();
-			}
-		});
+            languageSelector.requestFocus();
+        });
 	}
 
 	/**

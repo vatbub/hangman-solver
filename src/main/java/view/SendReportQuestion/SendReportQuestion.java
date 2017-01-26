@@ -21,18 +21,8 @@ package view.SendReportQuestion;
  */
 
 
-import java.io.IOException;
-
-/**
- * Sample Skeleton for "AlertDialog.fxml" Controller Class
- * You can copy and paste this code into your favorite IDE
- **/
-
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import common.AppConfig;
-import common.Internet;
+import common.internet.Internet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,6 +33,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 /**
  * A question box that asks the user if the app can send the game result to the devs when a game ends.
  * @author frede
@@ -52,7 +46,7 @@ public class SendReportQuestion {
 	
 	private static String eventName;
 	private static Stage stage;
-	private static ResourceBundle bundle = ResourceBundle.getBundle("view.SendReportQuestion.AlertDialog");
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("view.SendReportQuestion.AlertDialog");
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;

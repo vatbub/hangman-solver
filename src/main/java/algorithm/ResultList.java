@@ -42,7 +42,7 @@ public class ResultList extends ArrayList<Result> {
 	}
 
 	public List<ResultType> getResultTypeList() {
-		List<ResultType> res = new ArrayList<ResultType>();
+		List<ResultType> res = new ArrayList<>();
 		for (Result result : this) {
 			res.add(result.resultType);
 		}
@@ -51,7 +51,7 @@ public class ResultList extends ArrayList<Result> {
 	}
 
 	public List<String> getBestWords() {
-		List<String> res = new ArrayList<String>();
+		List<String> res = new ArrayList<>();
 		for (Result result : this) {
 			res.add(result.bestWord);
 		}

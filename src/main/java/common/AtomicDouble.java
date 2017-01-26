@@ -35,7 +35,7 @@ import static java.lang.Double.*;
 @SuppressWarnings("serial")
 public class AtomicDouble extends Number {
 
-	private AtomicLong bits;
+	private final AtomicLong bits;
 
 	/**
 	 * Creates a new {@code AtomicDouble} with initial value {@code 0}.
