@@ -3,4 +3,4 @@
 /.settings/
 .project
 /.idea/
-parentPom.iml
+*.iml
