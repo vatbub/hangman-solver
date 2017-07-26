@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>hangmanSolver</artifactId>
-    <version>0.0.18</version>
+    <version>0.0.19-SNAPSHOT</version>
     <name>Hangman Solver</name>
     <description>An application that solves Hangman</description>
     <inceptionYear>2016</inceptionYear>
@@ -46,14 +46,14 @@
     <parent>
         <groupId>com.github.vatbub</groupId>
         <artifactId>parentPom</artifactId>
-        <version>0.0.21</version>
+        <version>0.0.22-SNAPSHOT</version>
     </parent>
 
     <scm>
         <connection>scm:git:git@github.com:vatbub/hangman-solver.git</connection>
         <url>https://github.com/vatbub/hangman-solver</url>
         <developerConnection>scm:git:git@github.com:vatbub/hangman-solver.git</developerConnection>
-        <tag>hangmanSolver-0.0.18</tag>
+        <tag>testRelease</tag>
     </scm>
 
     <issueManagement>
@@ -126,7 +126,7 @@
         <dependency>
             <groupId>com.github.vatbub</groupId>
             <artifactId>common</artifactId>
-            <version>0.0.24</version>
+            <version>0.0.25-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
