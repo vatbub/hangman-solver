@@ -1,10 +1,10 @@
 # hangman-solver
 This is an algorithm to solve the popular [hangman game](https://en.wikipedia.org/wiki/Hangman_(game)).
 
-##Download the standalone app
+## Download the standalone app
 Get the FOKLauncher ([Download](https://bintray.com/vatbub/fokprojectsReleases/foklauncher#downloads)|[GitHub Repo](https://github.com/vatbub/fokLauncher)) and download "Hangman Solver" there.
 
-##How the algorithm works
+## How the algorithm works
 The algorithm is based on a dictionary taken from [Wiktionary](https://www.wiktionary.org/), the [Common Locale Data Repository](http://cldr.unicode.org/) and [various other WordNet projects](http://compling.hss.ntu.edu.sg/omw/).
   1. At first, the algorithm will compare the letter sequence it already guessed correctly (e. g. `_n_` if the word is `and` and `n` was already guessed) to all words in the dictionary with the same length.
   2. The word with the greatest amount of common letters is called the 'priority word' as the player most probably wants the computer to guess this word.
@@ -14,10 +14,10 @@ The algorithm is based on a dictionary taken from [Wiktionary](https://www.wikti
   6. The next guess is the letter at the highest position in the filtered ranking.
   7. Letters or words that have been proven to be wrong are temporarily removed from the dictionary.
   
-##How the heck can your algorithm play hangman in esperanto (and in 900 other languages)?
+## How the heck can your algorithm play hangman in esperanto (and in 900 other languages)?
 As the algorithms knowledge only depends on dictionaries, it is able to play hangman in almost any language that exists, including esperanto. Although we support 901 different languages, there are some languages that have better results than others. This mostly depends on the number of words in the corresponding dictionary. The more words the dictionary contains the better.
 
-##The social experiment
+## The social experiment
 One evening when we were testing the algorithm, we had the idea to launch a social experiment using this algorithm. Here is the Plan:
   - We will release a version of the algorithm for PC and Android
   - Next, we will collect what words are the most used in hangman
