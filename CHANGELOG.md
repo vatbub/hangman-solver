@@ -1,8 +1,7 @@
 # Change Log
 
-## [Unreleased](https://github.com/vatbub/hangman-solver/tree/HEAD)
-
-[Full Changelog](https://github.com/vatbub/hangman-solver/compare/hangmanSolver-0.0.17...HEAD)
+## [hangmanSolver-0.0.18](https://github.com/vatbub/hangman-solver/tree/hangmanSolver-0.0.18) (2017-07-26)
+[Full Changelog](https://github.com/vatbub/hangman-solver/compare/hangmanSolver-0.0.17...hangmanSolver-0.0.18)
 
 **Closed issues:**
 
