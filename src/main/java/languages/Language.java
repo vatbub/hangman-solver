@@ -21,10 +21,10 @@ package languages;
  */
 
 
+import com.github.vatbub.common.core.Common;
+import com.github.vatbub.common.core.logging.FOKLogger;
 import com.mongodb.MongoTimeoutException;
 import common.AppConfig;
-import common.Common;
-import logging.FOKLogger;
 import stats.HangmanStats;
 
 import java.io.File;

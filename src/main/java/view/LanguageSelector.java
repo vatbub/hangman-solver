@@ -21,46 +21,46 @@ package view;
  */
 
 
-import common.ProgressDialog;
+import com.github.vatbub.common.core.logging.FOKLogger;
+import com.github.vatbub.common.view.core.ProgressDialog;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import languages.LanguageList;
-import logging.FOKLogger;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class LanguageSelector extends ComboBox<String> implements ProgressDialog{
-	
-	private LanguageList langList;
-	private ProgressBar loadLanguagesProgressBar;
+public class LanguageSelector extends ComboBox<String> implements ProgressDialog {
 
-	public LanguageSelector() {
-		super();
-	}
+    private LanguageList langList;
+    private ProgressBar loadLanguagesProgressBar;
 
-	public LanguageSelector(ObservableList<String> arg0) {
-		super(arg0);
-	}
-	
-	public LanguageSelector(LanguageList langList){
-		super();
-		setLanguageList(langList);
-	}
-	
-	public void setLanguageList(LanguageList langList){
-		this.langList = langList;
-		//this.setItems(new Observable);
-	}
+    public LanguageSelector() {
+        super();
+    }
 
-	// Section to display load progress
-	
-	@Override
-	public void operationsStarted() {
-		FOKLogger.info(LanguageSelector.class.getName(), "Loading language list...");
-		LanguageSelector me = this;
+    public LanguageSelector(ObservableList<String> arg0) {
+        super(arg0);
+    }
 
-		Platform.runLater(() -> {
+    public LanguageSelector(LanguageList langList) {
+        super();
+        setLanguageList(langList);
+    }
+
+    public void setLanguageList(LanguageList langList) {
+        this.langList = langList;
+        //this.setItems(new Observable);
+    }
+
+    // Section to display load progress
+
+    @Override
+    public void operationsStarted() {
+        FOKLogger.info(LanguageSelector.class.getName(), "Loading language list...");
+        LanguageSelector me = this;
+
+        Platform.runLater(() -> {
             me.setDisable(true);
             //TODO Get String from resource bundle
             me.setPromptText("Loading languages, please wait...");
@@ -70,19 +70,19 @@ public class LanguageSelector extends ComboBox<String> implements ProgressDialog
 
             loadLanguagesProgressBar.setVisible(true);
         });
-	}
+    }
 
-	@Override
-	public void progressChanged(double operationsDone, double totalOperationsToDo) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void progressChanged(double operationsDone, double totalOperationsToDo) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void operationsFinished() {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	
+    @Override
+    public void operationsFinished() {
+        // TODO Auto-generated method stub
+
+    }
+
+
 }

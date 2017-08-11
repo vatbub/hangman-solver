@@ -27,47 +27,47 @@ import java.util.List;
 
 public class ResultList extends ArrayList<Result> {
 
-	private static final long serialVersionUID = 1114264855287178435L;
+    private static final long serialVersionUID = 1114264855287178435L;
 
-	public ResultList() {
-		super();
-	}
+    public ResultList() {
+        super();
+    }
 
-	public ResultList(int arg0) {
-		super(arg0);
-	}
+    public ResultList(int arg0) {
+        super(arg0);
+    }
 
-	public ResultList(Collection<? extends Result> arg0) {
-		super(arg0);
-	}
+    public ResultList(Collection<? extends Result> arg0) {
+        super(arg0);
+    }
 
-	public List<ResultType> getResultTypeList() {
-		List<ResultType> res = new ArrayList<>();
-		for (Result result : this) {
-			res.add(result.resultType);
-		}
+    public List<ResultType> getResultTypeList() {
+        List<ResultType> res = new ArrayList<>();
+        for (Result result : this) {
+            res.add(result.resultType);
+        }
 
-		return res;
-	}
+        return res;
+    }
 
-	public List<String> getBestWords() {
-		List<String> res = new ArrayList<>();
-		for (Result result : this) {
-			res.add(result.bestWord);
-		}
+    public List<String> getBestWords() {
+        List<String> res = new ArrayList<>();
+        for (Result result : this) {
+            res.add(result.bestWord);
+        }
 
-		return res;
-	}
+        return res;
+    }
 
-	public Result getFirstResultWithBestChar(char chr) {
-		for (Result res : this) {
-			if (res.resultType == ResultType.letter & res.bestChar == chr) {
-				return res;
-			}
-		}
+    public Result getFirstResultWithBestChar(char chr) {
+        for (Result res : this) {
+            if (res.resultType == ResultType.letter & res.bestChar == chr) {
+                return res;
+            }
+        }
 
-		// We only arrive here if no match has been found
-		return null;
-	}
+        // We only arrive here if no match has been found
+        return null;
+    }
 
 }

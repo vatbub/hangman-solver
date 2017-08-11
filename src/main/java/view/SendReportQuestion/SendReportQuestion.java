@@ -21,8 +21,8 @@ package view.SendReportQuestion;
  */
 
 
+import com.github.vatbub.common.internet.Internet;
 import common.AppConfig;
-import common.internet.Internet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -39,15 +39,14 @@ import java.util.ResourceBundle;
 
 /**
  * A question box that asks the user if the app can send the game result to the devs when a game ends.
- * @author frede
  *
+ * @author frede
  */
 public class SendReportQuestion {
-	
-	private static String eventName;
-	private static Stage stage;
-	private static final ResourceBundle bundle = ResourceBundle.getBundle("view.SendReportQuestion.AlertDialog");
 
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("view.SendReportQuestion.AlertDialog");
+    private static String eventName;
+    private static Stage stage;
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
 
@@ -71,26 +70,52 @@ public class SendReportQuestion {
 
     @FXML // fx:id="okParent"
     private HBox okParent; // Value injected by FXMLLoader
-    
+
+    public static void show(String windowTitle, String iftttEventName) {
+        stage = new Stage();
+        Parent root;
+        eventName = iftttEventName;
+        try {
+            root = FXMLLoader.load(SendReportQuestion.class.getResource("AlertDialog.fxml"), bundle);
+            Scene scene = new Scene(root);
+            // scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+            stage.setTitle(windowTitle);
+
+            stage.setMinWidth(scene.getRoot().minWidth(0) + 70);
+            stage.setMinHeight(scene.getRoot().minHeight(0) + 70);
+
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public static void hide() {
+        stage.hide();
+    }
+
     @FXML
     void actionButtonOnAction(ActionEvent event) {
-    	try {
-			Internet.sendEventToIFTTTMakerChannel(AppConfig.iftttMakerApiKey, eventName);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
-			hide();
-		}
+        try {
+            Internet.sendEventToIFTTTMakerChannel(AppConfig.iftttMakerApiKey, eventName);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            hide();
+        }
     }
 
     @FXML
     void cancelButtonOnAction(ActionEvent event) {
-    	hide();
+        hide();
     }
 
-
-    @FXML // This method is called by the FXMLLoader when initialization is complete
+    @FXML
+        // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert actionButton != null : "fx:id=\"actionButton\" was not injected: check your FXML file 'AlertDialog.fxml'.";
         assert actionParent != null : "fx:id=\"actionParent\" was not injected: check your FXML file 'AlertDialog.fxml'.";
@@ -101,32 +126,6 @@ public class SendReportQuestion {
 
         // Initialize your logic here: all @FXML variables will have been injected
 
-    }
-    
-    public static void show(String windowTitle, String iftttEventName){
-    	stage = new Stage();
-    	Parent root;
-    	eventName = iftttEventName;
-		try {
-			root = FXMLLoader.load(SendReportQuestion.class.getResource("AlertDialog.fxml"), bundle);
-			Scene scene = new Scene(root);
-			// scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-
-			stage.setTitle(windowTitle);
-
-			stage.setMinWidth(scene.getRoot().minWidth(0) + 70);
-			stage.setMinHeight(scene.getRoot().minHeight(0) + 70);
-
-			stage.setScene(scene);
-			stage.show();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-    
-    public static void hide(){
-    	stage.hide();
     }
 
 }

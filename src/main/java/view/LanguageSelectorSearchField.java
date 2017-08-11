@@ -21,16 +21,16 @@ package view;
  */
 
 
-import common.ProgressDialog;
+import com.github.vatbub.common.core.logging.FOKLogger;
+import com.github.vatbub.common.view.core.ProgressDialog;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import languages.LanguageList;
-import logging.FOKLogger;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class LanguageSelectorSearchField implements ProgressDialog{
+public class LanguageSelectorSearchField implements ProgressDialog {
 	
 	private final ComboBox<String> comboBox;
 	private final Parent parentNode;

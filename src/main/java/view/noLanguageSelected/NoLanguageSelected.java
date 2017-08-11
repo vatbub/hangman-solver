@@ -21,6 +21,7 @@ package view.noLanguageSelected;
  */
 
 
+import com.github.vatbub.common.core.logging.FOKLogger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,16 +35,17 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 /**
  * An alert windoow that pops up if no language has been selected by the user.
- * @author frede
  *
+ * @author frede
  */
 public class NoLanguageSelected {
-	
-	private static final ResourceBundle bundle = ResourceBundle.getBundle("view.noLanguageSelected.AlertDialog");
-	private static Stage stage;
+
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("view.noLanguageSelected.AlertDialog");
+    private static Stage stage;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -64,15 +66,39 @@ public class NoLanguageSelected {
     @FXML // fx:id="okParent"
     private HBox okParent; // Value injected by FXMLLoader
 
+    public static void show() {
+        stage = new Stage();
+        Parent root;
+        try {
+            root = FXMLLoader.load(NoLanguageSelected.class.getResource("AlertDialog.fxml"), bundle);
+            Scene scene = new Scene(root);
+            // scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+            stage.setTitle(bundle.getString("windowTitle"));
+
+            stage.setMinWidth(scene.getRoot().minWidth(0) + 70);
+            stage.setMinHeight(scene.getRoot().minHeight(0) + 70);
+
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            FOKLogger.log(NoLanguageSelected.class.getName(), Level.SEVERE, "An error occurred", e);
+        }
+    }
+
+    public static void hide() {
+        stage.hide();
+    }
 
     // Handler for Button[fx:id="okButton"] onAction
     @FXML
     void okButtonOnAction(ActionEvent event) {
         // handle the event here
-    	hide();
+        hide();
     }
 
-    @FXML // This method is called by the FXMLLoader when initialization is complete
+    @FXML
+        // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert detailsLabel != null : "fx:id=\"detailsLabel\" was not injected: check your FXML file 'AlertDialog.fxml'.";
         assert messageLabel != null : "fx:id=\"messageLabel\" was not injected: check your FXML file 'AlertDialog.fxml'.";
@@ -81,31 +107,6 @@ public class NoLanguageSelected {
 
         // Initialize your logic here: all @FXML variables will have been injected
 
-    }
-    
-    public static void show(){
-    	stage = new Stage();
-    	Parent root;
-		try {
-			root = FXMLLoader.load(NoLanguageSelected.class.getResource("AlertDialog.fxml"), bundle);
-			Scene scene = new Scene(root);
-			// scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-
-			stage.setTitle(bundle.getString("windowTitle"));
-
-			stage.setMinWidth(scene.getRoot().minWidth(0) + 70);
-			stage.setMinHeight(scene.getRoot().minHeight(0) + 70);
-
-			stage.setScene(scene);
-			stage.show();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-    
-    public static void hide(){
-    	stage.hide();
     }
 
 }

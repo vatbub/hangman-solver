@@ -23,11 +23,11 @@ package algorithm;
 
 /**
  * This enumeration describes the current state of the game.
+ *
+ * @author frede
  * @see Result
  * @see HangmanSolver
- * @author frede
- *
  */
 public enum GameState {
-	GAME_RUNNING, GAME_WON, GAME_LOST
+    GAME_RUNNING, GAME_WON, GAME_LOST
 }

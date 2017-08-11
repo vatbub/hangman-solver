@@ -43,14 +43,7 @@ public class CustomAtomicInteger extends AtomicInteger implements Comparable<Cus
         int myVal = this.get();
         int argVal = arg0.get();
 
-        if (myVal < argVal) {
-            return -1;
-        } else if (myVal == argVal) {
-            return 0;
-        } else {
-            // implies myVal>argVal
-            return 1;
-        }
+        return Integer.compare(myVal, argVal);
     }
 
     @Override
