@@ -1,5 +1,18 @@
 # Change Log
 
+## [Unreleased](https://github.com/vatbub/hangman-solver/tree/HEAD)
+
+[Full Changelog](https://github.com/vatbub/hangman-solver/compare/hangmanSolver-0.0.18...HEAD)
+
+**Implemented enhancements:**
+
+- Convert to gradle [\#18](https://github.com/vatbub/hangman-solver/issues/18)
+- Implement automated update checks [\#1](https://github.com/vatbub/hangman-solver/issues/1)
+
+**Closed issues:**
+
+- Another testbug [\#26](https://github.com/vatbub/hangman-solver/issues/26)
+
 ## [hangmanSolver-0.0.18](https://github.com/vatbub/hangman-solver/tree/hangmanSolver-0.0.18) (2017-07-26)
 [Full Changelog](https://github.com/vatbub/hangman-solver/compare/hangmanSolver-0.0.17...hangmanSolver-0.0.18)
 
