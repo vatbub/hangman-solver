@@ -1,20 +1,28 @@
 package view;
 
-import java.io.IOException;
+/*-
+ * #%L
+ * Hangman Solver
+ * %%
+ * Copyright (C) 2016 Frederik Kammel
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
-/**
- * Sample Skeleton for "askIfWin.fxml" Controller Class
- * You can copy and paste this code into your favorite IDE
- **/
-
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
 
 import algorithm.GameState;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +36,11 @@ import javafx.stage.Stage;
 import logging.FOKLogger;
 import stats.HangmanStats;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+
 /**
  * A dialog to ask the user if the computer has won the game. Will probably be
  * removed when the win detector is introduced.
@@ -40,8 +53,7 @@ public class GameEndDialog {
 	private static Stage stage;
 	private static MainWindow mainWindowCopy;
 	private static GameState gameStateCopy;
-	private static ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
-	private static FOKLogger log = new FOKLogger(GameEndDialog.class.getName());
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("view.strings.messages");
 
 	@FXML // ResourceBundle that was given to the FXMLLoader
 	private ResourceBundle resources;
@@ -124,17 +136,14 @@ public class GameEndDialog {
 			break;
 		}
 
-		solutionTextBox.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (newValue.contains("_")) {
-					solutionLabel.setText(bundle.getString("solutionLabel.enterSolutionText"));
-					submitButton.setDisable(true);
-				} else {
-					submitButton.setDisable(false);
-				}
-			}
-		});
+		solutionTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.contains("_")) {
+                solutionLabel.setText(bundle.getString("solutionLabel.enterSolutionText"));
+                submitButton.setDisable(true);
+            } else {
+                submitButton.setDisable(false);
+            }
+        });
 
 		solutionTextBox.setText(mainWindowCopy.currentSequence.getText());
 	}
@@ -164,7 +173,7 @@ public class GameEndDialog {
 			
 			stage.show();
 		} catch (IOException e) {
-			log.getLogger().log(Level.SEVERE, "An error occurred", e);
+			FOKLogger.log(GameEndDialog.class.getName(), Level.SEVERE, "An error occurred", e);
 		}
 	}
 

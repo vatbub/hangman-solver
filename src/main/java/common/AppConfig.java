@@ -1,13 +1,34 @@
 package common;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.logging.Level;
+/*-
+ * #%L
+ * Hangman Solver
+ * %%
+ * Copyright (C) 2016 Frederik Kammel
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 
 import com.mongodb.MongoClientURI;
 import languages.Language;
 import logging.FOKLogger;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
 
 /**
  * A class to configure some parameters.
@@ -15,17 +36,16 @@ import logging.FOKLogger;
  * @author frede
  *
  */
-public class Config {
-	private static final FOKLogger log = new FOKLogger(Config.class.getName());
+public class AppConfig {
 	private static int oldThreadCount = 0;
 
 	// Project setup
 	public static URL getUpdateRepoBaseURL() {
 		URL res = null;
 		try {
-			res = new URL("http://dl.bintray.com/vatbub/fokprojectsSnapshots");
+			res = new URL("http://dl.bintray.com/vatbub/fokprojectsReleases");
 		} catch (MalformedURLException e) {
-			log.getLogger().log(Level.SEVERE, "An error occurred", e);
+			FOKLogger.log(AppConfig.class.getName(), Level.SEVERE, "An error occurred", e);
 		}
 
 		return res;
@@ -49,11 +69,11 @@ public class Config {
 
 		if (threadCount != oldThreadCount) {
 			oldThreadCount = threadCount;
-			log.getLogger().info("Now using " + threadCount + " threads");
+			FOKLogger.info(AppConfig.class.getName(), "Now using " + threadCount + " threads");
 		}
 
 		return threadCount;
-	};
+	}
 
 	/**
 	 * The {@link algorithm.HangmanSolver}-algorithm will find the word in in

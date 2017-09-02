@@ -1,8 +1,26 @@
 package view.noLanguageSelected;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+/*-
+ * #%L
+ * Hangman Solver
+ * %%
+ * Copyright (C) 2016 Frederik Kammel
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +31,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 /**
  * An alert windoow that pops up if no language has been selected by the user.
  * @author frede
@@ -20,7 +42,7 @@ import javafx.stage.Stage;
  */
 public class NoLanguageSelected {
 	
-	private static ResourceBundle bundle = ResourceBundle.getBundle("view.noLanguageSelected.AlertDialog");
+	private static final ResourceBundle bundle = ResourceBundle.getBundle("view.noLanguageSelected.AlertDialog");
 	private static Stage stage;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
@@ -29,6 +51,7 @@ public class NoLanguageSelected {
     @FXML // URL location of the FXML file that was given to the FXMLLoader
     private URL location;
 
+    @SuppressWarnings("CanBeFinal")
     @FXML // fx:id="detailsLabel"
     private Label detailsLabel; // Value injected by FXMLLoader
 

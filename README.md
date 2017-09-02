@@ -31,5 +31,11 @@ One evening when we were testing the algorithm, we had the idea to launch a soci
 ## Build the latest release
 Repeat the steps mentioned above but switch to the `release` branch by running `git checkout release` prior to runing `mvn package`.
 
+##Docs
+[Maven Site](http://vatbubmvnsites.s3-website-us-west-2.amazonaws.com/hangmanSolver/0.0.18-SNAPSHOT/site/hangmanSolver/), [JavaDoc](http://vatbubmvnsites.s3-website-us-west-2.amazonaws.com/hangmanSolver/0.0.18-SNAPSHOT/site/hangmanSolver/apidocs/index.html)
+
 #Current build status
 [![Travis build status](https://travis-ci.org/vatbub/hangman-solver.svg?branch=master)](https://travis-ci.org/vatbub/hangman-solver/)
+
+## Contributing
+Contributions of any kind are very welcome. Just fork and submit a Pull Request and we will be happy to merge. Just keep in mind that we use [Issue driven development](https://github.com/vatbub/defaultRepo/wiki/Issue-driven-development).

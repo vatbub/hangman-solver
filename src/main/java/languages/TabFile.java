@@ -1,28 +1,47 @@
 package languages;
 
+/*-
+ * #%L
+ * Hangman Solver
+ * %%
+ * Copyright (C) 2016 Frederik Kammel
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+
+import algorithm.HangmanSolver;
+import common.AppConfig;
+import common.ArrayListWithSortableKey;
+import common.AtomicDouble;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
-
-import algorithm.HangmanSolver;
-import common.*;
-
+@SuppressWarnings("SameParameterValue")
 public class TabFile {
 
 	public static void main(String[] args) {
 		if (args[0].equals("optimize")) {
 			Scanner sc = new Scanner(System.in);
-			String targetPath = null;
-			String originPath = null;
+			String targetPath;
+			String originPath;
 
 			System.out.println("Please enter the path of the original *.tab-files:");
 
@@ -38,6 +57,7 @@ public class TabFile {
 			File folder = new File(originPath);
 			File[] listOfFiles = folder.listFiles();
 
+			assert listOfFiles != null;
 			for (File file : listOfFiles) {
 				if (!file.getName().equals("LICENSE")) {
 					TabFile origin;
@@ -74,7 +94,7 @@ public class TabFile {
 	/**
 	 * The values in this *.tab file.
 	 */
-	private ArrayList<ArrayListWithSortableKey<String>> values = new ArrayList<ArrayListWithSortableKey<String>>();
+	private final ArrayList<ArrayListWithSortableKey<String>> values = new ArrayList<>();
 
 	/**
 	 * Creates a new object representation of the specified *.tab file.
@@ -136,7 +156,7 @@ public class TabFile {
 		columnHeaders = scan.nextLine().split("	");
 
 		while (scan.hasNextLine()) {
-			ArrayListWithSortableKey<String> temp = new ArrayListWithSortableKey<String>(
+			ArrayListWithSortableKey<String> temp = new ArrayListWithSortableKey<>(
 					Arrays.asList(scan.nextLine().split("	")));
 			while (temp.size() < this.getColumnCount()) {
 				// Fill it up
@@ -275,7 +295,7 @@ public class TabFile {
 	 *         0.
 	 */
 	public List<List<Integer>> indexOf(String valueToFind, boolean ignoreCase) {
-		List<List<Integer>> res = new ArrayList<List<Integer>>();
+		List<List<Integer>> res = new ArrayList<>();
 
 		for (int i = 0; i < this.getColumnCount(); i++) {
 			res.add(indexOf(valueToFind, i, ignoreCase));
@@ -325,7 +345,7 @@ public class TabFile {
 	 * @return A list of row indexes where the value was found.
 	 */
 	public List<Integer> indexOf(String valueToFind, int columnIndex, boolean ignoreCase) {
-		List<Integer> res = new ArrayList<Integer>();
+		List<Integer> res = new ArrayList<>();
 
 		for (int i = 0; i < this.getRowCount(); i++) {
 			if (ignoreCase) {
@@ -402,7 +422,7 @@ public class TabFile {
 							+ " columns)");
 		}
 
-		values.add(new ArrayListWithSortableKey<String>(Arrays.asList(newValues)));
+		values.add(new ArrayListWithSortableKey<>(Arrays.asList(newValues)));
 	}
 
 	/**
@@ -416,7 +436,7 @@ public class TabFile {
 	 *         the specified length.
 	 */
 	public List<String> getValuesWithLength(int column, int length) {
-		List<String> res = new ArrayList<String>();
+		List<String> res = new ArrayList<>();
 
 		for (int i = 0; i < this.getRowCount(); i++) {
 			if (this.getValueAt(i, column).length() == length) {
@@ -443,15 +463,15 @@ public class TabFile {
 	 *         correlation.
 	 */
 	public String getValueWithHighestCorrelation(int column, String value, List<String> ignoredWords) {
-		ArrayList<Thread> threads = new ArrayList<Thread>();
+		ArrayList<Thread> threads = new ArrayList<>();
 		AtomicInteger currentIndex = new AtomicInteger(0);
 		AtomicInteger maxIndex = new AtomicInteger(-1);
 		AtomicDouble maxCorr = new AtomicDouble(-1);
 		
-		List<String> ignoredWordsCopy = new ArrayList<String>(ignoredWords);
+		List<String> ignoredWordsCopy = new ArrayList<>(ignoredWords);
 		
 		// split all entries up that contain a space
-		List<String> stringsToSplit = new ArrayList<String>();
+		List<String> stringsToSplit = new ArrayList<>();
 		
 		// Find words to split
 		for (String word:ignoredWordsCopy){
@@ -466,33 +486,30 @@ public class TabFile {
 			ignoredWordsCopy.addAll(Arrays.asList(word.split(" ")));
 		}
 
-		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
-			threads.add(new Thread() {
-				@Override
-				public void run() {
-					int index = currentIndex.getAndIncrement();
-					while (index < getRowCount()) {
-						if (value.length() == getValueAt(index, column).length()
-								&& !ignoredWordsCopy.contains(getValueAt(index, column))
-								&& !HangmanSolver.currentWordContainsWrongChar(getValueAt(index, column))) {
-							double corr = stringCorrelation(value, getValueAt(index, column));
+		for (int i = 0; i < AppConfig.getParallelThreadCount(); i++) {
+			threads.add(new Thread(() -> {
+                int index = currentIndex.getAndIncrement();
+                while (index < getRowCount()) {
+                    if (value.length() == getValueAt(index, column).length()
+                            && !ignoredWordsCopy.contains(getValueAt(index, column))
+                            && !HangmanSolver.currentWordContainsWrongChar(getValueAt(index, column))) {
+                        double corr = stringCorrelation(value, getValueAt(index, column));
 
-							if (corr > maxCorr.get()) {
-								maxCorr.set(corr);
-								maxIndex.set(index);
-							}
-						}
+                        if (corr > maxCorr.get()) {
+                            maxCorr.set(corr);
+                            maxIndex.set(index);
+                        }
+                    }
 
-						// Grab the next index
-						index = currentIndex.getAndIncrement();
-					}
-				}
-			});
+                    // Grab the next index
+                    index = currentIndex.getAndIncrement();
+                }
+            }));
 			threads.get(i).start();
 		}
 
 		// Wait for threads
-		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
+		for (int i = 0; i < AppConfig.getParallelThreadCount(); i++) {
 			try {
 				threads.get(i).join();
 			} catch (InterruptedException e) {
@@ -545,7 +562,7 @@ public class TabFile {
 
 	public void sortDescending(int sortKey) {
 		setSortKey(sortKey);
-		Collections.sort(values, Collections.reverseOrder());
+		values.sort(Collections.reverseOrder());
 	}
 
 	private void setSortKey(int sortKey) {

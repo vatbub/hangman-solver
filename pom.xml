@@ -1,160 +1,151 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>hangmanSolver</artifactId>
-	<version>0.0.17</version>
-	<name>Hangman Solver</name>
-	<description>An application that solves Hangman</description>
-	<inceptionYear>2016</inceptionYear>
-	<packaging>jar</packaging>
-	<url>https://github.com/vatbub/hangman-solver</url>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>hangmanSolver</artifactId>
+    <version>0.0.18</version>
+    <name>Hangman Solver</name>
+    <description>An application that solves Hangman</description>
+    <inceptionYear>2016</inceptionYear>
+    <packaging>jar</packaging>
+    <url>https://github.com/vatbub/hangman-solver</url>
 
-	<developers>
-		<developer>
-			<id>fkammel</id>
-			<name>Frederik Kammel</name>
-			<email>vatbub123@googlemail.com</email>
-			<url>https://fokprojects.mo-mar.de/</url>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>Europe/Berlin</timezone>
-		</developer>
-	</developers>
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-vatbub-fokprojectsReleases</id>
+            <name>bintray</name>
+            <url>http://dl.bintray.com/vatbub/fokprojectsReleases</url>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-vatbub-fokprojectsSnapshots</id>
+            <name>bintray</name>
+            <url>http://dl.bintray.com/vatbub/fokprojectsSnapshots</url>
+        </repository>
+        <repository>
+            <snapshots />
+            <id>snapshots</id>
+            <name>libs-snapshot</name>
+            <url>https://oss.jfrog.org/artifactory/libs-snapshot</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-vatbub-fokprojectsSnapshots</id>
+            <name>bintray-plugins</name>
+            <url>http://dl.bintray.com/vatbub/fokprojectsSnapshots</url>
+        </pluginRepository>
+    </pluginRepositories>
 
-	<repositories>
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>bintray-vatbub-fokprojectsReleases</id>
-			<name>bintray</name>
-			<url>http://dl.bintray.com/vatbub/fokprojectsReleases</url>
-		</repository>
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>bintray-vatbub-fokprojectsSnapshots</id>
-			<name>bintray</name>
-			<url>http://dl.bintray.com/vatbub/fokprojectsSnapshots</url>
-		</repository>
-		<repository>
-			<snapshots />
-			<id>snapshots</id>
-			<name>libs-snapshot</name>
-			<url>https://oss.jfrog.org/artifactory/libs-snapshot</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>bintray-vatbub-fokprojectsSnapshots</id>
-			<name>bintray-plugins</name>
-			<url>http://dl.bintray.com/vatbub/fokprojectsSnapshots</url>
-		</pluginRepository>
-	</pluginRepositories>
+    <parent>
+        <groupId>com.github.vatbub</groupId>
+        <artifactId>parentPom</artifactId>
+        <version>0.0.21</version>
+    </parent>
 
-	<parent>
-		<groupId>com.github.vatbub</groupId>
-		<artifactId>parentPom</artifactId>
-		<version>0.0.17</version>
-	</parent>
+    <scm>
+        <connection>scm:git:git@github.com:vatbub/hangman-solver.git</connection>
+        <url>https://github.com/vatbub/hangman-solver</url>
+        <developerConnection>scm:git:git@github.com:vatbub/hangman-solver.git</developerConnection>
+        <tag>hangmanSolver-0.0.18</tag>
+    </scm>
 
-	<scm>
-		<connection>scm:git:git@github.com:vatbub/hangman-solver.git</connection>
-		<url>https://github.com/vatbub/hangman-solver/blob/master/</url>
-		<developerConnection>scm:git:git@github.com:vatbub/hangman-solver.git</developerConnection>
-		<tag>hangmanSolver-0.0.17</tag>
-	</scm>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/vatbub/hangman-solver/issues</url>
+    </issueManagement>
 
-	<issueManagement>
-		<system>GitHub</system>
-		<url>https://github.com/vatbub/hangman-solver/issues</url>
-	</issueManagement>
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/vatbub/hangman-solver</url>
+    </ciManagement>
 
-	<ciManagement>
-		<system>Travis CI</system>
-		<url>https://travis-ci.org/vatbub/hangman-solver</url>
-	</ciManagement>
+    <licenses>
+        <license>
+            <comments>LICENSE
 
-	<licenses>
-		<license>
-			<comments>LICENSE
+                This software is released under the Apache License v2.0. In short this means:
+                - You may reproduce, redistribute and modify the source code of this application and the application
+                itself as long as you include this licensing information.
 
-This software is released under the Apache License v2.0. In short this means:
-- You may reproduce, redistribute and modify  the source code of this application and the application itself as long as you include this licensing information.
+                The exact wording of the Apache License can be found here:
+                http://www.apache.org/licenses/LICENSE-2.0
 
-The exact wording of the Apache License can be found here:
-http://www.apache.org/licenses/LICENSE-2.0
+                NOTE:
+                Some portions of this software are third-party components and use a different license that the actual
+                software itself:
 
-NOTE:
-Some portions of this software are third-party components and use a different license that the actual software itself:
+                The software uses databases provided by the Extended Open Multilingual Wordnet:
 
-The software uses databases provided by the Extended Open Multilingual Wordnet:
+                Francis Bond and Ryan Foster (2013)
+                Linking and extending an open multilingual wordnet.
+                In 51st Annual Meeting of the Association for Computational Linguistics: ACL-2013.
+                Sofia. 1352-1362
+                http://aclweb.org/anthology/P/P13/P13-1133.pdf
 
-Francis Bond and Ryan Foster (2013)
-Linking and extending an open multilingual wordnet. 
-In 51st Annual Meeting of the Association for Computational Linguistics: ACL-2013. 
-Sofia. 1352-1362
-http://aclweb.org/anthology/P/P13/P13-1133.pdf
+                The project uses data from the following providers:
 
-The project uses data from the following providers:
+                Wiktionary (CC BY-SA 3.0):
+                http://creativecommons.org/licenses/by-sa/3.0/
 
-Wiktionary (CC BY-SA 3.0):
-http://creativecommons.org/licenses/by-sa/3.0/
+                Common Locale Data Repository (MIT-License):
+                http://www.unicode.org/copyright.html
 
-Common Locale Data Repository (MIT-License):
-http://www.unicode.org/copyright.html
+                Various other wordnet projects, full list available here:
+                http://compling.hss.ntu.edu.sg/omw/
 
-Various other wordnet projects, full list available here:
-http://compling.hss.ntu.edu.sg/omw/
+                The languagecode database is provided by:
+                SIL International (www.ethnologue.com)
+                http://www.ethnologue.com/terms-use#CodeTables
+            </comments>
+        </license>
+    </licenses>
 
-The languagecode database is provided by:
-SIL International (www.ethnologue.com)
-http://www.ethnologue.com/terms-use#CodeTables</comments>
-		</license>
-	</licenses>
+    <properties>
+        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+        <!-- Access the build timestamp with ${maven.build.timestamp} -->
+        <gitRepoName>hangman-solver</gitRepoName>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mainClass>view.MainWindow</mainClass>
+    </properties>
 
-	<build>
-		<sourceDirectory>src/main/java</sourceDirectory>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<archive>
-								<manifest>
-									<mainClass>view.MainWindow</mainClass>
-								</manifest>
-							</archive>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    <dependencies>
+        <!-- <dependency> <groupId>org.glassfish</groupId> <artifactId>javax.json</artifactId>
+            <version>1.0.4</version> </dependency> -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.vatbub</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.24</version>
+        </dependency>
+    </dependencies>
 
-	<dependencies>
-		<!-- <dependency> <groupId>org.glassfish</groupId> <artifactId>javax.json</artifactId> 
-			<version>1.0.4</version> </dependency> -->
-		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongodb-driver</artifactId>
-			<version>3.3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.vatbub</groupId>
-			<artifactId>common</artifactId>
-			<version>0.0.18</version>
-		</dependency>
-	</dependencies>
+    <build>
+        <plugins>
+            <!-- Create the jar-with-dependencies -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>buildMainExecutableJar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

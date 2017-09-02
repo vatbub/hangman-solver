@@ -1,14 +1,36 @@
 package algorithm;
 
+/*-
+ * #%L
+ * Hangman Solver
+ * %%
+ * Copyright (C) 2016 Frederik Kammel
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+
+import common.AppConfig;
+import languages.Language;
+import languages.TabFile;
+import logging.FOKLogger;
+
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
-
-import common.Config;
-import languages.*;
-import logging.FOKLogger;
 
 /**
  * A class that holds all methods and algorithms to solve a hangman puzzle.
@@ -20,13 +42,12 @@ public class HangmanSolver {
 
 	private static Language langOld;
 	private static TabFile database;
-	private static FOKLogger log = new FOKLogger(HangmanSolver.class.getName());
 
 	/**
 	 * A {@link List} that contains all characters and words that the computer
 	 * has guessed.
 	 */
-	public static List<String> proposedSolutions = new ArrayList<String>();
+	public static final List<String> proposedSolutions = new ArrayList<>();
 
 	private static String currentSequenceCopy;
 
@@ -64,7 +85,7 @@ public class HangmanSolver {
 		}
 
 		// Split the pattern up in words
-		ArrayList<String> words = new ArrayList<String>(Arrays.asList(currentSequence.split(" ")));
+		ArrayList<String> words = new ArrayList<>(Arrays.asList(currentSequence.split(" ")));
 
 		// Go through all words
 		for (String word : words) {
@@ -119,7 +140,7 @@ public class HangmanSolver {
 			} else {
 				// More than one maxValue found, return the one that appears the
 				// most
-				Map<Character, Integer> charCounts = new HashMap<Character, Integer>();
+				Map<Character, Integer> charCounts = new HashMap<>();
 
 				for (Result res : maxValues) {
 					if (charCounts.containsKey(res.bestChar)) {
@@ -140,6 +161,7 @@ public class HangmanSolver {
 					}
 				}
 
+				assert maxEntry != null;
 				globalResult = resultList.getFirstResultWithBestChar(maxEntry.getKey());
 			}
 
@@ -170,11 +192,11 @@ public class HangmanSolver {
 		String bestWord = database.getValueWithHighestCorrelation(2, word, proposedSolutions);
 		boolean foundBestWord = true;
 
-		log.getLogger().info("Best match in dictionary: " + bestWord);
+		FOKLogger.info(HangmanSolver.class.getName(), "Best match in dictionary: " + bestWord);
 
 		if (bestWord.length() == 0) {
 			// dictionaries are both used up
-			log.getLogger().severe("dictionary used up");
+			FOKLogger.severe(HangmanSolver.class.getName(), "dictionary used up");
 			foundBestWord = false;
 		} else if (bestWord.equals("")) {
 			foundBestWord = false;
@@ -195,7 +217,7 @@ public class HangmanSolver {
 			res.bestCharScore = chr.letterScore;
 
 			// Set the result type
-			if (res.bestWordScore >= Config.thresholdToSelectWord(word.length())) {
+			if (res.bestWordScore >= AppConfig.thresholdToSelectWord(word.length())) {
 				// Specify the bestWord as the global result
 				res.convertToWordResult();
 			} else {
@@ -204,7 +226,7 @@ public class HangmanSolver {
 
 		} else {
 			// No bestWord found
-			log.getLogger().info("No best word found, using most common chars only");
+			FOKLogger.info(HangmanSolver.class.getName(), "No best word found, using most common chars only");
 			SingleChar chr = getMostFrequentChar(wordsWithEqualLength);
 			res.bestChar = chr.chr;
 			res.bestCharScore = chr.letterScore;
@@ -222,12 +244,12 @@ public class HangmanSolver {
 	 */
 	private static void loadLanguageDatabases(Language lang) {
 		try {
-			log.getLogger().info("Loading language databases for " + lang.getHumanReadableName());
+			FOKLogger.info(HangmanSolver.class.getName(), "Loading language databases for " + lang.getHumanReadableName());
 			langOld = lang;
 			database = lang.getTabFile();
 			lang.mergeWithOnlineVersionAsync();
 		} catch (IOException e) {
-			log.getLogger().log(Level.SEVERE, "An error occurred", e);
+			FOKLogger.log(HangmanSolver.class.getName(), Level.SEVERE, "An error occurred", e);
 		}
 	}
 
@@ -255,9 +277,9 @@ public class HangmanSolver {
 	 * @return The most frequent char.
 	 */
 	private static SingleChar getMostFrequentChar(List<String> wordsWithEqualLength, char[] priorityChars) {
-		ArrayList<Thread> threads = new ArrayList<Thread>();
+		ArrayList<Thread> threads = new ArrayList<>();
 		AtomicInteger currentIndex = new AtomicInteger(0);
-		List<CustomAtomicInteger> charCounts = new ArrayList<CustomAtomicInteger>();
+		List<CustomAtomicInteger> charCounts = new ArrayList<>();
 
 		System.out.println("Preparing...");
 		for (int i = 0; i < Character.MAX_VALUE; i++) {
@@ -269,30 +291,27 @@ public class HangmanSolver {
 		// ArrayList<AtomicInteger>(Collections.nCopies(Character.MAX_VALUE, new
 		// AtomicInteger(0)));
 
-		log.getLogger().info("Dictionary size: " + wordsWithEqualLength.size());
+		FOKLogger.info(HangmanSolver.class.getName(), "Dictionary size: " + wordsWithEqualLength.size());
 		System.out.println("Counting...");
-		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
-			threads.add(new Thread() {
-				@Override
-				public void run() {
-					int index = currentIndex.getAndIncrement();
-					while (index < wordsWithEqualLength.size()) {
-						countAllCharsInString(wordsWithEqualLength.get(index), charCounts);
+		for (int i = 0; i < AppConfig.getParallelThreadCount(); i++) {
+			threads.add(new Thread(() -> {
+                int index = currentIndex.getAndIncrement();
+                while (index < wordsWithEqualLength.size()) {
+                    countAllCharsInString(wordsWithEqualLength.get(index), charCounts);
 
-						// Grab the next index
-						index = currentIndex.getAndIncrement();
-					}
-				}
-			});
+                    // Grab the next index
+                    index = currentIndex.getAndIncrement();
+                }
+            }));
 			threads.get(i).start();
 		}
 
 		// Wait for threads
-		for (int i = 0; i < Config.getParallelThreadCount(); i++) {
+		for (int i = 0; i < AppConfig.getParallelThreadCount(); i++) {
 			try {
 				threads.get(i).join();
 			} catch (InterruptedException e) {
-				log.getLogger().log(Level.SEVERE, "An error occurred", e);
+				FOKLogger.log(HangmanSolver.class.getName(), Level.SEVERE, "An error occurred", e);
 			}
 		}
 
@@ -302,7 +321,7 @@ public class HangmanSolver {
 		int maxIndex = 0;
 
 		// copy charCounts
-		List<CustomAtomicInteger> sortedCharCounts = new ArrayList<CustomAtomicInteger>(charCounts);
+		List<CustomAtomicInteger> sortedCharCounts = new ArrayList<>(charCounts);
 		// sort the charCounts
 		Collections.sort(sortedCharCounts);
 		Collections.reverse(sortedCharCounts);
@@ -415,6 +434,7 @@ public class HangmanSolver {
 	 * @return {@code true} if the word contains a wrong char, {@code false}
 	 *         otherwise.
 	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public static boolean currentWordContainsWrongChar(String word) {
 		return wordContainsWrongChar(currentWordCopy, word);
 	}
@@ -449,7 +469,7 @@ public class HangmanSolver {
 	 * @return The number of wrong guesses done so far.
 	 */
 	public static int getWrongGuessCount() {
-		List<String> wrongSolutions = new ArrayList<String>();
+		List<String> wrongSolutions = new ArrayList<>();
 		for (String solution : proposedSolutions) {
 			if (wordContainsWrongChar(solution)) {
 				wrongSolutions.add(solution);
@@ -471,7 +491,7 @@ public class HangmanSolver {
 	 */
 	public static GameState winDetector(String currentSequence) {
 		// Split the pattern up in words
-		ArrayList<String> words = new ArrayList<String>(Arrays.asList(currentSequence.split(" ")));
+		ArrayList<String> words = new ArrayList<>(Arrays.asList(currentSequence.split(" ")));
 
 		// Remove all words that don't contain an underscore as they are fully
 		// solved
@@ -495,7 +515,7 @@ public class HangmanSolver {
 
 		// If the current wrong guess count is bigger than or equal to the
 		// permitted wrong guess count, we've lost.
-		if (getWrongGuessCount() + 1 >= Config.maxTurnCountToLoose) {
+		if (getWrongGuessCount() + 1 >= AppConfig.maxTurnCountToLoose) {
 			return GameState.GAME_LOST;
 		}
 
@@ -509,7 +529,7 @@ public class HangmanSolver {
 			this.letterScore = letterScore;
 		}
 
-		char chr;
-		double letterScore;
+		final char chr;
+		final double letterScore;
 	}
 }
