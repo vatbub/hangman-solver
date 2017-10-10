@@ -166,7 +166,7 @@ public class Language {
     }
 
     private File getMergedDictionaryFile() {
-        return new File(Common.getAndCreateAppDataPath()
+        return new File(Common.getInstance().getAndCreateAppDataPath()
                 + AppConfig.languageDictEnhancedPattern.replace("{langCode}", this.getLanguageCode()));
     }
 
