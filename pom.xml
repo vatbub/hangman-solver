@@ -19,6 +19,14 @@
             <url>http://dl.bintray.com/vatbub/fokprojectsReleases</url>
         </repository>
         <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>jcenter</id>
+            <name>bintray</name>
+            <url>http://jcenter.bintray.com</url>
+        </repository>
+        <repository>
             <snapshots/>
             <id>snapshots</id>
             <name>libs-snapshot</name>
@@ -30,7 +38,7 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-            <id>central</id>
+            <id>jcenter</id>
             <name>bintray-plugins</name>
             <url>http://jcenter.bintray.com</url>
         </pluginRepository>
@@ -49,7 +57,7 @@
     <parent>
         <groupId>com.github.vatbub</groupId>
         <artifactId>parentPom</artifactId>
-        <version>0.0.23-SNAPSHOT</version>
+        <version>0.0.24-SNAPSHOT</version>
     </parent>
 
     <scm>
