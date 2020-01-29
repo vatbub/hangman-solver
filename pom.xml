@@ -108,7 +108,7 @@
         <dependency>
             <groupId>com.github.vatbub</groupId>
             <artifactId>common.view.core</artifactId>
-            <version>0.1.2-SNAPSHOT</version>
+            <version>0.1.6-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
