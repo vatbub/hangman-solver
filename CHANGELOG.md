@@ -13,6 +13,10 @@
 
 - Another testbug [\#26](https://github.com/vatbub/hangman-solver/issues/26)
 
+**Merged pull requests:**
+
+- Bump parentPom from 1.0.1-SNAPSHOT to 1.0.3-SNAPSHOT [\#35](https://github.com/vatbub/hangman-solver/pull/35) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+
 ## [hangmanSolver-0.0.18](https://github.com/vatbub/hangman-solver/tree/hangmanSolver-0.0.18) (2017-07-26)
 [Full Changelog](https://github.com/vatbub/hangman-solver/compare/hangmanSolver-0.0.17...hangmanSolver-0.0.18)
 
