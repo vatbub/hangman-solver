@@ -98,7 +98,7 @@
         <dependency>
             <groupId>com.github.vatbub</groupId>
             <artifactId>common.internet</artifactId>
-            <version>0.1.2-SNAPSHOT</version>
+            <version>0.1.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.vatbub</groupId>
