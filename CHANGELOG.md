@@ -15,12 +15,9 @@
 
 **Merged pull requests:**
 
-- Bump mongodb-driver from 3.12.1 to 3.12.2 [\#36](https://github.com/vatbub/hangman-solver/pull/36) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump parentPom from 1.0.1-SNAPSHOT to 1.0.3-SNAPSHOT [\#35](https://github.com/vatbub/hangman-solver/pull/35) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump mongodb-driver from 3.5.0 to 3.12.1 [\#34](https://github.com/vatbub/hangman-solver/pull/34) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump common.core from 0.1.2-SNAPSHOT to 0.1.6-SNAPSHOT [\#33](https://github.com/vatbub/hangman-solver/pull/33) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump common.updater from 0.1.2-SNAPSHOT to 0.1.6-SNAPSHOT [\#32](https://github.com/vatbub/hangman-solver/pull/32) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump commons-io from 2.5 to 2.6 [\#31](https://github.com/vatbub/hangman-solver/pull/31) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump common.internet from 0.1.2-SNAPSHOT to 0.1.6-SNAPSHOT [\#30](https://github.com/vatbub/hangman-solver/pull/30) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump common.view.core from 0.1.2-SNAPSHOT to 0.1.6-SNAPSHOT [\#29](https://github.com/vatbub/hangman-solver/pull/29) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
@@ -55,7 +52,6 @@
 
 **Closed issues:**
 
-- Applying solutions does not work properly when guessing multiple words [\#23](https://github.com/vatbub/hangman-solver/issues/23)
 - Make saving a TabFile more performant [\#22](https://github.com/vatbub/hangman-solver/issues/22)
 
 ## [hangmanSolver-0.0.13](https://github.com/vatbub/hangman-solver/tree/hangmanSolver-0.0.13) (2016-09-05)
@@ -109,7 +105,6 @@
 **Implemented enhancements:**
 
 - Win-detector [\#4](https://github.com/vatbub/hangman-solver/issues/4)
-- Implement and set up MongoDB stats [\#2](https://github.com/vatbub/hangman-solver/issues/2)
 
 **Closed issues:**
 
