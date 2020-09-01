@@ -15,6 +15,8 @@
 
 **Merged pull requests:**
 
+- Bump mongodb-driver from 3.12.4 to 3.12.7 [\#42](https://github.com/vatbub/hangman-solver/pull/42) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump mongodb-driver from 3.12.3 to 3.12.4 [\#38](https://github.com/vatbub/hangman-solver/pull/38) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump mongodb-driver from 3.12.2 to 3.12.3 [\#37](https://github.com/vatbub/hangman-solver/pull/37) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump mongodb-driver from 3.12.1 to 3.12.2 [\#36](https://github.com/vatbub/hangman-solver/pull/36) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump parentPom from 1.0.1-SNAPSHOT to 1.0.3-SNAPSHOT [\#35](https://github.com/vatbub/hangman-solver/pull/35) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
