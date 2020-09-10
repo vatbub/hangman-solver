@@ -6,27 +6,11 @@
 
 **Implemented enhancements:**
 
-- Convert to gradle [\#18](https://github.com/vatbub/hangman-solver/issues/18)
 - Implement automated update checks [\#1](https://github.com/vatbub/hangman-solver/issues/1)
 
 **Closed issues:**
 
 - Another testbug [\#26](https://github.com/vatbub/hangman-solver/issues/26)
-
-**Merged pull requests:**
-
-- Bump mongodb-driver from 3.12.4 to 3.12.7 [\#42](https://github.com/vatbub/hangman-solver/pull/42) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump commons-io from 2.6 to 2.7 [\#39](https://github.com/vatbub/hangman-solver/pull/39) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump mongodb-driver from 3.12.3 to 3.12.4 [\#38](https://github.com/vatbub/hangman-solver/pull/38) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump mongodb-driver from 3.12.2 to 3.12.3 [\#37](https://github.com/vatbub/hangman-solver/pull/37) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump mongodb-driver from 3.12.1 to 3.12.2 [\#36](https://github.com/vatbub/hangman-solver/pull/36) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump parentPom from 1.0.1-SNAPSHOT to 1.0.3-SNAPSHOT [\#35](https://github.com/vatbub/hangman-solver/pull/35) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump mongodb-driver from 3.5.0 to 3.12.1 [\#34](https://github.com/vatbub/hangman-solver/pull/34) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump common.core from 0.1.2-SNAPSHOT to 0.1.6-SNAPSHOT [\#33](https://github.com/vatbub/hangman-solver/pull/33) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump common.updater from 0.1.2-SNAPSHOT to 0.1.6-SNAPSHOT [\#32](https://github.com/vatbub/hangman-solver/pull/32) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump commons-io from 2.5 to 2.6 [\#31](https://github.com/vatbub/hangman-solver/pull/31) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump common.internet from 0.1.2-SNAPSHOT to 0.1.6-SNAPSHOT [\#30](https://github.com/vatbub/hangman-solver/pull/30) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump common.view.core from 0.1.2-SNAPSHOT to 0.1.6-SNAPSHOT [\#29](https://github.com/vatbub/hangman-solver/pull/29) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [hangmanSolver-0.0.18](https://github.com/vatbub/hangman-solver/tree/hangmanSolver-0.0.18) (2017-07-26)
 [Full Changelog](https://github.com/vatbub/hangman-solver/compare/hangmanSolver-0.0.17...hangmanSolver-0.0.18)
@@ -76,7 +60,6 @@
 **Closed issues:**
 
 - Finish translation [\#15](https://github.com/vatbub/hangman-solver/issues/15)
-- Apply button does not grow with screen scale [\#14](https://github.com/vatbub/hangman-solver/issues/14)
 
 ## [hangmanSolver-0.0.12](https://github.com/vatbub/hangman-solver/tree/hangmanSolver-0.0.12) (2016-08-05)
 [Full Changelog](https://github.com/vatbub/hangman-solver/compare/hangmanSolver-0.0.11...hangmanSolver-0.0.12)
