@@ -9,9 +9,9 @@ package common;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,8 @@ package common;
 
 
 import com.github.vatbub.common.core.logging.FOKLogger;
-import com.mongodb.MongoClientURI;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import languages.Language;
 
 import java.io.File;
@@ -90,12 +91,15 @@ public class AppConfig {
     public static final String iftttLooseEvent = "hangmanSolverLost";
 
     // View
+    public static final ConnectionString mongoClientConnectionString =
+            new ConnectionString("mongodb://user:ljkhfgsd98675@ds019634.mlab.com:19634/hangmanstats");
+
     /**
-     * The {@link MongoClientURI} to reach the database where all submitted
+     * The {@link MongoClientSettings} to reach the database where all submitted
      * words are saved.
      */
-    public static final MongoClientURI mongoDBServerAddress = new MongoClientURI(
-            "mongodb://user:ljkhfgsd98675@ds019634.mlab.com:19634/hangmanstats");
+    public static final MongoClientSettings mongoClientSettings = MongoClientSettings.builder().applyConnectionString(
+            mongoClientConnectionString).build();
 
     // IFTTT
     /**

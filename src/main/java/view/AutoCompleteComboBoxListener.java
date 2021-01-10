@@ -9,9 +9,9 @@ package view;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,11 +21,11 @@ package view;
  */
 
 
-import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.ListView;
+import javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -125,17 +125,19 @@ public class AutoCompleteComboBoxListener<T> {
      */
     @SuppressWarnings("rawtypes")
     private void selectClosestResultBasedOnTextFieldValue(boolean affect, boolean inFocus) {
-        ObservableList items = AutoCompleteComboBoxListener.this.comboBox.getItems();
+        ObservableList<T> items = AutoCompleteComboBoxListener.this.comboBox.getItems();
+        String currentEditorText = AutoCompleteComboBoxListener.this.comboBox.getEditor().getText();
+
         boolean found = false;
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i) != null && AutoCompleteComboBoxListener.this.comboBox.getEditor().getText() != null
-                    && AutoCompleteComboBoxListener.this.comboBox.getEditor().getText().toLowerCase()
-                    .equals(items.get(i).toString().toLowerCase())) {
+        if (currentEditorText != null) {
+            for (int index = 0; index<items.size(); index++) {
+                T item = items.get(index);
+                if (item == null) continue;
+                if (!currentEditorText.equalsIgnoreCase(item.toString())) continue;
                 try {
-                    ListView lv = ((ComboBoxListViewSkin) AutoCompleteComboBoxListener.this.comboBox.getSkin())
-                            .getListView();
-                    lv.getSelectionModel().clearAndSelect(i);
-                    lv.scrollTo(lv.getSelectionModel().getSelectedIndex());
+                    ListView comboBox = (ListView) ((ComboBoxListViewSkin) AutoCompleteComboBoxListener.this.comboBox.getSkin()).getPopupContent();
+                    comboBox.getSelectionModel().clearAndSelect(index);
+                    comboBox.scrollTo(comboBox.getSelectionModel().getSelectedIndex());
                     found = true;
                     break;
                 } catch (Exception ignored) {

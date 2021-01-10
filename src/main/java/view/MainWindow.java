@@ -117,7 +117,7 @@ public class MainWindow extends Application implements Initializable, ProgressDi
     @FXML
     private CustomLabel versionLabel; // Value injected by FXMLLoader
 
-    public static void main(String[] args) {
+    public static void actualMain(String[] args) {
         Common.getInstance().setAppName("hangmanSolver");
         FOKLogger.enableLoggingOfUncaughtExceptions();
         for (String arg : args) {
