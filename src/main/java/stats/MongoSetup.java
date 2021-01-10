@@ -9,9 +9,9 @@ package stats;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,11 +21,15 @@ package stats;
  */
 
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.internal.MongoClientImpl;
 import common.AppConfig;
 import org.bson.Document;
+
+import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * This class sets up the connection to the
@@ -37,7 +41,7 @@ import org.bson.Document;
  */
 public class MongoSetup {
 
-    private static final MongoClient mongoClient = new MongoClient(AppConfig.mongoDBServerAddress);
+    private static final MongoClient mongoClient = new MongoClientImpl(AppConfig.mongoClientSettings, null);
     private static final MongoDatabase mongoDatabase = mongoClient.getDatabase(AppConfig.mongoDBDatabaseName);
     private static final MongoCollection<Document> wordsUsedCollection = mongoDatabase
             .getCollection(AppConfig.mongoDBWordsUsedCollectionName);
@@ -64,9 +68,7 @@ public class MongoSetup {
      * reachable.<br>
      * NOTE: This method will take a very short time to run if the
      * <a href="https://www.mongodb.com/">MongoDB</a> is reachable but will take
-     * up to 30 seconds if not due to the way the
-     * <a href="https://docs.mongodb.com/ecosystem/drivers/">MongoDB driver</a>
-     * works.
+     * up to 10 seconds if not.
      *
      * @return {@code true} if the
      * <a href="https://www.mongodb.com/">MongoDB</a> is reachable,
@@ -74,9 +76,13 @@ public class MongoSetup {
      */
     public static boolean isReachable() {
         try {
-            mongoClient.getAddress();
+            for (String host : AppConfig.mongoClientConnectionString.getHosts()) {
+                InetAddress inetAddress = InetAddress.getByName(host);
+                if (!inetAddress.isReachable(10000))
+                    return false;
+            }
             return true;
-        } catch (Exception e) {
+        } catch (IOException e) {
             return false;
         }
     }
