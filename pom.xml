@@ -72,7 +72,7 @@
         <gitRepoName>hangman-solver</gitRepoName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>view.EntryClass</mainClass>
-        <javafx.version>14.0.2.1</javafx.version>
+        <javafx.version>16</javafx.version>
     </properties>
 
     <dependencies>
